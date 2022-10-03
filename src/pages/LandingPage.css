@@ -1,0 +1,7 @@
+.test{
+    background-image: url("/public/zombie.jpg");
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+}
