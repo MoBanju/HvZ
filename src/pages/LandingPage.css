@@ -1,7 +1,36 @@
-.test{
+.background{
     background-image: url("/public/zombie.jpg");
     height: 100vh;
     background-repeat: no-repeat;
     background-size: cover;
-    
+}
+
+.card{
+    background-color: rgba(82, 82, 82, 0.7);
+    align-items: center;
+    height: fit-content;
+    width: fit-content;
+    padding: 70px;
+    border-radius: 20px;
+    color: rgb(0, 0, 0);
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.6) 0px 14px 28px, rgba(0, 0, 0, 0.6) 0px 10px 10px;}
+
+.table{
+    color: rgb(0, 0, 0);
+    width: max-content;
+}
+
+.login-btn{
+    min-width: 300px;
+    padding: 10px;
+    font-size: 30px;
+    background-color: rgb(0, 0, 0);
+}
+
+.btn-delete, .btn-create{
+    border: none;
+    background: none;
+    margin: 0;
+    padding: 0
 }
