@@ -16,7 +16,7 @@ function GamesTable() {
             </tr>
         </thead>
         <tbody>
-                {GAMES.map(game => <GamesTableItem  game={game} />)}     
+                {GAMES.map(game => <GamesTableItem game={game} key = {game.id}/>)}     
         </tbody>
     </table>
     <div className="d-flex flex-row-reverse">
