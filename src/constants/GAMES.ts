@@ -35,10 +35,9 @@ const PLAYERS: IPlayer[] = [
 
 export const GAMES: IGame[] = [
     {
+        id: 1,
         title: 'Game 1',
         description: 'Game 1 desc',
         state: 'register',
-        chat: CHAT,
-        players: PLAYERS,
     },
 ];
