@@ -1,0 +1,8 @@
+{
+  "realm": "HvZ",
+  "auth-server-url": "https://hvz-2022-keycloak.herokuapp.com/auth/",
+  "ssl-required": "external",
+  "resource": "react-client",
+  "public-client": true,
+  "confidential-port": 0
+}
