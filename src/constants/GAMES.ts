@@ -41,4 +41,25 @@ export const GAMES: IGame[] = [
         chat: CHAT,
         players: PLAYERS,
     },
+    {
+        title: 'Game 2',
+        description: 'Game 2 desc',
+        state: 'complete',
+        chat: CHAT,
+        players: PLAYERS,
+    },
+    {
+        title: 'Game 3',
+        description: 'Game 3 desc',
+        state: 'complete',
+        chat: CHAT,
+        players: PLAYERS,
+    },
+    {
+        title: 'Game 4',
+        description: 'Game 4 desc',
+        state: 'inprogress',
+        chat: CHAT,
+        players: PLAYERS,
+    },
 ];

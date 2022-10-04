@@ -5,13 +5,23 @@ import "./LandingPage.css";
 
 function LandingPage() {
     return (
-    <Container className="justify-content-center align-items-center test" fluid>
+    <Container className="justify-content-center align-items-center background d-flex" fluid>
         <Row> 
-            <Col> Hie </Col>
-            <Col> Hade</Col>
+            <Col className="m-auto"> 
+                <div className="card m-5 mx-auto">
+                    <p className="card-text">
+                        <LoginForm/>
+                    </p>
+                </div>
+            </Col>
+            <Col>
+            <div className="card m-5 mx-auto">
+                    <p className="card-text">
+                        <GamesTable/>
+                    </p>
+                </div>
+            </Col>
         </Row>
-        <LoginForm />
-        <GamesTable />
     </Container>)
 }
 
