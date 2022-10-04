@@ -1,5 +1,6 @@
 import { IChat } from "../models/IChat";
 import { IGame } from "../models/IGame";
+import { IGameDetailed } from "../models/IGameDetailed";
 import { IPlayer } from "../models/IPlayer";
 
 
@@ -33,11 +34,37 @@ const PLAYERS: IPlayer[] = [
     },
 ]
 
-export const GAMES: IGame[] = [
+export const GAMES: IGameDetailed[] = [
     {
         id: 1,
         title: 'Game 1',
         description: 'Game 1 desc',
         state: 'register',
+        chat: CHAT,
+        players: PLAYERS,
+    },
+    {
+        id:2,
+        title: 'Game 2',
+        description: 'Game 2 desc',
+        state: 'complete',
+        chat: CHAT,
+        players: PLAYERS,
+    },
+    {
+        id: 3,
+        title: 'Game 3',
+        description: 'Game 3 desc',
+        state: 'complete',
+        chat: CHAT,
+        players: PLAYERS,
+    },
+    {
+        id: 4,
+        title: 'Game 4',
+        description: 'Game 4 desc',
+        state: 'inprogress',
+        chat: CHAT,
+        players: PLAYERS,
     },
 ];
