@@ -19,6 +19,7 @@ initialize().then(() => {
   );
 }).catch((error) => {
   console.log("Failed to initalize keycloak: ", error);
+  // TODO: make this look nicer.
   root.render(
     <React.StrictMode>
       <p>Could not connect to keycloak</p>
