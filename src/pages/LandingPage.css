@@ -3,6 +3,7 @@
     height: 100vh;
     background-repeat: no-repeat;
     background-size: cover;
+    overflow-y: auto;
 }
 
 .card{
@@ -14,7 +15,9 @@
     border-radius: 20px;
     color: rgb(0, 0, 0);
     border: none;
-    box-shadow: rgba(0, 0, 0, 0.6) 0px 14px 28px, rgba(0, 0, 0, 0.6) 0px 10px 10px;}
+    box-shadow: rgba(0, 0, 0, 0.6) 0px 14px 28px, rgba(0, 0, 0, 0.6) 0px 10px 10px;
+    position: relative;
+}
 
 .table{
     color: rgb(0, 0, 0);

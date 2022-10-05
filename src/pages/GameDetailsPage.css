@@ -1,0 +1,21 @@
+.background-game{
+    background-color: rgb(198, 232, 195);
+    height: 100vh;
+}
+
+.chat{
+    border-radius: 5px;
+    right: 6vh;
+}
+
+.scroll{
+    max-height: 20vh;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scroll::-webkit-scrollbar {
+    display: none;
+  }
+  

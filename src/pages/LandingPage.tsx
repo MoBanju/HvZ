@@ -16,9 +16,9 @@ function LandingPage() {
             </Col>
             <Col>
             <div className="card m-5 mx-auto">
-                    <p className="card-text">
+                    <div className="card-text">
                         <GamesTable/>
-                    </p>
+                    </div>
                 </div>
             </Col>
         </Row>
