@@ -17,16 +17,22 @@ const gameSlice = createSlice({
     name: 'games',
     initialState: initialeState,
     reducers: {
-        setGamesError: (state, action: PayloadAction<string>) => 
+        setGamesError: (state, action: PayloadAction<string>) =>
             state = {
                 ...state,
                 error: new Error(action.payload),
             },
-        setGames: (state, action: PayloadAction<IGame[]>) => 
+        setGames: (state, action: PayloadAction<IGame[]>) =>
             state = {
                 isLoaded: true,
                 error: undefined,
                 games: action.payload,
+            },
+        removeGame: (state, action: PayloadAction<number>) =>
+            state = {
+                ...state,
+                games: state.games?.filter((game) => game.id !== action.payload)
+                
             },
         // TODO: This is a temp action to the create game form.
         addGame: (state, action: PayloadAction<IGame>) => 
@@ -39,6 +45,6 @@ const gameSlice = createSlice({
 });
 
 
-export const { setGamesError, setGames, addGame } = gameSlice.actions;
+export const { setGamesError, setGames, removeGame, addGame } = gameSlice.actions;
 
 export default gameSlice.reducer;
