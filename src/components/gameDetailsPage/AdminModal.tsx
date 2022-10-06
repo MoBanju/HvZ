@@ -34,12 +34,12 @@ function AdminModal({show, setShow, player}: {show: boolean, setShow: Dispatch<R
         <Modal.Body>
             <table>
                 <tbody>
-                    <tr>
-                        <th>Player</th>
-                        <th className="ps-3">Role</th>
+                    <tr className="fs-5">
+                        <th className="pb-3">Player</th>
+                        <th className="ps-3 pb-3">Role</th>
                     </tr>
                     <tr>
-                        <td>{player.map((check, i) => <p key={i}>{check.id}</p>)}</td>
+                        <td className="fw-bold">{player.map((check, i) => <p key={i}>{check.id}</p>)}</td>
                         <td>
                             {player.map((check, i) => <p key={i}>  
                             {check.isHuman && <select defaultValue={"human"} name="roles" id="roles" className="rounded ms-3" onChange={afterClick}>
@@ -65,9 +65,6 @@ function AdminModal({show, setShow, player}: {show: boolean, setShow: Dispatch<R
                 </tbody>
             </table>
         </Modal.Body>
-        <Modal.Footer>
-            <button>Submit changes</button>
-        </Modal.Footer>
     </Modal>);
 }
 
