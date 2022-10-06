@@ -12,16 +12,16 @@ function Chat({chatmessages}: {chatmessages: IChat[]}) {
           <button className="m-2 btn-delete text-primary">Global</button>
           <button className="m-2 btn-delete text-success">Human</button>
       </header>
-      <body className="m-3 bg-dark modal-body">
+      <div className="m-3 bg-dark modal-body">
         <div className="scroll m-1">
-          {chatmessages.map(chat => <p className="bg-primary bg rounded p-3 m-2">({chat.chatTime}) {chat.message}</p>)}
+          {chatmessages.map((chat, i) => <p key={i} className="bg-primary bg rounded p-3 m-2">({chat.chatTime}) {chat.message}</p>)}
         </div>
 
         <div>
           <input type="text" className="rounded p-2 m-3" />
           <button className="btn-delete"><AiOutlineArrowRight color="#1976D2" size={30}/></button>
         </div>
-      </body>
+      </div>
     </div>
   )
 }

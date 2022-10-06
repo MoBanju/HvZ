@@ -11,7 +11,7 @@ function BiteCode({player}:{player: IPlayer}) {
       </div>
 
       <div>
-        <p className="fs-2">Your bitecode: { <p className="bg-black bg rounded p-3 m-2 text-white text-center w-25">{player.biteCode}</p>}</p>
+        <p className="fs-2">Your bitecode: { <span className="bg-black bg rounded p-3 m-2 text-white text-center w-25">{player.biteCode}</span>}</p>
       </div>
     </>
   )
