@@ -9,7 +9,7 @@
 }
 
 .scroll{
-    max-height: 20vh;
+    max-height: 42vh;
     overflow-y: scroll;
     -ms-overflow-style: none;
     scrollbar-width: none;

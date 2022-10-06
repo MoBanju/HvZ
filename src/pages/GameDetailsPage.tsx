@@ -45,9 +45,7 @@ function GameDetailsPage() {
         <div>
             <BiteCode player={game.players[0]} gamestate={game.state}/>
         </div>
-        <div className="d-flex">
-            <Chat chatmessages={game.chat}/>
-        </div>
+        <Chat chatmessages={game.chat}/>
     </Container>)
 }
 
