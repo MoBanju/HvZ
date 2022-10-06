@@ -5,7 +5,7 @@ function JoinGameBtn({gamestate}: {gamestate: keyof IGameState}) {
     if(gamestate !== 'register')
         return (<></>);
   return (
-    <div>JoinGameBtn</div>
+    <button className='btn btn-dark btn-lg rounded-3'>Join</button>
   )
 }
 

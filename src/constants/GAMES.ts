@@ -38,7 +38,7 @@ export const GAMES: IGameDetailed[] = [
     {
         id: 1,
         title: 'Game 1',
-        description: 'Game 1 desc',
+        description: 'Description lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. A scelerisque purus semper eget. Pharetra et ultrices neque ornare aenean euismod. Eu volutpat odio facilisis mauris sit amet massa vitae. Dignissim enim sit amet venenatis urna cursus eget nunc.',
         state: 'register',
         chat: CHAT,
         players: PLAYERS,
