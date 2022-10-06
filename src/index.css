@@ -13,3 +13,21 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.modal {
+  --bs-modal-bg: rgba(82, 82, 82, 0.7);
+  --bs-modal-header-border-color: black;
+  --bs-modal-footer-border-color: black
+}
+
+.input-group-text {
+  background-color: tomato;
+}
+
+.form-control {
+  background-color: pink;
+}
+
+.form-control:focus {
+  background-color: rgba(255, 112, 112, 0.63);
+}
