@@ -19,7 +19,7 @@ const fetchGameMiddelware: Middleware<{}, RootState> = storeApi => next => actio
             catch (e) {
                 storeApi.dispatch(setGameError((e as Error).message))
             }
-        }, 2500);
+        }, 1000);
     }
     return next(action);
 }

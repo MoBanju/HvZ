@@ -10,7 +10,7 @@ const fetchGamesMiddelware: Middleware<{}, RootState> = storeApi => next => acti
     if(action.type === ACTION_TYPE) {
         setTimeout(() => {
             storeApi.dispatch(setGames(GAMES))
-        }, 2500);
+        }, 1000);
     }
     return next(action);
 }
