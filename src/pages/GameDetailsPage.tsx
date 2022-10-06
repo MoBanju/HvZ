@@ -38,7 +38,7 @@ function GameDetailsPage() {
     <Container className="background-game p-sm-4" fluid>
         <a href="/" className="btn-delete mb-4 btn btn-lg"><MdBackspace/></a>
         <div className="mt-3 mb-5">
-           <ProgressBar/>
+           <ProgressBar gamestate={game.state} />
         </div>
         <div>
             <GameStateIndicator gamestate={game.state}/>
