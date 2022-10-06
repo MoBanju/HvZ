@@ -20,6 +20,14 @@ code {
   --bs-modal-footer-border-color: black
 }
 
+.table {
+  --bs-table-hover-bg: rgba(240, 87, 87, 0.08);
+}
+
+.table-hover {
+  --bs-table-hover-color: white;
+}
+
 .input-group-text {
   background-color: tomato;
 }
