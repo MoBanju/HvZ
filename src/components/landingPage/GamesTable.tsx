@@ -1,4 +1,3 @@
-import { GAMES } from "../../constants/GAMES";
 import GamesTableItem from "./GamesTableItem";
 import "../../pages/LandingPage.css";
 import {AiFillPlusSquare} from "react-icons/ai" ;
@@ -18,7 +17,7 @@ function GamesTable() {
     }, []);
     return (
     <div className="table-responsive">
-    <table className="table display-5">
+    <table className="table table-hover display-5">
         <thead>
             <tr>
                 <th scope="col">Title</th>
