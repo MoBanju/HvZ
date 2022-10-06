@@ -8,8 +8,7 @@ function LoginForm() {
     if (keycloak.authenticated) {
         return (<><div>
             <button onClick={() => keycloak.logout()} className="btn btn-dark btn-lg login-btn m-5">Logout</button>
-        </div>
-            {console.log(keycloak.tokenParsed)}</>)
+        </div></>)
     }
     else {
         return (
@@ -20,8 +19,6 @@ function LoginForm() {
                 <div>
                     <button onClick={() => keycloak.register()} className="btn btn-dark btn-lg login-btn m-5">Register</button>
                 </div>
-                {console.log(keycloak.tokenParsed)}
-
             </>
         );
     }
