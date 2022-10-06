@@ -106,6 +106,7 @@ function Chat({ chatmessages }: { chatmessages: IChat[] }) {
             aria-describedby="message"
             value={chatMessage}
             disabled={isLoading}
+            onKeyPress={(e) => {if(e.charCode === 13) sendMessage()}}
             onChange={(e: ChangeEvent<HTMLInputElement>) => {setChatMessage(e.target.value);}}
           />
           <Button
