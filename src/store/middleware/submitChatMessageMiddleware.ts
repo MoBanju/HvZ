@@ -15,7 +15,7 @@ const submitChatMessageMiddleware: Middleware<{}, RootState> = storeApi => next 
                 ...game,
                 chat: [... game.chat, action.payload.chat],
             }));
-        }, 2500);
+        }, 1000);
     }
     return next(action);
 }

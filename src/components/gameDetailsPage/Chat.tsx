@@ -58,7 +58,7 @@ function Chat({ chatmessages }: { chatmessages: IChat[] }) {
   };
 
   return (
-    <Container className="bg-dark position-absolute bottom-0 end-0 h-50 w-25 p-0 rounded">
+    <Container className="bg-dark position-absolute bottom-0 end-0 h-50 w-25 p-0 rounded"style={{marginRight: "15px"}}>
       <ul className="nav nav-tabs justify-content-around" role="tablist">
         <Button
           onClick={() => { setChatState(ChatState.GLOBAL) }}
@@ -106,6 +106,7 @@ function Chat({ chatmessages }: { chatmessages: IChat[] }) {
             aria-describedby="message"
             value={chatMessage}
             disabled={isLoading}
+            onKeyPress={(e) => {if(e.charCode === 13) sendMessage()}}
             onChange={(e: ChangeEvent<HTMLInputElement>) => {setChatMessage(e.target.value);}}
           />
           <Button

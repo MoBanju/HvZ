@@ -18,7 +18,7 @@ function GameDetailsPage() {
     const routeParam = useParams()["id"]
     const dispatch = useAppDispatch()
     useEffect(()=>{
-        dispatch(fetchGameAction(1))
+        dispatch(fetchGameAction(Number(routeParam)))
     }, [])
     const {isLoaded, error, game} = useAppSelector(state => state.game)
 
