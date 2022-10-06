@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import BiteCode from "../components/gameDetailsPage/BiteCode";
@@ -12,15 +12,20 @@ import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { fetchGameAction } from "../store/middleware/fetchGameMiddleware";
 import "./GameDetailsPage.css";
 import {MdBackspace} from "react-icons/md"
+import AdminModal from "../components/gameDetailsPage/AdminModal";
+import keycloak from "../keycloak"
+
 
 
 function GameDetailsPage() {
+    const [show, setShow] = useState(false);
     const routeParam = useParams()["id"]
     const dispatch = useAppDispatch()
     useEffect(()=>{
         dispatch(fetchGameAction(1))
     }, [])
     const {isLoaded, error, game} = useAppSelector(state => state.game)
+    const isAdmin = keycloak.realmAccess?.roles.includes("ADMIN")
 
     if(error){
         return <p>{error.message}</p>
@@ -48,6 +53,14 @@ function GameDetailsPage() {
         <div className="d-flex">
             <Chat chatmessages={game.chat}/>
         </div>
+        { isAdmin && 
+        <div>
+            <button className="btn btn-dark mt-3 mb-3" onClick={() => {setShow(true)}}>Admin-table</button>
+            <div>
+                <AdminModal show={show} setShow={setShow} player={game.players}/>
+            </div>
+        </div>
+        }
     </Container>)
 }
 

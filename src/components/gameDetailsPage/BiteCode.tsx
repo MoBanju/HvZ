@@ -18,11 +18,7 @@ function BiteCode({player, gamestate}:{player: IPlayer, gamestate: keyof IGameSt
       </>
     )
   }
-  if(gamestate === 'register'){
-    return(
-      <div>Waiting for game..</div>
-    )
-  }
+  
   return(
     <div></div>
   )

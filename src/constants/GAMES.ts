@@ -27,10 +27,16 @@ const PLAYERS: IPlayer[] = [
         isPatientZero: false,
     },
     {
-        biteCode: '1234ABCD',
+        biteCode: '1234ADSDS',
         id: 2,
         isHuman: false,
         isPatientZero: true,
+    },
+    {
+        biteCode: 'ADSFSD',
+        id: 3,
+        isHuman: false,
+        isPatientZero: false,
     },
 ]
 
