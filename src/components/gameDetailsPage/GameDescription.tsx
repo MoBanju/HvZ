@@ -1,15 +1,15 @@
 function GameDescription({title, description}: {title: string, description: string}) {
   return (
-    <div className="d-flex">
-    <div className="me-5">
+    <div className="clearfix">
+    <div className="me-5 desc float-start">
         <h1>{title}</h1>
-        <h5 className="w-30">{description}</h5>
+        <h5 className="">{description}</h5>
     </div>
 
-    <div className="float-end me-5">
+    <div className="float-end me-5 desc m">
       <h3>Rules</h3>
       <h5>
-        <ul className="w-30">
+        <ul>
           <li className="m-2">People who are not registered players are not allowed to interfere with gameplay. 
             Under the original rules, this includes spying on the other team, 
             or helping players stay in a safe area by bringing them food or doing something 
