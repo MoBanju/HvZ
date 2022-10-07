@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Container } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import BiteCode from "../components/gameDetailsPage/BiteCode";
 import Chat from "../components/gameDetailsPage/Chat";
 import GameDescription from "../components/gameDetailsPage/GameDescription";
@@ -31,7 +31,7 @@ function GameDetailsPage() {
     }
     return (
     <Container className="background-game p-sm-4" fluid>
-        <a href="/" className="btn-delete mb-4 btn btn-lg"><MdBackspace/></a>
+        <NavLink to="/" className="btn-delete mb-4 btn btn-lg"><MdBackspace/></NavLink>
         <div className="mt-3 mb-5">
            <ProgressBar gamestate={game.state} />
         </div>
