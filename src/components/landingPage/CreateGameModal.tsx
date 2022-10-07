@@ -30,16 +30,20 @@ function CreateGameModal({show, setShow}: IProps) {
         </Modal.Header>
         <Modal.Body>
             <InputGroup >
-                <InputGroup.Text id="title" onChange={(e: React.FormEvent<HTMLInputElement>) => {setGame({...game, title: e.currentTarget.value})}}>Title:</InputGroup.Text>
+                <InputGroup.Text id="title" >Title:</InputGroup.Text>
                 <FormControl
                 placeholder="HvZ summer camp 2025"
                 aria-label="Title"
                 aria-describedby="title"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setGame({...game, title: e.currentTarget.value})}}
                 />
             </InputGroup>
             <InputGroup className="mt-4">
                 <InputGroup.Text onChange={(e: React.FormEvent<HTMLInputElement>) => {setGame({...game, description: e.currentTarget.value})}}>Description</InputGroup.Text>
-                <Form.Control as="textarea" aria-label="Description" placeholder="Come join your friends and family as we play a game of human vs zombies during summer camp 2025"/>
+                <Form.Control 
+                as="textarea" 
+                aria-label="Description" 
+                placeholder="Come join your friends and family as we play a game of human vs zombies during summer camp 2025"/>
             </InputGroup>
         </Modal.Body>
         <Modal.Footer>

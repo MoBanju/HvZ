@@ -18,19 +18,10 @@ function GamesTable() {
     }, []);
 
     let myGames = games.map((game, i) => <GamesTableItem game={game} key={i} />)
-    
-    const fiveLess = (tall: number) => {
-        if(tall > 1)
-        setsideTall(tall-1)
-    }
-    const fiveMore = (tall: number) => {
-        if(tall*5 < myGames.length)
-        setsideTall(tall+1)
-    }
 
     return (
         <div className="table-responsive">
-            <table className="table display-5">
+            <table className="table display-5 table-hover" >
                 <thead>
                     <tr>
                         <th scope="col">Title</th>
@@ -40,16 +31,16 @@ function GamesTable() {
                     </tr>
                 </thead>
                 <tbody>
-                    {myGames.slice((sideTall-1)*5, sideTall*5)}
+                    {myGames.slice((sideTall - 1) * 5, sideTall * 5)}
                 </tbody>
             </table>
             <div className="d-flex flex-row-reverse">
-                {isAdmin && <button className="btn-create mt-4 float-right"> <AiFillPlusSquare size={50} onClick={() => { setShow(true) }} /> </button>}
+                {isAdmin && <button className="btn-create mt-4 float-right"> <AiFillPlusSquare className="bosspann" size={50} onClick={() => { setShow(true) }} /> </button>}
             </div>
             <div className="text-center">
-                <h1><button onClick={() => fiveLess(sideTall)} className="btn-delete">{'<'}</button>
+                <h1>{sideTall > 1 && <button onClick={() => setsideTall(sideTall - 1)} className="btn-delete">{'<'}</button>}
                     {sideTall}
-                    <button onClick={()=>fiveMore(sideTall)} className="btn-delete">{'>'}</button></h1>
+                    {sideTall * 5 < myGames.length && <button onClick={() => setsideTall(sideTall + 1)} className="btn-delete">{'>'}</button>}</h1>
             </div>
             <CreateGameModal show={show} setShow={setShow} />
         </div>)

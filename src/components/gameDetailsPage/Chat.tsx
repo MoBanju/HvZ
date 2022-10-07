@@ -1,28 +1,128 @@
-import { Container } from "react-bootstrap";
-import { icons } from "react-icons/lib";
 import { IChat } from "../../models/IChat";
-import {AiOutlineArrowRight} from "react-icons/ai";
-import { IGame } from "../../models/IGame";
-import { IGameState } from "../../models/IGameState";
+import { AiOutlineArrowRight } from "react-icons/ai";
+import React, { ChangeEvent, useState } from "react";
+import { Button, Container, FormControl, InputGroup, Spinner } from "react-bootstrap";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { submitChatMessageAction } from "../../store/middleware/submitChatMessageMiddleware";
 
-function Chat({chatmessages}: {chatmessages: IChat[]}) {
+enum ChatState {
+  GLOBAL,
+  HUMAN,
+  ZOMBIE,
+}
+
+function Chat({ chatmessages }: { chatmessages: IChat[] }) {
+  const [chatState, setChatState] = useState<ChatState>(ChatState.GLOBAL);
+  const [chatMessage, setChatMessage] = useState("");
+  const isLoading = useAppSelector(state => state.game.sendingMessage);
+  const dispatch = useAppDispatch();
+
+  const isHuman = true;
+  const isZombie = false;
+
+  const filterChat = (chatMessage: IChat) => {
+    switch (chatState) {
+      case ChatState.HUMAN:
+        return chatMessage.isHumanGlobal && isHuman;
+      case ChatState.ZOMBIE:
+        return chatMessage.isZombieGlobal && isZombie;
+      case ChatState.GLOBAL:
+        return !chatMessage.isHumanGlobal && !chatMessage.isZombieGlobal
+      default:
+        return false;
+    }
+  };
+
+  const sendMessage = () => {
+    let isHumanGlobal: boolean, isZombieGlobal: boolean;
+
+    switch (chatState) {
+      case ChatState.HUMAN:
+        isHumanGlobal = true;
+        isZombieGlobal = false;
+        break;
+      case ChatState.ZOMBIE:
+        isHumanGlobal = false;
+        isZombieGlobal = true;
+        break;
+      case ChatState.GLOBAL:
+        // Fallthrough
+      default:
+        isHumanGlobal = false;
+        isZombieGlobal = false;
+    }
+    
+    const action = submitChatMessageAction(0, {chatTime: "QQ", isHumanGlobal, isZombieGlobal, message: chatMessage})
+    dispatch(action)
+    setChatMessage("");
+  };
+
   return (
-    <div className="chat bg-dark mt-5 position-fixed bottom-0 me-auto">
-      <header className="chat-header m-3">
-          <button className="m-2 btn-delete text-primary">Global</button>
-          <button className="m-2 btn-delete text-success">Human</button>
-      </header>
-      <div className="m-3 bg-dark modal-body">
-        <div className="scroll m-1">
-          {chatmessages.map((chat, i) => <p key={i} className="bg-primary bg rounded p-3 m-2">({chat.chatTime}) {chat.message}</p>)}
-        </div>
+    <Container className="bg-dark position-absolute bottom-0 end-0 h-50 w-25 p-0 rounded"style={{marginRight: "15px"}}>
+      <ul className="nav nav-tabs justify-content-around" role="tablist">
+        <Button
+          onClick={() => { setChatState(ChatState.GLOBAL) }}
+          className={`nav-link p-2 text-primary ${chatState === ChatState.GLOBAL ? "active" : ""}`}
+        >
+          Global
+        </Button>
+        {isHuman && <Button
+          onClick={() => { setChatState(ChatState.HUMAN) }}
+          className={`nav-link p-2 text-success ${chatState === ChatState.HUMAN ? "active" : ""}`}
+        >
+          Human
+        </Button>}
+        {isZombie && <Button
+          onClick={() => { setChatState(ChatState.ZOMBIE) }}
+          className={`nav-link p-2 text-danger ${chatState === ChatState.ZOMBIE ? "active" : ""}`}
+        >
+          Zombie
+        </Button>}
+      </ul>
+      <Container className="scroll m-1 d-flex flex-column">
+        {chatmessages
+          .filter(filterChat)
+          .map((chat, i) =>
+            <p
+              key={i}
+              className={`bg-danger rounded p-3 m-2 ${i% 2 === 0 ? "align-self-end" : "align-self-start"} mw-50 text-break`}
+              style={{maxWidth: "55%"}}
+              >
+                ({chat.chatTime}) {chat.message}
+              </p>
+            )}
+      </Container>
 
-        <div>
-          <input type="text" className="rounded p-2 m-3" />
-          <button className="btn-delete"><AiOutlineArrowRight color="#1976D2" size={30}/></button>
-        </div>
-      </div>
-    </div>
+      <Container>
+        <InputGroup>
+          <InputGroup.Text id="message" 
+            >
+              Message
+            </InputGroup.Text>
+          <FormControl
+            name="message"
+            placeholder="glhf evry1"
+            aria-label="Message"
+            aria-describedby="message"
+            value={chatMessage}
+            disabled={isLoading}
+            onKeyPress={(e) => {if(e.charCode === 13) sendMessage()}}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {setChatMessage(e.target.value);}}
+          />
+          <Button
+            variant="outline-secondary"
+            className="input-group-text"
+            style={{maxWidth: "95%"}}
+            onClick={sendMessage}
+            disabled={isLoading}
+            >
+              {
+                isLoading ? <Spinner animation="border" size={"sm"} /> : <AiOutlineArrowRight color="#1976D2" size={16} />
+              }
+            </Button>
+        </InputGroup>
+      </Container>
+    </Container>
   )
 }
 

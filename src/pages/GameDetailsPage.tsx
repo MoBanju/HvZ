@@ -22,7 +22,7 @@ function GameDetailsPage() {
     const routeParam = useParams()["id"]
     const dispatch = useAppDispatch()
     useEffect(()=>{
-        dispatch(fetchGameAction(1))
+        dispatch(fetchGameAction(Number(routeParam)))
     }, [])
     const {isLoaded, error, game} = useAppSelector(state => state.game)
     const isAdmin = keycloak.realmAccess?.roles.includes("ADMIN")
@@ -32,7 +32,7 @@ function GameDetailsPage() {
     }
 
     if(!isLoaded || game === undefined){
-        return <p>Loading..</p>
+        return <div className="background-game"><div className="loader"></div></div>
     }
     return (
     <Container className="background-game p-sm-4" fluid>
