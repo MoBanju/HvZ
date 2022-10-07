@@ -27,7 +27,7 @@ function GameDetailsPage() {
     }
 
     if(!isLoaded || game === undefined){
-        return <p>Loading..</p>
+        return <p className="background-game"><div className="loader"></div></p>
     }
     return (
     <Container className="background-game p-sm-4" fluid>
