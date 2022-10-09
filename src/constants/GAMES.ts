@@ -21,16 +21,48 @@ const CHAT: IChat[] = [
 
 const PLAYERS: IPlayer[] = [
     {
-        biteCode: '1234ABCD',
         id: 1,
         isHuman: true,
         isPatientZero: false,
+        biteCode: '1234ABCD',
     },
     {
-        biteCode: '1234ABCD',
         id: 2,
         isHuman: false,
         isPatientZero: true,
+        biteCode: '1234ADSDS',
+
+    },
+    {
+        id: 3,
+        isHuman: false,
+        isPatientZero: false,
+        biteCode: 'ADSFSD',
+    },
+    {
+        id: 4,
+        isHuman: false,
+        isPatientZero: false,
+        biteCode: 'ADLALALAD',
+    },
+    {
+        id: 5,
+        isHuman: false,
+        isPatientZero: true,
+        biteCode: 'W3456T',
+
+    },
+    {
+        id: 6,
+        isHuman: false,
+        isPatientZero: false,
+        biteCode: 'WAWAWWA',
+    },
+    {
+        id: 7,
+        isHuman: false,
+        isPatientZero: false,
+        biteCode: '64746',
     },
 ]
 

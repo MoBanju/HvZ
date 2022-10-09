@@ -27,9 +27,9 @@ function GamesTableItem({ game }: { game: IGame }) {
         };
 
         return (<>
-                <tr className="ms-6" >
-                        <td onClick={handleClick} role={"button"}> {game.title} </td>
-                        <td>22</td>
+                <tr className="ms-6" onClick={handleClick}>
+                        <td> {game.title} </td>
+                        <td className="ps-5">22</td>
                         <td>{game.state}</td>
                         <td>{isAdmin && <button onClick={deleteGame} className="btn-delete"><CgTrash className="bosspann" /></button>} </td>
                 </tr>
