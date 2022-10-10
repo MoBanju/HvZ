@@ -1,22 +1,34 @@
 import GamesTableItem from "./GamesTableItem";
 import "../../pages/LandingPage.css";
 import { AiFillPlusSquare } from "react-icons/ai";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CreateGameModal from "./CreateGameModal";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { fetchGamesAction } from "../../store/middleware/fetchGamesMiddleware";
 import keycloak from "../../keycloak";
+import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
+import { RequestsEnum } from "../../store/middleware/requestMiddleware";
+import { GetGamesAction } from "../api/getGames";
 
 function GamesTable() {
+    const dispatch = useAppDispatch();
+
     const isAdmin = keycloak.realmAccess?.roles.includes("ADMIN")
+    const isLoggedIn = keycloak.authenticated;
+
     const [show, setShow] = useState(false);
     const [sideTall, setsideTall] = useState(1);
-    const { isLoaded, error, games } = useAppSelector(state => state.games);
-    const dispatch = useAppDispatch();
-    const isLoggedIn = keycloak.authenticated;
+    const games  = useAppSelector(state => state.games.games);
+    const [gamesRequestLoading, gamesRequestError] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.GetGames);
+
     useEffect(() => {
-        dispatch(fetchGamesAction);
+        dispatch(GetGamesAction())
     }, []);
+
+    if(gamesRequestLoading)
+        return (<p>loading ...</p>);
+    
+    if(gamesRequestError)
+        alert(gamesRequestError.message);
 
     let myGames = games.map((game, i) => <GamesTableItem game={game} key={i} />)
 

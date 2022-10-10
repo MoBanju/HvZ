@@ -4,10 +4,10 @@ import { IPlayer } from "../../models/IPlayer";
 import { useAppDispatch } from "../../store/hooks";
 
 
-function AdminModal({ show, setShow, player }: { show: boolean, setShow: Dispatch<React.SetStateAction<boolean>>, player: IPlayer[] }) {
+function AdminModal({ show, setShow, players }: { show: boolean, setShow: Dispatch<React.SetStateAction<boolean>>, players: IPlayer[] }) {
     const hide = () => { setShow(false); setLoading(false) };
     const [loading, setLoading] = useState(false);
-    const [roles, setRoles] = useState<IPlayer[]>(player);
+    const [roles, setRoles] = useState<IPlayer[]>(players);
     const dispatch = useAppDispatch();
 
     const afterClick = (e: any) => {
@@ -20,13 +20,13 @@ function AdminModal({ show, setShow, player }: { show: boolean, setShow: Dispatc
             else {
                 const bitC = roles[i].biteCode
                 if (e.target.value === "human") {
-                    newArr.push({ id: Number(e.target.id), isHuman: true, isPatientZero: false, biteCode: bitC })
+                    newArr.push({ id: Number(e.target.id), isHuman: true, isPatientZero: false, biteCode: bitC, user: roles[i].user })
                 }
                 else if (e.target.value === "zombie") {
-                    newArr.push({ id: Number(e.target.id), isHuman: false, isPatientZero: false, biteCode: bitC })
+                    newArr.push({ id: Number(e.target.id), isHuman: false, isPatientZero: false, biteCode: bitC, user: roles[i].user })
                 }
                 else if (e.target.value === "patientZero") {
-                    newArr.push({ id: Number(e.target.id), isHuman: false, isPatientZero: true, biteCode: bitC })
+                    newArr.push({ id: Number(e.target.id), isHuman: false, isPatientZero: true, biteCode: bitC, user: roles[i].user })
                 }
             }
             setRoles(newArr)
