@@ -2,7 +2,9 @@ import { IPlayer } from "../../models/IPlayer"
 import {IoIosArrowDroprightCircle} from "react-icons/io";
 import { IGameState } from "../../models/IGameState";
 
-function BiteCode({player, gamestate}:{player: IPlayer, gamestate: keyof IGameState}) {
+function BiteCode({player, gamestate}:{player: IPlayer | undefined, gamestate: keyof IGameState}) {
+  if(!player)
+    return null;
   if (gamestate === 'inprogress'){
     return (
       <>
