@@ -45,3 +45,18 @@
     min-width: 30%;
     max-width: 43%;
   }
+
+  .chat-min{
+    min-height: 20vh;
+    max-height: 40vh;
+    max-width: 150px;
+    display: contents;
+  }
+
+  .mw{
+    max-width: 400px;
+  }
+
+  .mw-2{
+    max-width: 450px;
+  }
