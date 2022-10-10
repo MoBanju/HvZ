@@ -4,16 +4,16 @@ import {BsCheckLg} from "react-icons/bs"
 function GameStateIndicator({gamestate}: {gamestate: keyof IGameState}) {
   if(gamestate === "register"){
     return (
-      <div></div>
+      <div>Joined <BsCheckLg color='green' size={20}/></div>
     )
   }
   else if(gamestate === "complete"){
     return (
-      <div>Complete</div>
+      <div>Completed..</div>
     )
   }
   return(
-    <div>Joined <BsCheckLg color='green' size={20}/></div>
+    <div>Game in progress..</div>
   )
 }
 

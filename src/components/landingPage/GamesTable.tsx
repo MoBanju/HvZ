@@ -13,6 +13,7 @@ function GamesTable() {
     const [sideTall, setsideTall] = useState(1);
     const { isLoaded, error, games } = useAppSelector(state => state.games);
     const dispatch = useAppDispatch();
+    const isLoggedIn = keycloak.authenticated;
     useEffect(() => {
         dispatch(fetchGamesAction);
     }, []);
@@ -21,6 +22,9 @@ function GamesTable() {
 
     return (
         <div className="table-responsive">
+            { isLoggedIn &&
+                <p className=" fw-bold justify-content-center d-flex">To access the game details, click on a game title!</p>
+            }
             <table className="table display-5 table-hover" >
                 <thead>
                     <tr>

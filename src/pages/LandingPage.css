@@ -38,3 +38,21 @@
     margin: 0;
     padding: 0
 }
+
+.alert-container {
+    position: absolute;
+    top: -5rem;
+    left: 0;
+    right: 0;
+    border: none;
+  }
+  
+  .alert-inner {
+    display: inline-block;
+    padding: 8px 16px;
+    z-index: 4;
+    background-color: rgba(82, 82, 82, 0.7) !important;
+    border-radius: 20px;
+    color: rgb(0, 0, 0);
+    border: none;
+  }

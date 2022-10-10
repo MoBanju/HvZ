@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import { NavLink, useParams } from "react-router-dom";
 import BiteCode from "../components/gameDetailsPage/BiteCode";
@@ -12,22 +12,27 @@ import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { fetchGameAction } from "../store/middleware/fetchGameMiddleware";
 import "./GameDetailsPage.css";
 import {MdBackspace} from "react-icons/md"
+import AdminModal from "../components/gameDetailsPage/AdminModal";
+import keycloak from "../keycloak"
+
 
 
 function GameDetailsPage() {
+    const [show, setShow] = useState(false);
     const routeParam = useParams()["id"]
     const dispatch = useAppDispatch()
     useEffect(()=>{
         dispatch(fetchGameAction(Number(routeParam)))
     }, [])
     const {isLoaded, error, game} = useAppSelector(state => state.game)
+    const isAdmin = keycloak.realmAccess?.roles.includes("ADMIN")
 
     if(error){
         return <p>{error.message}</p>
     }
 
     if(!isLoaded || game === undefined){
-        return <p>Loading..</p>
+        return <div className="background-game"><div className="loader"></div></div>
     }
     return (
     <Container className="background-game p-sm-4" fluid>
@@ -45,7 +50,17 @@ function GameDetailsPage() {
         <div>
             <BiteCode player={game.players[0]} gamestate={game.state}/>
         </div>
-        <Chat chatmessages={game.chat}/>
+        <div className="d-flex">
+            <Chat chatmessages={game.chat}/>
+        </div>
+        { isAdmin && 
+        <div>
+            <button className="btn btn-dark mt-3 mb-3" onClick={() => {setShow(true)}}>Admin-table</button>
+            <div>
+                <AdminModal show={show} setShow={setShow} player={game.players}/>
+            </div>
+        </div>
+        }
     </Container>)
 }
 
