@@ -1,29 +1,20 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { IPlayer } from "../../models/IPlayer";
 import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE } from "../../store/middleware/requestMiddleware";
-import { addChatMsg, updatePlayerState } from "../../store/slices/gameSlice";
+import { updatePlayerState } from "../../store/slices/gameSlice";
 
 interface IParams {
     gameId: number
-    newUser: PutPlayerRequest
-}
-export interface PutPlayerRequest {
-    id: number,
-    isHuman: boolean,
-    biteCode: string,
-    isPatientZero: boolean
+    newUser: IPlayer
 }
 
-
-export async function PutPlayerType({gameId, newUser}: IParams) {
+export async function PutPlayerType({ gameId, newUser }: IParams): Promise<IPlayer> {
     let body = {
         "id": newUser.id,
         "isHuman": newUser.isHuman,
         "biteCode": newUser.biteCode,
         "isPatientZero": newUser.isPatientZero
     }
-
-
     const response: any = await fetch("https://localhost:7072/game/" + gameId + "/Players/" + newUser.id, {
         method: "PUT",
         headers: {
@@ -34,13 +25,12 @@ export async function PutPlayerType({gameId, newUser}: IParams) {
     if (!response.ok) {
         throw new Error("Couldnt update usertype")
     }
-    const data = await response.json() as IPlayer
-    return data
+    return newUser;
 
 
 }
 
-export const PutPlayerTypeAction: (gameId: number, newUser: PutPlayerRequest) => PayloadAction<RequestPayload<IParams, IPlayer>> = (gameId: number, newUser: PutPlayerRequest) => ({
+export const PutPlayerTypeAction: (gameId: number, newUser: IPlayer) => PayloadAction<RequestPayload<IParams, IPlayer>> = (gameId: number, newUser: IPlayer) => ({
     type: REQUEST_ACTION_TYPE,
     payload: {
         cbDispatch: updatePlayerState,
