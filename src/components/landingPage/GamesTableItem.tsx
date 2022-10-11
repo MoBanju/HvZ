@@ -44,7 +44,7 @@ function GamesTableItem({ game }: { game: IGame }) {
                         <td className='alert-inner rounded-3 fw-bolder'>Please login to see game details.</td>
                 </tr>}
                 <tr className="ms-6" >
-                        <td onClick={handleClick} role={"button"}> {game.title} </td>
+                        <td onClick={handleClick} role={"button"}> {game.name} </td>
                         <td className="ps-5">22</td>
                         <td>{game.state}</td>
                         <td>{isAdmin && <button onClick={deleteGame} className="btn-delete"><CgTrash className="bosspann" /></button>} </td>

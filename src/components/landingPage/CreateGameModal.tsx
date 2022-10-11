@@ -1,8 +1,7 @@
-import React, { Dispatch, useRef, useState } from "react";
+import React, { Dispatch, useState } from "react";
 import { Button, Form, FormControl, InputGroup, Modal, Spinner} from "react-bootstrap";
 import { IGame } from "../../models/IGame";
 import { useAppDispatch } from "../../store/hooks";
-import gameSlice from "../../store/slices/gameSlice";
 import { addGame } from "../../store/slices/gamesSlice";
 
 interface IProps {
@@ -13,7 +12,7 @@ interface IProps {
 function CreateGameModal({show, setShow}: IProps) {
     const hide = () => {setShow(false); setLoading(false)};
     const [loading, setLoading] = useState(false);
-    const [game, setGame] = useState<IGame>({id: 0, title: '', state: 'register' ,description: ''});
+    const [game, setGame] = useState<IGame>({id: 0, name: '', state: 'register' ,description: ''});
     const dispatch = useAppDispatch();
 
     const handleSubmit = () => {
@@ -35,7 +34,7 @@ function CreateGameModal({show, setShow}: IProps) {
                 placeholder="HvZ summer camp 2025"
                 aria-label="Title"
                 aria-describedby="title"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setGame({...game, title: e.currentTarget.value})}}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setGame({...game, name: e.currentTarget.value})}}
                 />
             </InputGroup>
             <InputGroup className="mt-4">

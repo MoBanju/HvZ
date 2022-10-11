@@ -1,9 +1,14 @@
 import { IChat } from "../../models/IChat";
 import { AiOutlineArrowRight } from "react-icons/ai";
-import React, { ChangeEvent, useState } from "react";
-import { Button, Container, FormControl, InputGroup, Spinner } from "react-bootstrap";
+import { Button, Collapse, Container, FormControl, InputGroup, Spinner } from "react-bootstrap";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { submitChatMessageAction } from "../../store/middleware/submitChatMessageMiddleware";
+import { IPlayer } from '../../models/IPlayer';
+import { PostChatMessageAction } from "../api/postChatMessage";
+import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
+import { RequestsEnum } from "../../store/middleware/requestMiddleware";
+import GetChatByGameIdAction from "../api/getChatByGameId";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import {TbArrowsVertical} from "react-icons/tb"
 
 enum ChatState {
   GLOBAL,
@@ -11,14 +16,34 @@ enum ChatState {
   ZOMBIE,
 }
 
-function Chat({ chatmessages }: { chatmessages: IChat[] }) {
+function Chat({gameId, currentPlayer}: { gameId: number, currentPlayer: IPlayer | undefined}) {
+  
+  
   const [chatState, setChatState] = useState<ChatState>(ChatState.GLOBAL);
   const [chatMessage, setChatMessage] = useState("");
-  const isLoading = useAppSelector(state => state.game.sendingMessage);
   const dispatch = useAppDispatch();
+  const chatmessages = useAppSelector(state => state.game.chat);
+  const [isLoading, error]= namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PostChatMessage);
+  const [isCollapseOpen, setCollapse] = React.useState(false)
+  
+  useEffect(() => {
+    dispatch(GetChatByGameIdAction(gameId));
+  }, [])
+  
+  
+  if(error)
+    return <p>{error.message}</p>
+  
+  if(!currentPlayer)
+  return null;
 
-  const isHuman = true;
-  const isZombie = false;
+  const isHuman = currentPlayer.isHuman;
+  const isZombie = !isHuman;
+  
+
+  const initCollapse = () => {
+    return setCollapse(!isCollapseOpen)
+  }
 
   const filterChat = (chatMessage: IChat) => {
     switch (chatState) {
@@ -51,15 +76,32 @@ function Chat({ chatmessages }: { chatmessages: IChat[] }) {
         isHumanGlobal = false;
         isZombieGlobal = false;
     }
+
+    const msg: IChat = {
+      id: 0,
+      message: chatMessage,
+      chatTime: new Date().toJSON(),
+      isHumanGlobal,
+      isZombieGlobal,
+      player: currentPlayer,
+    };
+
+    const postMessageAction = PostChatMessageAction(gameId, msg)
     
-    const action = submitChatMessageAction(0, {chatTime: "QQ", isHumanGlobal, isZombieGlobal, message: chatMessage})
-    dispatch(action)
+    dispatch(postMessageAction)
     setChatMessage("");
   };
 
+
+
   return (
-    <Container className="bg-dark position-absolute bottom-0 end-0 h-50 w-25 p-0 rounded"style={{marginRight: "15px"}}>
-      <ul className="nav nav-tabs justify-content-around" role="tablist">
+    <div>
+    <Container className="bg-dark position-absolute bottom-0 end-0 w-25 p-0 rounded mw-2"style={{marginRight: "15px"}}>
+        <div id="collapsePanel col-md-auto">
+        <ul className="nav nav-tabs rounded-1" role="tablist">
+        <Button onClick={initCollapse} className="p-2 text-primary btn-delete">
+        <TbArrowsVertical/>
+      </Button>
         <Button
           onClick={() => { setChatState(ChatState.GLOBAL) }}
           className={`nav-link p-2 text-primary ${chatState === ChatState.GLOBAL ? "active" : ""}`}
@@ -79,50 +121,57 @@ function Chat({ chatmessages }: { chatmessages: IChat[] }) {
           Zombie
         </Button>}
       </ul>
-      <Container className="scroll m-1 d-flex flex-column">
-        {chatmessages
-          .filter(filterChat)
-          .map((chat, i) =>
-            <p
-              key={i}
-              className={`bg-danger rounded p-3 m-2 ${i% 2 === 0 ? "align-self-end" : "align-self-start"} mw-50 text-break`}
-              style={{maxWidth: "55%"}}
-              >
-                ({chat.chatTime}) {chat.message}
-              </p>
-            )}
-      </Container>
+      <Collapse in={isCollapseOpen}>
+        <div className="chat-min">
 
-      <Container>
-        <InputGroup>
-          <InputGroup.Text id="message" 
-            >
-              Message
-            </InputGroup.Text>
-          <FormControl
-            name="message"
-            placeholder="glhf evry1"
-            aria-label="Message"
-            aria-describedby="message"
-            value={chatMessage}
-            disabled={isLoading}
-            onKeyPress={(e) => {if(e.charCode === 13) sendMessage()}}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => {setChatMessage(e.target.value);}}
-          />
-          <Button
-            variant="outline-secondary"
-            className="input-group-text"
-            style={{maxWidth: "95%"}}
-            onClick={sendMessage}
-            disabled={isLoading}
-            >
-              {
-                isLoading ? <Spinner animation="border" size={"sm"} /> : <AiOutlineArrowRight color="#1976D2" size={16} />
-              }
-            </Button>
-        </InputGroup>
-      </Container>
-    </Container>
+        <Container className="scroll m-1 d-flex flex-column" >
+          {chatmessages
+            .filter(filterChat)
+            .map((chat, i) =>
+              <p
+                key={i}
+                className={`mb-1 bg-danger rounded p-3 m-2 ${currentPlayer == chat.player ? "align-self-end" : "align-self-start"} mw-50 text-break`}
+                style={{maxWidth: "55%"}}
+                >
+                  ({chat.player.user.firstName}) {chat.message}
+                </p>
+              )}
+        </Container>
+        <Container className="bottom-0 mb-2 mw">
+          <InputGroup>
+            <InputGroup.Text id="message" 
+              >
+                Message
+              </InputGroup.Text>
+            <FormControl
+              name="message"
+              placeholder="glhf evry1"
+              aria-label="Message"
+              aria-describedby="message"
+              value={chatMessage}
+              disabled={isLoading}
+              onKeyPress={(e) => {if(e.charCode === 13) sendMessage()}}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {setChatMessage(e.target.value);}}
+            />
+            <Button
+              variant="outline-secondary"
+              className="input-group-text"
+              style={{maxWidth: "95%"}}
+              onClick={sendMessage}
+              disabled={isLoading}
+              >
+                {
+                  isLoading ? <Spinner animation="border" size={"sm"} /> : <AiOutlineArrowRight color="#1976D2" size={16} />
+                }
+              </Button>
+          </InputGroup>
+        </Container>
+        </div>
+      </Collapse>
+
+        </div>
+        </Container>
+    </div>
   )
 }
 

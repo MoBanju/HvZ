@@ -7,13 +7,14 @@ import GameDescription from "../components/gameDetailsPage/GameDescription";
 import GameStateIndicator from "../components/gameDetailsPage/GameStateIndicator";
 import JoinGameBtn from "../components/gameDetailsPage/JoinGameBtn";
 import ProgressBar from "../components/gameDetailsPage/ProgressBar";
-import { GAMES } from "../constants/GAMES";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { fetchGameAction } from "../store/middleware/fetchGameMiddleware";
 import "./GameDetailsPage.css";
 import { MdBackspace } from "react-icons/md"
 import AdminModal from "../components/gameDetailsPage/AdminModal";
 import keycloak from "../keycloak"
+import { GetGameByIdAction } from "../components/api/getGameById";
+import { namedRequestInProgAndError } from "../store/slices/requestSlice";
+import { RequestsEnum } from "../store/middleware/requestMiddleware";
 
 
 
@@ -34,6 +35,7 @@ function GameDetailsPage() {
     if (!isLoaded || game === undefined) {
         return <div className="background-game"><div className="loader"></div></div>
     }
+
     return (
         <Container className="background-game p-sm-4" fluid>
             <a href="/" className="btn-delete mb-4 btn btn-lg"><MdBackspace /></a>
@@ -43,23 +45,23 @@ function GameDetailsPage() {
             </div>
             <div>
                 <GameStateIndicator gamestate={game.state} />
-                <GameDescription title={game.title} description={game.description} />
-            </div>
+{/*                 <GameDescription title={game.title} description={game.description} />
+ */}            </div>
             <div>
                 <JoinGameBtn gamestate={game.state} />
             </div>
             <div>
-                <BiteCode player={game.players[0]} gamestate={game.state} />
-            </div>
+{/*                 <BiteCode player={game.players[0]} gamestate={game.state} />
+ */}            </div>
             <div className="d-flex">
-                <Chat chatmessages={game.chat} />
-            </div>
+{/*                 <Chat chatmessages={game.chat} />
+ */}            </div>
             {isAdmin &&
                 <div>
                     <button className="btn btn-dark mt-3 mb-3" onClick={() => { setShow(true) }}>Admin-table</button>
                     <div>
-                        <AdminModal show={show} setShow={setShow} player={game.players} />
-                    </div>
+{/*                         <AdminModal show={show} setShow={setShow} player={game.players} />
+ */}                    </div>
                 </div>
             }
         </Container>)
