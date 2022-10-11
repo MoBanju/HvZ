@@ -34,6 +34,7 @@ function GamesTableItem({ game }: { game: IGame }) {
                 }
         };
 
+
         return (<>
                 {isAlertVisible && 
                 <tr className='alert-container'>
