@@ -11,7 +11,7 @@ interface initialeState {
     chat: IChat[],
 }
 
-const initialeState: initialeState = {
+const initialState: initialeState = {
     game: undefined,
     currentPlayer: undefined,
     players: [],
@@ -20,7 +20,7 @@ const initialeState: initialeState = {
 
 const gameSlice = createSlice({
     name: 'game',
-    initialState: initialeState,
+    initialState: initialState,
     reducers: {
         setGame: (state, action: PayloadAction<{ game: IGame, players: IPlayer[] }>) => {
             return {
@@ -33,7 +33,7 @@ const gameSlice = createSlice({
         setChat: (state, action: PayloadAction<IChatResponse[]>) => {
             let chat = action.payload.map<IChat>(chatResponse => {
                 let player = state.players.find(player => player.id === chatResponse.playerId);
-                if(!player)
+                if (!player)
                     throw new Error("INVALID PLAYER!");
                 return {
                     id: chatResponse.playerId,
@@ -53,10 +53,24 @@ const gameSlice = createSlice({
             ...state,
             chat: [...state.chat, action.payload],
         }),
+        updatePlayerState: (state, action: PayloadAction<IPlayer>) => {
+            let players = state.players.map(player => {
+                if(player.id === action.payload.id){
+                    return action.payload
+                }
+                return player
+            })
+
+            return {
+                ...state,
+                players
+            }
+
+        }
     },
 });
 
 
-export const { setGame, setChat, addChatMsg } = gameSlice.actions;
+export const { setGame, setChat, addChatMsg , updatePlayerState} = gameSlice.actions;
 
 export default gameSlice.reducer;
