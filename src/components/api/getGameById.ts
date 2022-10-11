@@ -1,5 +1,6 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { IGame } from "../../models/IGame";
+import { IGameState } from "../../models/IGameState";
 import { IPlayer } from "../../models/IPlayer";
 import { REQUEST_ACTION_TYPE, RequestPayload, RequestsEnum } from "../../store/middleware/requestMiddleware";
 import { setGame } from "../../store/slices/gameSlice";
@@ -24,9 +25,21 @@ async function GetGameById(id: number) {
     if(!response.ok)
         throw new Error(response.statusText);
     let gameResponse = await response.json() as IGameResponse;
+    let state: keyof IGameState;
+    switch(gameResponse.state) {
+            case 0:
+                state = "register";
+                break;
+            case 1:
+                state = "inprogress";
+                break;
+            case 2:
+            default:
+                state = "complete";
+        }
     let game: IGame= {
         ...gameResponse,
-        state: 'complete',
+        state,
     }
     return game;
 }
