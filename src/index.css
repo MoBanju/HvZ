@@ -17,8 +17,10 @@ code {
 .modal {
   --bs-modal-bg: rgba(82, 82, 82, 0.7);
   --bs-modal-header-border-color: black;
-  --bs-modal-footer-border-color: black
+  --bs-modal-footer-border-color: black;
+  --bs-modal-color: rgb(189, 189, 189);
 }
+
 
 .table {
   --bs-table-hover-bg: rgba(240, 87, 87, 0.08);
