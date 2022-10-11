@@ -1,39 +1,49 @@
 import React, { Dispatch, useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
+import { IGame } from "../../models/IGame";
 import { IPlayer } from "../../models/IPlayer";
 import { useAppDispatch } from "../../store/hooks";
+import { PutPlayerRequest, PutPlayerTypeAction } from "../api/putPlayerType";
 
 
-function AdminModal({ show, setShow, players }: { show: boolean, setShow: Dispatch<React.SetStateAction<boolean>>, players: IPlayer[] }) {
+function AdminModal({ show, setShow, players, game }: { show: boolean, setShow: Dispatch<React.SetStateAction<boolean>>, players: IPlayer[], game: IGame }) {
     const hide = () => { setShow(false); setLoading(false) };
     const [loading, setLoading] = useState(false);
     const [roles, setRoles] = useState<IPlayer[]>(players);
     const dispatch = useAppDispatch();
 
     const afterClick = (e: any) => {
-
-        let newArr: IPlayer[] = []
-        for (let i = 0; i < roles.length; i++) {
-            if (roles[i].id.toString() !== e.target.id) {
-                newArr.push(roles[i])
-            }
-            else {
-                const bitC = roles[i].biteCode
-                if (e.target.value === "human") {
-                    newArr.push({ id: Number(e.target.id), isHuman: true, isPatientZero: false, biteCode: bitC, user: roles[i].user })
-                }
-                else if (e.target.value === "zombie") {
-                    newArr.push({ id: Number(e.target.id), isHuman: false, isPatientZero: false, biteCode: bitC, user: roles[i].user })
-                }
-                else if (e.target.value === "patientZero") {
-                    newArr.push({ id: Number(e.target.id), isHuman: false, isPatientZero: true, biteCode: bitC, user: roles[i].user })
-                }
-            }
-            setRoles(newArr)
+        setLoading(true)
+        let selectedPlayer = players.find( player => player.id === Number(e.target.id))!
+        
+        let newPlayer:PutPlayerRequest = {
+             id: Number(e.target.id), 
+             isHuman: selectedPlayer.isHuman, 
+             isPatientZero: selectedPlayer.isPatientZero, 
+             biteCode: selectedPlayer.biteCode
         }
 
+        if (e.target.value === "human") {
+            newPlayer.isHuman = true
+            newPlayer.isPatientZero= false
+        }
+        else if (e.target.value === "zombie") {
+            newPlayer.isHuman = false
+            newPlayer.isPatientZero= false
+        }
+        else if (e.target.value === "patientZero") {
+            newPlayer.isHuman = false
+            newPlayer.isPatientZero= true
+        }
+
+        dispatch(PutPlayerTypeAction(game.id, newPlayer))
+        setLoading(false)
+
+        return null
     }
-    useEffect(() => { console.log(roles) }, [roles]) //ONLY TO CONSOLE LOG NEW STATE IN ROLE
+
+
+
     return (
         <Modal show={show} onEscapeKeyDown={hide} onHide={hide}>
             <Modal.Header closeButton>
@@ -47,7 +57,7 @@ function AdminModal({ show, setShow, players }: { show: boolean, setShow: Dispat
                             <th className="ps-3 pb-3">Role</th>
                         </tr>
                         <tr>
-                            <td className="fw-bold">{roles.map((check, i) => <p key={i}>{check.id}</p>)}</td>
+                            <td className="fw-bold">{roles.map((check, i) => <p key={i}>{check.id} {check.user.firstName}</p>)}</td>
                             <td>
                                 {roles.map((check, i) => <p key={i}>
                                     {check.isHuman &&
