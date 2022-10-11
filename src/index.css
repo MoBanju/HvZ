@@ -29,13 +29,13 @@ code {
 }
 
 .input-group-text {
-  background-color: tomato;
+  background-color: #5cb85c;
 }
 
 .form-control {
-  background-color: pink;
+  background-color: rgb(199, 202, 210);
 }
 
 .form-control:focus {
-  background-color: rgba(255, 112, 112, 0.63);
+  background-color: rgba(239, 244, 247, 0.63);
 }
