@@ -17,8 +17,10 @@ code {
 .modal {
   --bs-modal-bg: rgba(82, 82, 82, 0.7);
   --bs-modal-header-border-color: black;
-  --bs-modal-footer-border-color: black
+  --bs-modal-footer-border-color: black;
+  --bs-modal-color: rgb(189, 189, 189);
 }
+
 
 .table {
   --bs-table-hover-bg: rgba(240, 87, 87, 0.08);
@@ -29,13 +31,13 @@ code {
 }
 
 .input-group-text {
-  background-color: tomato;
+  background-color: #5cb85c;
 }
 
 .form-control {
-  background-color: pink;
+  background-color: rgb(199, 202, 210);
 }
 
 .form-control:focus {
-  background-color: rgba(255, 112, 112, 0.63);
+  background-color: rgba(239, 244, 247, 0.63);
 }

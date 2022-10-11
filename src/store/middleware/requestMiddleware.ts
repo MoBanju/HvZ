@@ -8,6 +8,7 @@ export const REQUEST_ACTION_TYPE = "request/iniateRequest";
 export enum RequestsEnum {
     GetGames,
     GetGameById,
+    DeleteGameById,
     GetChatByGameId,
     PostChatMessage,
     PostGame,

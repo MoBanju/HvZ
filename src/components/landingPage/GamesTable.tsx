@@ -8,6 +8,8 @@ import keycloak from "../../keycloak";
 import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
 import { RequestsEnum } from "../../store/middleware/requestMiddleware";
 import { GetGamesAction } from "../api/getGames";
+import DeleteGameModal from "./DeleteGameModal";
+
 
 function GamesTable() {
     const dispatch = useAppDispatch();
@@ -15,7 +17,7 @@ function GamesTable() {
     const isAdmin = keycloak.realmAccess?.roles.includes("ADMIN")
     const isLoggedIn = keycloak.authenticated;
 
-    const [show, setShow] = useState(false);
+    const [ showCreateModal, setShowCreateModal] = useState(false);
     const [sideTall, setsideTall] = useState(1);
     const games  = useAppSelector(state => state.games.games);
     const [gamesRequestLoading, gamesRequestError] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.GetGames);
@@ -51,14 +53,15 @@ function GamesTable() {
                 </tbody>
             </table>
             <div className="d-flex flex-row-reverse">
-                {isAdmin && <button className="btn-create mt-4 float-right"> <AiFillPlusSquare className="bosspann" size={50} onClick={() => { setShow(true) }} /> </button>}
+                {isAdmin && <button className="btn-create mt-4 float-right"> <AiFillPlusSquare className="bosspann" size={50} onClick={() => { setShowCreateModal(true) }} /> </button>}
             </div>
             <div className="text-center">
-                <h1>{sideTall > 1 && <button onClick={() => setsideTall(sideTall - 1)} className="btn-delete">{'<'}</button>}
+                <h1>
+                    {sideTall > 1 && <button onClick={() => setsideTall(sideTall - 1)} className="btn-delete">{'<'}</button>}
                     {sideTall}
                     {sideTall * 5 < myGames.length && <button onClick={() => setsideTall(sideTall + 1)} className="btn-delete">{'>'}</button>}</h1>
             </div>
-            <CreateGameModal show={show} setShow={setShow} />
+            <CreateGameModal show={showCreateModal} setShow={setShowCreateModal} />
         </div>)
 }
 

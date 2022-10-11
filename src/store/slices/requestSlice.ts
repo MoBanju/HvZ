@@ -69,8 +69,10 @@ export function namedRequestError(state: InitialState, requestName: RequestsEnum
 };
 
 export function namedRequestInProgAndError(state: InitialState, requestName: RequestsEnum): [boolean, Error | undefined] {
-    let request = state.requests.find(request => request.name === requestName && request.error)
-    return [request?.inProgress ?? false, request?.error];
+    let request = state.requests.find(request => request.name === requestName)
+    let inprogress = request?.inProgress || false;
+    let error = request?.error;
+    return [inprogress, error];
 };
 
 export const { RequestStarted, RequestFinished, RequestFailed } = requestSlice.actions;
