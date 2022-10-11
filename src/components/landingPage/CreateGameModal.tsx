@@ -1,8 +1,12 @@
 import React, { Dispatch, useState } from "react";
 import { Button, Form, FormControl, InputGroup, Modal, Spinner} from "react-bootstrap";
 import { IGame } from "../../models/IGame";
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { RequestsEnum } from "../../store/middleware/requestMiddleware";
 import { addGame } from "../../store/slices/gamesSlice";
+import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
+import { PostGameAction, PostGameRequest} from "../api/postGames";
+
 
 interface IProps {
     show: boolean,
@@ -10,20 +14,19 @@ interface IProps {
 }
 
 function CreateGameModal({show, setShow}: IProps) {
-    const hide = () => {setShow(false); setLoading(false)};
-    const [loading, setLoading] = useState(false);
-    const [game, setGame] = useState<IGame>({id: 0, name: '', state: 'register' ,description: ''});
+    const hide = () => {setShow(false); }
+    const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PostGame)
+    
+    const [game, setGame] = useState<PostGameRequest>({name: ""});
     const dispatch = useAppDispatch();
 
-    const handleSubmit = () => {
-        setLoading(true);
-        setTimeout(() => {
-            dispatch(addGame(game))
-            hide();
-        }, 2500)
-    }
+    const submitGame = () => {  
+        const postGameAction = PostGameAction(game)
+        dispatch(postGameAction)
+      };
+
     return (
-    <Modal show={show} onEscapeKeyDown={hide} onHide={hide}>
+    <Modal show={show} onEscapeKeyDown={hide} modal={hide} onHide={hide} id="myModal">
         <Modal.Header closeButton>
             <Modal.Title>Create a new game</Modal.Title>
         </Modal.Header>
@@ -38,7 +41,7 @@ function CreateGameModal({show, setShow}: IProps) {
                 />
             </InputGroup>
             <InputGroup className="mt-4">
-                <InputGroup.Text onChange={(e: React.FormEvent<HTMLInputElement>) => {setGame({...game, description: e.currentTarget.value})}}>Description</InputGroup.Text>
+                <InputGroup.Text onChange={(e: React.FormEvent<HTMLInputElement>) => {}}>Description</InputGroup.Text>
                 <Form.Control 
                 as="textarea" 
                 aria-label="Description" 
@@ -46,7 +49,10 @@ function CreateGameModal({show, setShow}: IProps) {
             </InputGroup>
         </Modal.Body>
         <Modal.Footer>
-            <Button variant="dark" onClick={handleSubmit}>
+            {error &&
+                <p>{error.message}</p>
+            }
+            <Button variant="dark" onClick={submitGame}>
                 {loading ?
                 <Spinner animation="border" as="span"/>
                 : <span>Submit</span>}

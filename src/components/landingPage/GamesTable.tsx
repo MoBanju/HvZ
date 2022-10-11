@@ -61,7 +61,7 @@ function GamesTable() {
                     {sideTall}
                     {sideTall * 5 < myGames.length && <button onClick={() => setsideTall(sideTall + 1)} className="btn-delete">{'>'}</button>}</h1>
             </div>
-            <CreateGameModal show={showCreateModal} setShow={setShowCreateModal} />
+            <CreateGameModal show={showCreateModal} setShow={setShowCreateModal}/>
         </div>)
 }
 
