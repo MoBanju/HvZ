@@ -2,8 +2,8 @@ import React from 'react'
 import { IGameState } from '../../models/IGameState'
 
 function JoinGameBtn({gamestate}: {gamestate: keyof IGameState}) {
-    if(gamestate !== 'register')
-        return (null);
+  if(gamestate !== 'Register')
+    return (null);
   return (
     <button className='btn btn-dark btn-lg rounded-3'>Join</button>
   )

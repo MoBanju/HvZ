@@ -1,22 +1,36 @@
 import GamesTableItem from "./GamesTableItem";
 import "../../pages/LandingPage.css";
 import { AiFillPlusSquare } from "react-icons/ai";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CreateGameModal from "./CreateGameModal";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { fetchGamesAction } from "../../store/middleware/fetchGamesMiddleware";
 import keycloak from "../../keycloak";
+import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
+import { RequestsEnum } from "../../store/middleware/requestMiddleware";
+import { GetGamesAction } from "../api/getGames";
+import DeleteGameModal from "./DeleteGameModal";
+
 
 function GamesTable() {
-    const isAdmin = keycloak.realmAccess?.roles.includes("ADMIN")
-    const [show, setShow] = useState(false);
-    const [sideTall, setsideTall] = useState(1);
-    const { isLoaded, error, games } = useAppSelector(state => state.games);
     const dispatch = useAppDispatch();
+
+    const isAdmin = keycloak.realmAccess?.roles.includes("ADMIN")
     const isLoggedIn = keycloak.authenticated;
+
+    const [ showCreateModal, setShowCreateModal] = useState(false);
+    const [sideTall, setsideTall] = useState(1);
+    const games  = useAppSelector(state => state.games.games);
+    const [gamesRequestLoading, gamesRequestError] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.GetGames);
+
     useEffect(() => {
-        dispatch(fetchGamesAction);
+        dispatch(GetGamesAction())
     }, []);
+
+    if(gamesRequestLoading)
+        return (<p>loading ...</p>);
+    
+    if(gamesRequestError)
+        alert(gamesRequestError.message);
 
     let myGames = games.map((game, i) => <GamesTableItem game={game} key={i} />)
 
@@ -39,14 +53,15 @@ function GamesTable() {
                 </tbody>
             </table>
             <div className="d-flex flex-row-reverse">
-                {isAdmin && <button className="btn-create mt-4 float-right"> <AiFillPlusSquare className="bosspann" size={50} onClick={() => { setShow(true) }} /> </button>}
+                {isAdmin && <button className="btn-create mt-4 float-right"> <AiFillPlusSquare className="bosspann" size={50} onClick={() => { setShowCreateModal(true) }} /> </button>}
             </div>
             <div className="text-center">
-                <h1>{sideTall > 1 && <button onClick={() => setsideTall(sideTall - 1)} className="btn-delete">{'<'}</button>}
+                <h1>
+                    {sideTall > 1 && <button onClick={() => setsideTall(sideTall - 1)} className="btn-delete">{'<'}</button>}
                     {sideTall}
                     {sideTall * 5 < myGames.length && <button onClick={() => setsideTall(sideTall + 1)} className="btn-delete">{'>'}</button>}</h1>
             </div>
-            <CreateGameModal show={show} setShow={setShow} />
+            <CreateGameModal show={showCreateModal} setShow={setShowCreateModal}/>
         </div>)
 }
 

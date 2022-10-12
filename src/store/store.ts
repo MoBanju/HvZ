@@ -1,17 +1,21 @@
 import { applyMiddleware, combineReducers, legacy_createStore } from "redux";
-import fetchGameMiddelware from "./middleware/fetchGameMiddleware";
-import fetchGamesMiddelware from "./middleware/fetchGamesMiddleware";
-import submitChatMessageMiddleware from "./middleware/submitChatMessageMiddleware";
+import requestMiddleware from "./middleware/requestMiddleware";
 import gameSlice from "./slices/gameSlice";
 import gamesSlice from "./slices/gamesSlice";
+import requestsSlice from "./slices/requestSlice";
 
 const appReducers = combineReducers({
+    requests: requestsSlice,
     game: gameSlice,
     games: gamesSlice,
 });
 
+const appMiddleware = applyMiddleware(
+    requestMiddleware,
+)
 
-export const store = legacy_createStore(appReducers, applyMiddleware(fetchGamesMiddelware, fetchGameMiddelware, submitChatMessageMiddleware));
+
+export const store = legacy_createStore(appReducers, appMiddleware);
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof appReducers>;

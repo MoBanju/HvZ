@@ -56,3 +56,7 @@
     color: rgb(0, 0, 0);
     border: none;
   }
+
+  .title{
+    width: 16vh;
+  }

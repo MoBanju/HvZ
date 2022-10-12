@@ -1,50 +1,76 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IGameDetailed } from "../../models/IGameDetailed";
+import { IChatResponse } from "../../components/api/getChatByGameId";
+import { IChat } from "../../models/IChat";
+import { IGame } from "../../models/IGame";
+import { IPlayer } from "../../models/IPlayer";
 
 interface initialeState {
-    isLoaded: boolean,
-    sendingMessage: boolean,
-    error: Error | undefined,
-    game: IGameDetailed | undefined,
+    game: IGame | undefined,
+    currentPlayer: IPlayer | undefined,
+    players: IPlayer[],
+    chat: IChat[],
 }
 
-const initialeState: initialeState = {
-    isLoaded: false,
-    sendingMessage: true,
-    error: undefined,
+const initialState: initialeState = {
     game: undefined,
+    currentPlayer: undefined,
+    players: [],
+    chat: [],
 }
 
 const gameSlice = createSlice({
     name: 'game',
-    initialState: initialeState,
+    initialState: initialState,
     reducers: {
-        setGameError: (state, action: PayloadAction<string>) => {
+        setGame: (state, action: PayloadAction<{ game: IGame, players: IPlayer[] }>) => {
             return {
                 ...state,
-                isLoaded: false,
-                error: new Error(action.payload),
-                game: undefined,
+                ...action.payload,
+                // TODO: Temp fix, current player is always first player in list.
+                currentPlayer: action.payload.players[0],
             };
         },
-        setSendingMessage: ( state, action: PayloadAction<boolean> ) => {
+        setChat: (state, action: PayloadAction<IChatResponse[]>) => {
+            let chat = action.payload.map<IChat>(chatResponse => {
+                let player = state.players.find(player => player.id === chatResponse.playerId);
+                if (!player)
+                    throw new Error("INVALID PLAYER!");
+                return {
+                    id: chatResponse.playerId,
+                    message: chatResponse.message,
+                    chatTime: chatResponse.chatTime,
+                    isHumanGlobal: chatResponse.isHumanGlobal,
+                    isZombieGlobal: chatResponse.isZombieGlobal,
+                    player: player as IPlayer,
+                };
+            });
             return {
                 ...state,
-                sendingMessage: action.payload,
+                chat,
             }
         },
-        setGame: (state, action: PayloadAction<IGameDetailed>) => {
+        addChatMsg: (state, action: PayloadAction<IChat>) => ({
+            ...state,
+            chat: [...state.chat, action.payload],
+        }),
+        updatePlayerState: (state, action: PayloadAction<IPlayer>) => {
+            let players = state.players.map(player => {
+                if(player.id === action.payload.id){
+                    return action.payload
+                }
+                return player
+            })
+
             return {
-                isLoaded: true,
-                sendingMessage: false,
-                error: undefined,
-                game: action.payload,
-            };
+                ...state,
+                players
+            }
+
         }
     },
 });
 
 
-export const { setGameError, setGame, setSendingMessage } = gameSlice.actions;
+export const { setGame, setChat, addChatMsg , updatePlayerState} = gameSlice.actions;
 
 export default gameSlice.reducer;
