@@ -1,7 +1,9 @@
 import { PayloadAction } from "@reduxjs/toolkit";
+import { API_URL } from "../../constants/enviroment";
 import { IPlayer } from "../../models/IPlayer";
 import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE } from "../../store/middleware/requestMiddleware";
 import { updatePlayerState } from "../../store/slices/gameSlice";
+import getAuthHeaders from "./setAuthHeaders";
 
 interface IParams {
     gameId: number
@@ -9,17 +11,16 @@ interface IParams {
 }
 
 export async function PutPlayerType({ gameId, newUser }: IParams): Promise<IPlayer> {
+    const headers = await getAuthHeaders();
     let body = {
         "id": newUser.id,
         "isHuman": newUser.isHuman,
         "biteCode": newUser.biteCode,
         "isPatientZero": newUser.isPatientZero
     }
-    const response: any = await fetch("https://localhost:7072/game/" + gameId + "/Players/" + newUser.id, {
+    const response: any = await fetch( API_URL + "/game/" + gameId + "/Players/" + newUser.id, {
         method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers,
         body: JSON.stringify(body)
     })
     if (!response.ok) {
