@@ -10,7 +10,7 @@ import { IGameResponse } from "./getGames";
 
 export interface PostGameRequest {
     name: string,
-    // description: string,
+    description: string,
 }
 
 interface IParams {
@@ -20,7 +20,7 @@ interface IParams {
 async function postGames({gameInfo}: IParams): Promise<IGame>{
     let body: PostGameRequest = {
         name: gameInfo.name,
-        // description: gameInfo.description,
+        description: gameInfo.description,
     };
 
     let response = await fetch(`http://localhost:5072/game`, {
@@ -36,18 +36,19 @@ async function postGames({gameInfo}: IParams): Promise<IGame>{
     return {
         id: createdGame.id,
         name: createdGame.name,
-        description: "",
+        description: createdGame.description,
         state: "register",
     }
 };
 
 
-export const PostGameAction: (gameInfo: PostGameRequest) => PayloadAction<RequestPayload<IParams, IGame>> = (gameInfo: PostGameRequest) => ({
+export const PostGameAction: (gameInfo: PostGameRequest, sideEffect: ()=> void) => PayloadAction<RequestPayload<IParams, IGame>> = (gameInfo: PostGameRequest, sideEffect: ()=> void) => ({
         type: REQUEST_ACTION_TYPE,
         payload: {
             cbDispatch: addGame,
             params: {gameInfo},
             request: postGames,
             requestName: RequestsEnum.PostGame,
+            sideEffect,
         },
     });

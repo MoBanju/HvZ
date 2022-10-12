@@ -38,6 +38,7 @@ function AdminModal({ show, setShow, players, game }: { show: boolean, setShow: 
             newPlayer.isPatientZero = true
         }
         dispatch(PutPlayerTypeAction(game.id, newPlayer))
+        
 
         return null
     }
