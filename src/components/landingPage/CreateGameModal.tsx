@@ -14,19 +14,19 @@ interface IProps {
 }
 
 function CreateGameModal({show, setShow}: IProps) {
-    const hide = () => {setShow(false); }
+    const hide = () => {setShow(false); console.log("LALALAL")}
     const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PostGame)
     
-    const [game, setGame] = useState<PostGameRequest>({name: ""});
+    const [game, setGame] = useState<PostGameRequest>({name: "", description: ""});
     const dispatch = useAppDispatch();
 
     const submitGame = () => {  
-        const postGameAction = PostGameAction(game)
+        const postGameAction = PostGameAction(game, () => {hide()})
         dispatch(postGameAction)
       };
 
     return (
-    <Modal show={show} onEscapeKeyDown={hide} modal={hide} onHide={hide} id="myModal">
+    <Modal show={show} onEscapeKeyDown={hide} onHide={hide} id="myModal">
         <Modal.Header closeButton>
             <Modal.Title>Create a new game</Modal.Title>
         </Modal.Header>
@@ -41,7 +41,7 @@ function CreateGameModal({show, setShow}: IProps) {
                 />
             </InputGroup>
             <InputGroup className="mt-4">
-                <InputGroup.Text onChange={(e: React.FormEvent<HTMLInputElement>) => {}}>Description</InputGroup.Text>
+                <InputGroup.Text onChange={(e: React.FormEvent<HTMLInputElement>) => {setGame({...game, description: e.currentTarget.value})}}>Description</InputGroup.Text>
                 <Form.Control 
                 as="textarea" 
                 aria-label="Description" 

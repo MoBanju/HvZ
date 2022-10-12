@@ -12,7 +12,7 @@ import getAuthHeaders from "./setAuthHeaders";
 
 export interface PostGameRequest {
     name: string,
-    // description: string,
+    description: string,
 }
 
 interface IParams {
@@ -22,7 +22,7 @@ interface IParams {
 async function postGames({gameInfo}: IParams): Promise<IGame>{
     let body: PostGameRequest = {
         name: gameInfo.name,
-        // description: gameInfo.description,
+        description: gameInfo.description,
     };
     const headers = await getAuthHeaders();
 
@@ -37,18 +37,19 @@ async function postGames({gameInfo}: IParams): Promise<IGame>{
     return {
         id: createdGame.id,
         name: createdGame.name,
-        description: "",
+        description: createdGame.description,
         state: "Register",
     }
 };
 
 
-export const PostGameAction: (gameInfo: PostGameRequest) => PayloadAction<RequestPayload<IParams, IGame>> = (gameInfo: PostGameRequest) => ({
+export const PostGameAction: (gameInfo: PostGameRequest, sideEffect: ()=> void) => PayloadAction<RequestPayload<IParams, IGame>> = (gameInfo: PostGameRequest, sideEffect: ()=> void) => ({
         type: REQUEST_ACTION_TYPE,
         payload: {
             cbDispatch: addGame,
             params: {gameInfo},
             request: postGames,
             requestName: RequestsEnum.PostGame,
+            sideEffect,
         },
     });

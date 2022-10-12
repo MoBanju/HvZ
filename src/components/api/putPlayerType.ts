@@ -1,8 +1,8 @@
 import { PayloadAction } from "@reduxjs/toolkit";
-import { API_URL } from "../../constants/enviroment";
 import { IPlayer } from "../../models/IPlayer";
 import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE } from "../../store/middleware/requestMiddleware";
 import { updatePlayerState } from "../../store/slices/gameSlice";
+import { API_URL } from "../../constants/enviroment";
 import getAuthHeaders from "./setAuthHeaders";
 
 interface IParams {

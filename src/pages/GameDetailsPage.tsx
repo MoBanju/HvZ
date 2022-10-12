@@ -39,7 +39,8 @@ function GameDetailsPage() {
 
     return (
     <Container className="background-game p-sm-4" fluid>
-        <NavLink to="/" className="btn-delete mb-4 btn btn-lg"><MdBackspace/></NavLink>
+        <NavLink to={"/"} className="btn-delete mb-4 btn btn-lg"><MdBackspace/></NavLink>
+        {keycloak.authenticated && <span>Logged in as: {keycloak.tokenParsed?.preferred_username} </span>}
         <div className="mt-3 mb-5">
            <ProgressBar gamestate={game.state} />
         </div>
