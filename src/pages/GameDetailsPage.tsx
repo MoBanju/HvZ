@@ -60,7 +60,7 @@ function GameDetailsPage() {
         <div>
             <button className="btn btn-dark mt-3 mb-3" onClick={() => {setShow(true)}}>Admin-table</button>
             <div>
-                <AdminModal show={show} setShow={setShow} players={players}/>
+                <AdminModal show={show} setShow={setShow} players={players} game={game}/>
             </div>
         </div>
         }

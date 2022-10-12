@@ -12,6 +12,7 @@ export enum RequestsEnum {
     GetChatByGameId,
     PostChatMessage,
     PostGame,
+    PutPlayerType,
 }
 
 export interface RequestPayload<P, T> {
