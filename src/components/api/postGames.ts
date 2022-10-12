@@ -1,4 +1,5 @@
 import { PayloadAction } from "@reduxjs/toolkit";
+import { API_URL } from "../../constants/enviroment";
 import { IChat } from "../../models/IChat";
 import { IGame } from "../../models/IGame";
 import { IGameState } from "../../models/IGameState";
@@ -7,6 +8,7 @@ import { addChatMsg } from "../../store/slices/gameSlice";
 import { addGame } from "../../store/slices/gamesSlice";
 import { IChatResponse } from "./getChatByGameId";
 import { IGameResponse } from "./getGames";
+import getAuthHeaders from "./setAuthHeaders";
 
 export interface PostGameRequest {
     name: string,
@@ -22,12 +24,11 @@ async function postGames({gameInfo}: IParams): Promise<IGame>{
         name: gameInfo.name,
         description: gameInfo.description,
     };
+    const headers = await getAuthHeaders();
 
-    let response = await fetch(`http://localhost:5072/game`, {
+    let response = await fetch(`${API_URL}/game`, {
         method: "POST",
-        headers: {
-            'Content-type': 'application/json',
-        },
+        headers,
         body: JSON.stringify(body),
     });
     if(!response.ok)
@@ -37,7 +38,7 @@ async function postGames({gameInfo}: IParams): Promise<IGame>{
         id: createdGame.id,
         name: createdGame.name,
         description: createdGame.description,
-        state: "register",
+        state: "Register",
     }
 };
 

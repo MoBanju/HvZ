@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Container, Nav } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { NavLink, useParams } from "react-router-dom";
 import BiteCode from "../components/gameDetailsPage/BiteCode";
 import Chat from "../components/gameDetailsPage/Chat";
@@ -12,9 +12,9 @@ import "./GameDetailsPage.css";
 import {MdBackspace} from "react-icons/md"
 import AdminModal from "../components/gameDetailsPage/AdminModal";
 import keycloak from "../keycloak"
-import { GetGameByIdAction } from "../components/api/getGameById";
 import { namedRequestInProgAndError } from "../store/slices/requestSlice";
 import { RequestsEnum } from "../store/middleware/requestMiddleware";
+import { GetGameAndPlayersByGameIdAction } from "../components/api/getGameAndPlayersByGameId";
 
 
 
@@ -23,10 +23,10 @@ function GameDetailsPage() {
     const routeParam = useParams()["id"]
     const dispatch = useAppDispatch()
     useEffect(()=>{
-        dispatch(GetGameByIdAction(Number(routeParam)))
+        dispatch(GetGameAndPlayersByGameIdAction(Number(routeParam)))
     }, [])
     const {game, currentPlayer, players} = useAppSelector(state => state.game)
-    const [requestInProgress, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.GetGameById);
+    const [requestInProgress, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.GetGameAndPlayerByGameId);
     const isAdmin = keycloak.realmAccess?.roles.includes("ADMIN")
 
     if(error){

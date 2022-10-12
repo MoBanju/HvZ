@@ -1,6 +1,8 @@
 import { PayloadAction } from "@reduxjs/toolkit";
+import { API_URL } from "../../constants/enviroment";
 import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE } from "../../store/middleware/requestMiddleware";
 import { setChat } from "../../store/slices/gameSlice";
+import getAuthHeaders from "./setAuthHeaders";
 
 export interface IChatResponse {
     id: number,
@@ -16,7 +18,10 @@ interface IParams {
 }
 
 async function GetChatByGameId({gameId}: IParams): Promise<IChatResponse[]> {
-    let response = await fetch(`http://localhost:5072/game/${gameId}/chat`);
+    const headers = await getAuthHeaders();
+    let response = await fetch(`${API_URL}/game/${gameId}/chat`, {
+        headers,
+    });
     if(!response.ok)
         throw new Error(response.statusText);
     let chatResponse = await response.json() as IChatResponse[];
