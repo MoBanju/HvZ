@@ -20,13 +20,13 @@ export interface RequestPayload<P, T> {
     cbDispatch: ActionCreatorWithPayload<T, string>;
     params: P,
     request: ({}: P) => Promise<T>;
-
+    sideEffect?: () => void;
 }
 
 const requestMiddleware: Middleware<{}, RootState> = storeApi => next => (action: PayloadAction<RequestPayload<any, any>>) => {
     if(action.type === REQUEST_ACTION_TYPE)
     {
-        const { requestName, params, cbDispatch, request} = action.payload;
+        const { requestName, params, cbDispatch, request, sideEffect} = action.payload;
         // Set the request as in progress / is-loading
         storeApi.dispatch(RequestStarted(requestName));
         // Iniate the request
@@ -36,6 +36,8 @@ const requestMiddleware: Middleware<{}, RootState> = storeApi => next => (action
             storeApi.dispatch(cbDispatch(data));
             // Update the request to complete / is-not-loading
             storeApi.dispatch(RequestFinished(requestName));
+            if(sideEffect)
+                sideEffect();
         })
         .catch((error) => {
             // Update the request to failed

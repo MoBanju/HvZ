@@ -48,12 +48,13 @@ async function postChatMessage({gameId, chatMsg}: IParams): Promise<IChat>{
 };
 
 
-export const PostChatMessageAction: (gameId: number, chatMsg: IChat) => PayloadAction<RequestPayload<IParams, IChat>> = (gameId: number, chatMsg: IChat) => ({
+export const PostChatMessageAction: (gameId: number, chatMsg: IChat, sideEffect: () => void) => PayloadAction<RequestPayload<IParams, IChat>> = (gameId: number, chatMsg: IChat, sideEffect: () => void) => ({
         type: REQUEST_ACTION_TYPE,
         payload: {
             cbDispatch: addChatMsg,
             params: {gameId, chatMsg},
             request: postChatMessage,
             requestName: RequestsEnum.PostChatMessage,
+            sideEffect,
         },
     });

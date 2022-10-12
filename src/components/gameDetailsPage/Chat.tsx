@@ -16,6 +16,11 @@ enum ChatState {
   ZOMBIE,
 }
 
+const FETCH_CHAT_INTERVAL = 5000;
+
+var TIMER: NodeJS.Timer;
+
+
 function Chat({gameId, currentPlayer}: { gameId: number, currentPlayer: IPlayer | undefined}) {
   
   
@@ -23,26 +28,43 @@ function Chat({gameId, currentPlayer}: { gameId: number, currentPlayer: IPlayer 
   const [chatMessage, setChatMessage] = useState("");
   const dispatch = useAppDispatch();
   const chatmessages = useAppSelector(state => state.game.chat);
-  const [isLoading, error]= namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PostChatMessage);
+  const [isLoadingPost, errorPost] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PostChatMessage);
+  const [isLoadingGet, errorGet] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.GetChatByGameId);
   const [isCollapseOpen, setCollapse] = React.useState(false)
+
+  const chatMsgContainerRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
-    dispatch(GetChatByGameIdAction(gameId));
+    return () => {clearInterval(TIMER);};
   }, [])
   
+  const fetchChat = () => {
+    dispatch(GetChatByGameIdAction(gameId));
+  }
   
-  if(error)
-    return <p>{error.message}</p>
+  
+  if(errorPost)
+  return <p>{errorPost.message}</p>
   
   if(!currentPlayer)
   return null;
-
+  
   const isHuman = currentPlayer.isHuman;
   const isZombie = !isHuman;
   
-
+  
   const initCollapse = () => {
-    return setCollapse(!isCollapseOpen)
+    if(!TIMER)
+      fetchChat();
+
+    if(!isCollapseOpen) {
+      TIMER = setInterval(fetchChat, FETCH_CHAT_INTERVAL);
+      scrollToBottomOfChat();
+    }
+    else
+      clearInterval(TIMER);
+
+    setCollapse(!isCollapseOpen)
   }
 
   const filterChat = (chatMessage: IChat) => {
@@ -57,6 +79,10 @@ function Chat({gameId, currentPlayer}: { gameId: number, currentPlayer: IPlayer 
         return false;
     }
   };
+
+  const scrollToBottomOfChat = () => {
+    chatMsgContainerRef.current?.scrollIntoView({behavior: "smooth"});
+  }
 
   const sendMessage = () => {
     let isHumanGlobal: boolean, isZombieGlobal: boolean;
@@ -86,7 +112,7 @@ function Chat({gameId, currentPlayer}: { gameId: number, currentPlayer: IPlayer 
       player: currentPlayer,
     };
 
-    const postMessageAction = PostChatMessageAction(gameId, msg)
+    const postMessageAction = PostChatMessageAction(gameId, msg, scrollToBottomOfChat);
     
     dispatch(postMessageAction)
     setChatMessage("");
@@ -124,7 +150,7 @@ function Chat({gameId, currentPlayer}: { gameId: number, currentPlayer: IPlayer 
       <Collapse in={isCollapseOpen}>
         <div className="chat-min">
 
-        <Container className="scroll m-1 d-flex flex-column" >
+        <Container className="scroll m-1 d-flex flex-column">
           {chatmessages
             .filter(filterChat)
             .map((chat, i) =>
@@ -136,6 +162,10 @@ function Chat({gameId, currentPlayer}: { gameId: number, currentPlayer: IPlayer 
                   ({chat.player.user.firstName}) {chat.message}
                 </p>
               )}
+              <div ref={chatMsgContainerRef} />
+              <p>!</p>
+              <p>!</p>
+              <div />
         </Container>
         <Container className="bottom-0 mb-2 mw">
           <InputGroup>
@@ -149,7 +179,7 @@ function Chat({gameId, currentPlayer}: { gameId: number, currentPlayer: IPlayer 
               aria-label="Message"
               aria-describedby="message"
               value={chatMessage}
-              disabled={isLoading}
+              disabled={isLoadingPost}
               onKeyPress={(e) => {if(e.charCode === 13) sendMessage()}}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {setChatMessage(e.target.value);}}
             />
@@ -158,10 +188,10 @@ function Chat({gameId, currentPlayer}: { gameId: number, currentPlayer: IPlayer 
               className="input-group-text"
               style={{maxWidth: "95%"}}
               onClick={sendMessage}
-              disabled={isLoading}
+              disabled={isLoadingPost}
               >
                 {
-                  isLoading ? <Spinner animation="border" size={"sm"} /> : <AiOutlineArrowRight color="#1976D2" size={16} />
+                  isLoadingPost ? <Spinner animation="border" size={"sm"} /> : <AiOutlineArrowRight color="#1976D2" size={16} />
                 }
               </Button>
           </InputGroup>
