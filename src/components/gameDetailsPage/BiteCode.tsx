@@ -5,7 +5,7 @@ import { IGameState } from "../../models/IGameState";
 function BiteCode({player, gamestate}:{player: IPlayer | undefined, gamestate: keyof IGameState}) {
   if(!player)
     return null;
-  if (gamestate === 'inprogress'){
+  if (gamestate === 'Progress'){
     return (
       <>
       {!player.isHuman && <div>
