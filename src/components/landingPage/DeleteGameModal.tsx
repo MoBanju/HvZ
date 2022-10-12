@@ -1,9 +1,8 @@
 import { ChangeEvent, Dispatch, useState } from "react";
-import { Button, Form, FormControl, InputGroup, Modal, Spinner } from "react-bootstrap";
+import { Button, FormControl, InputGroup, Modal, Spinner } from "react-bootstrap";
 import { IGame } from "../../models/IGame";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { RequestsEnum } from "../../store/middleware/requestMiddleware";
-import { setGame } from "../../store/slices/gameSlice";
 import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
 import { DeleteGameByIdAction } from "../api/deleteGameById";
 
@@ -22,7 +21,7 @@ function DeleteGameModal({ game, show, setShow }: IProps) {
     const hide = () => {setShow(false)};
 
     const handleSubmit = () => {
-        dispatch(DeleteGameByIdAction(game.id));
+        dispatch(DeleteGameByIdAction(game.id, hide));
     };
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {

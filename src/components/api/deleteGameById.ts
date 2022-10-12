@@ -20,7 +20,7 @@ async function deleteGameById({ id }: IParams) {
     return id;
 }
 
-export function DeleteGameByIdAction(id: number): PayloadAction<RequestPayload<IParams, number>> {
+export function DeleteGameByIdAction(id: number, sideEffect: () => void): PayloadAction<RequestPayload<IParams, number>> {
     return {
         type: REQUEST_ACTION_TYPE,
         payload: {
@@ -28,6 +28,7 @@ export function DeleteGameByIdAction(id: number): PayloadAction<RequestPayload<I
             params: { id },
             request: deleteGameById,
             requestName: RequestsEnum.DeleteGameById,
+            sideEffect,
         },
     }
 };
