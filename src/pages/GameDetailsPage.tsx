@@ -46,11 +46,11 @@ function GameDetailsPage() {
            <ProgressBar gamestate={game.state} />
         </div>
         <div>
-            <GameStateIndicator gamestate={game.state}/>
+            <GameStateIndicator gamestate={game.state} player={currentPlayer}/>
             <GameDescription title={game.name} description={game.description} />
         </div>
         <div>
-            <JoinGameBtn gamestate={game.state}/>
+            <JoinGameBtn gameId={game.id}/>
         </div>
         <div>
             <BiteCode player={currentPlayer} gamestate={game.state}/>

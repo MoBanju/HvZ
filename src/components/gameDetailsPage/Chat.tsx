@@ -24,7 +24,7 @@ var TIMER: NodeJS.Timer;
 
 
 function Chat({gameId, currentPlayer}: { gameId: number, currentPlayer: IPlayer | undefined}) {
-  
+
   
   const [chatState, setChatState] = useState<ChatState>(ChatState.GLOBAL);
   const [chatMessage, setChatMessage] = useState("");
@@ -134,7 +134,6 @@ function Chat({gameId, currentPlayer}: { gameId: number, currentPlayer: IPlayer 
     dispatch(postMessageAction)
     setChatMessage("");
   };
-
 
 
   return (

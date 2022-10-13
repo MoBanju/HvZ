@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IChatResponse } from "../../components/api/getChatByGameId";
+import keycloak from "../../keycloak";
 import { IChat } from "../../models/IChat";
 import { IGame } from "../../models/IGame";
 import { IPlayer } from "../../models/IPlayer";
@@ -24,12 +25,11 @@ const gameSlice = createSlice({
     initialState: initialState,
     reducers: {
         setGame: (state, action: PayloadAction<{ game: IGame, players: IPlayer[] }>) => {
-            console.log(action.payload.players)
+            const currPlayer = action.payload.players.find(player => player.user.keyCloakId === keycloak.tokenParsed?.sub)
             return {
                 ...state,
                 ...action.payload,
-                // TODO: Temp fix, current player is always first player in list.
-                currentPlayer: action.payload.players[0],
+                currentPlayer: currPlayer,
             };
         },
         setChat: (state, action: PayloadAction<IChatResponse[]>) => {
@@ -68,11 +68,19 @@ const gameSlice = createSlice({
                 players
             }
 
+        },
+        addPlayer: (state, action: PayloadAction<IPlayer>) => {
+            const currPlayer = action.payload.user.keyCloakId === keycloak.tokenParsed?.sub ? action.payload : undefined;
+            return {
+                ...state,
+                currentPlayer: currPlayer,
+                players: [...state.players!, action.payload],
+            }
         }
     },
 });
 
 
-export const { setGame, setChat, addChatMsg , updatePlayerState} = gameSlice.actions;
+export const { setGame, setChat, addChatMsg , updatePlayerState, addPlayer} = gameSlice.actions;
 
 export default gameSlice.reducer;

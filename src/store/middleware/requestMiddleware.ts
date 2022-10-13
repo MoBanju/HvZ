@@ -12,6 +12,7 @@ export enum RequestsEnum {
     GetChatByGameId,
     PostChatMessage,
     PostGame,
+    postPlayerInGame,
     PutPlayerType,
 }
 
