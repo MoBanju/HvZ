@@ -129,10 +129,11 @@ function Chat({gameId, currentPlayer}: { gameId: number, currentPlayer: IPlayer 
       player: currentPlayer,
     };
 
-    const postMessageAction = PostChatMessageAction(gameId, msg, scrollToBottomOfChat);
-    
-    dispatch(postMessageAction)
-    setChatMessage("");
+    if(msg.message.trim().length !== 0){
+      const postMessageAction = PostChatMessageAction(gameId, msg, scrollToBottomOfChat);
+      dispatch(postMessageAction)
+      setChatMessage("");
+    }
   };
 
 
