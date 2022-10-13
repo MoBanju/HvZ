@@ -13,7 +13,7 @@ function AdminModal({ show, setShow, players, game }: { show: boolean, setShow: 
     const dispatch = useAppDispatch();
     const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PutPlayerType);
 
-
+    
     const afterClick = (e: any) => {
 
         let selectedPlayer = players.find(player => player.id === Number(e.target.id))!
