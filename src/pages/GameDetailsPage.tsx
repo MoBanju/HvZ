@@ -15,6 +15,7 @@ import keycloak from "../keycloak"
 import { namedRequestInProgAndError } from "../store/slices/requestSlice";
 import { RequestsEnum } from "../store/middleware/requestMiddleware";
 import { GetGameAndPlayersByGameIdAction } from "../components/api/getGameAndPlayersByGameId";
+import StartGameBtn from "../components/gameDetailsPage/StartGameBtn";
 
 
 
@@ -62,6 +63,9 @@ function GameDetailsPage() {
             <button className="btn btn-dark mt-3 mb-3" onClick={() => {setShow(true)}}>Admin-table</button>
             <div>
                 <AdminModal show={show} setShow={setShow} players={players} game={game}/>
+            </div>
+            <div>
+                <StartGameBtn/>
             </div>
         </div>
         }

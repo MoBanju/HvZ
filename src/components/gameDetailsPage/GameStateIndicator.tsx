@@ -2,7 +2,7 @@ import { IGameState } from '../../models/IGameState'
 import {BsCheckLg} from "react-icons/bs"
 
 function GameStateIndicator({gamestate}: {gamestate: keyof IGameState}) {
-  if(gamestate === "Register"){
+  if(gamestate === "Registration"){
     return (
       <div>Joined <BsCheckLg color='green' size={20}/></div>
     )
