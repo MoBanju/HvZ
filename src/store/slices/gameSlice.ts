@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IChatResponse } from "../../components/api/getChatByGameId";
+import StartGameBtn from "../../components/gameDetailsPage/StartGameBtn";
 import keycloak from "../../keycloak";
 import { IChat } from "../../models/IChat";
 import { IGame } from "../../models/IGame";
@@ -76,11 +77,19 @@ const gameSlice = createSlice({
                 currentPlayer: currPlayer,
                 players: [...state.players!, action.payload],
             }
-        }
+        },
+        deletePlayer: (state, action: PayloadAction<number>) => {
+            const currPlayer = state.currentPlayer?.id === action.payload ? undefined : state.currentPlayer;
+            return{
+                ...state,
+                currentPlayer: currPlayer,
+                players: state.players.filter(item => item.id !== action.payload),
+            }
+        },
     },
 });
 
 
-export const { setGame, setChat, addChatMsg , updatePlayerState, addPlayer} = gameSlice.actions;
+export const { setGame, setChat, addChatMsg , updatePlayerState, addPlayer, deletePlayer} = gameSlice.actions;
 
 export default gameSlice.reducer;
