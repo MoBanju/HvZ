@@ -11,9 +11,11 @@ function LandingPage() {
     return (
         <>
     <Container className="justify-content-center align-items-center background d-flex" fluid>
+        <div className="position-absolute top-0 start-0 m-3">
+                {keycloak.authenticated && <span>Logged in as: {keycloak.tokenParsed?.preferred_username} </span>}
+                {isAdmin && <span> <MdAdminPanelSettings size={30}/> Admin</span>}
+        </div>
         <Row> 
-        {keycloak.authenticated && <span>Logged in as: {keycloak.tokenParsed?.preferred_username} </span>}
-        {isAdmin && <span> <MdAdminPanelSettings size={30}/> Admin</span>}
             <Col className="m-auto"> 
                 <div className="card m-5 mx-auto">
                     <div className="card-text">
