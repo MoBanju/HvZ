@@ -6,18 +6,21 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { RequestsEnum } from "../../store/middleware/requestMiddleware";
 import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
 import { PutPlayerTypeAction } from "../api/putPlayerType";
+import {CgTrash} from "react-icons/cg";
+import { DeletePlayerByIdAction } from "../api/deletePlayerById";
 
 
 function AdminModal({ show, setShow, players, game }: { show: boolean, setShow: Dispatch<React.SetStateAction<boolean>>, players: IPlayer[], game: IGame }) {
     const hide = () => { setShow(false) };
     const dispatch = useAppDispatch();
     const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PutPlayerType);
-
     
+    const handleSubmit = (playerid: number) => {
+        dispatch(DeletePlayerByIdAction(game.id, playerid));
+    };
+
     const afterClick = (e: any) => {
-
         let selectedPlayer = players.find(player => player.id === Number(e.target.id))!
-
         let newPlayer: IPlayer = {
             id: Number(e.target.id),
             isHuman: selectedPlayer.isHuman,
@@ -56,6 +59,7 @@ function AdminModal({ show, setShow, players, game }: { show: boolean, setShow: 
                         <tr className="fs-5">
                             <th className="pb-3">Player</th>
                             <th className="ps-3 pb-3">Role</th>
+                            <th className="pb-3"> </th>
                         </tr>
                         <tr>
                             <td className="fw-bold">{players.map((check, i) => <p key={i}>{check.id} {check.user.firstName}</p>)}</td>
@@ -83,6 +87,9 @@ function AdminModal({ show, setShow, players, game }: { show: boolean, setShow: 
                                         </select>
                                     }</p>)) : <Spinner animation="border" size={"sm"} />}
                             </td>
+                            <td>
+                                {players.map((x, i)=> <p><button className="btn-delete" key={i} onClick={()=>handleSubmit(x.id)}><CgTrash className="bosspann" size={30}/></button></p>)}
+                            </td>                 
                         </tr>
                     </tbody>
                 </table>

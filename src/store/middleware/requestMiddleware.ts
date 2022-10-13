@@ -15,6 +15,7 @@ export enum RequestsEnum {
     PostKill,
     postPlayerInGame,
     PutPlayerType,
+    DeletePlayerById,
 }
 
 export interface RequestPayload<P, T> {
