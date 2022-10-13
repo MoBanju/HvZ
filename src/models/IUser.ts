@@ -1,5 +1,5 @@
 export interface IUser {
-    id: number,
+    keyCloakId: string,
     firstName: string,
     lastName: string,
 }

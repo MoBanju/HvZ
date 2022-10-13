@@ -12,7 +12,7 @@ interface IProps {
 }
 
 function CreateGameModal({show, setShow}: IProps) {
-    const hide = () => {setShow(false); console.log("LALALAL")}
+    const hide = () => {setShow(false);}
     const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PostGame)
 
     const nameInputRef = useRef() as MutableRefObject<HTMLInputElement>;
