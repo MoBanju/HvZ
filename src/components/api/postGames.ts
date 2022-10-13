@@ -38,7 +38,7 @@ async function postGames({gameInfo}: IParams): Promise<IGame>{
         id: createdGame.id,
         name: createdGame.name,
         description: createdGame.description,
-        state: "Register",
+        state: "Registration",
     }
 };
 

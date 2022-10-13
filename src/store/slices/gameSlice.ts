@@ -18,11 +18,13 @@ const initialState: initialeState = {
     chat: [],
 }
 
+
 const gameSlice = createSlice({
     name: 'game',
     initialState: initialState,
     reducers: {
         setGame: (state, action: PayloadAction<{ game: IGame, players: IPlayer[] }>) => {
+            console.log(action.payload.players)
             return {
                 ...state,
                 ...action.payload,
