@@ -16,6 +16,7 @@ function GamesTableItem({ game }: { game: IGame }) {
         const isLoggedIn = keycloak.authenticated;
         const [ isAlertVisible, setIsAlertVisible ] = React.useState(false);
         const [ showDeleteModal, setShowDeleteModal ] = useState(false);
+        
 
 
         const deleteGame = () => {
