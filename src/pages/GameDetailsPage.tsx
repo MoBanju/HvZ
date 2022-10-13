@@ -55,7 +55,7 @@ function GameDetailsPage() {
             <JoinGameBtn gameId={game.id}/>
         </div>
         <div>
-            <BiteCode player={currentPlayer} gamestate={game.state}/>
+            <BiteCode />
         </div>
         <div className="d-flex">
             <Chat currentPlayer={currentPlayer} gameId={game.id}/>
