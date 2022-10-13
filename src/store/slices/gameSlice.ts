@@ -33,18 +33,18 @@ const gameSlice = createSlice({
             };
         },
         setChat: (state, action: PayloadAction<IChatResponse[]>) => {
-            let chat = action.payload.map<IChat>(chatResponse => {
-                let player = state.players.find(player => player.id === chatResponse.playerId);
-                if (!player)
-                    throw new Error("INVALID PLAYER!");
-                return {
-                    id: chatResponse.playerId,
-                    message: chatResponse.message,
-                    chatTime: chatResponse.chatTime,
-                    isHumanGlobal: chatResponse.isHumanGlobal,
-                    isZombieGlobal: chatResponse.isZombieGlobal,
-                    player: player as IPlayer,
-                };
+            let chat = action.payload
+                .filter(chatResponse => state.players.some(player => player.id === chatResponse.playerId))
+                .map<IChat>(chatResponse => {
+                    let player = state.players.find(player => player.id === chatResponse.playerId) as IPlayer;
+                    return {
+                        id: chatResponse.playerId,
+                        message: chatResponse.message,
+                        chatTime: chatResponse.chatTime,
+                        isHumanGlobal: chatResponse.isHumanGlobal,
+                        isZombieGlobal: chatResponse.isZombieGlobal,
+                        player: player,
+                    };
             });
             return {
                 ...state,
