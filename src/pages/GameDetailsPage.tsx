@@ -9,7 +9,7 @@ import JoinGameBtn from "../components/gameDetailsPage/JoinGameBtn";
 import ProgressBar from "../components/gameDetailsPage/ProgressBar";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import "./GameDetailsPage.css";
-import {MdBackspace} from "react-icons/md"
+import {MdAdminPanelSettings, MdBackspace, MdOutlineAdminPanelSettings} from "react-icons/md"
 import AdminModal from "../components/gameDetailsPage/AdminModal";
 import keycloak from "../keycloak"
 import { namedRequestInProgAndError } from "../store/slices/requestSlice";
@@ -38,10 +38,12 @@ function GameDetailsPage() {
         return <div className="background-game"><div className="loader"></div></div>
     }
 
+
     return (
     <Container className="background-game p-sm-4" fluid>
         <NavLink to={"/"} className="btn-delete mb-4 btn btn-lg"><MdBackspace/></NavLink>
-        {keycloak.authenticated && <span>Logged in as: {keycloak.tokenParsed?.preferred_username} </span>}
+        {keycloak.authenticated && <span>Logged in as: {keycloak.tokenParsed?.preferred_username}</span>}
+        {isAdmin && <span> <MdAdminPanelSettings size={30}/> Admin</span>}
         <div className="mt-3 mb-5">
            <ProgressBar gamestate={game.state} />
         </div>

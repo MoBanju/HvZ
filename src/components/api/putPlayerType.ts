@@ -27,8 +27,6 @@ export async function PutPlayerType({ gameId, newUser }: IParams): Promise<IPlay
         throw new Error("Couldnt update usertype")
     }
     return newUser;
-
-
 }
 
 export const PutPlayerTypeAction: (gameId: number, newUser: IPlayer) => PayloadAction<RequestPayload<IParams, IPlayer>> = (gameId: number, newUser: IPlayer) => ({
