@@ -2,7 +2,7 @@ import { IGameState } from "../../models/IGameState"
 
 function ProgressBar({gamestate}: {gamestate: keyof IGameState}) {
   let width = 0
-  if(gamestate === "Register") width = 33
+  if(gamestate === "Registration") width = 33
   else if(gamestate === "Progress") width = 66
   else if(gamestate === "Complete") width = 100
 

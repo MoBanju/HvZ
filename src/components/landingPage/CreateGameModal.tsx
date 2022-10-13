@@ -1,11 +1,9 @@
-import React, { Dispatch, useState } from "react";
+import React, { Dispatch, MutableRefObject, useRef, useState } from "react";
 import { Button, Form, FormControl, InputGroup, Modal, Spinner} from "react-bootstrap";
-import { IGame } from "../../models/IGame";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { RequestsEnum } from "../../store/middleware/requestMiddleware";
-import { addGame } from "../../store/slices/gamesSlice";
 import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
-import { PostGameAction, PostGameRequest} from "../api/postGames";
+import { PostGameAction, PostGameRequest } from "../api/postGames";
 
 
 interface IProps {
@@ -14,13 +12,19 @@ interface IProps {
 }
 
 function CreateGameModal({show, setShow}: IProps) {
-    const hide = () => {setShow(false); console.log("LALALAL")}
+    const hide = () => {setShow(false);}
     const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PostGame)
+
+    const nameInputRef = useRef() as MutableRefObject<HTMLInputElement>;
+    const descriptionInputRef = useRef() as MutableRefObject<HTMLTextAreaElement>;
     
-    const [game, setGame] = useState<PostGameRequest>({name: "", description: ""});
     const dispatch = useAppDispatch();
 
     const submitGame = () => {  
+        const game: PostGameRequest = {
+            name: nameInputRef.current.value,
+            description: descriptionInputRef.current.value,
+        }
         const postGameAction = PostGameAction(game, () => {hide()})
         dispatch(postGameAction)
       };
@@ -37,15 +41,17 @@ function CreateGameModal({show, setShow}: IProps) {
                 placeholder="HvZ summer camp 2025"
                 aria-label="Title"
                 aria-describedby="title"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setGame({...game, name: e.currentTarget.value})}}
+                ref={nameInputRef}
                 />
             </InputGroup>
             <InputGroup className="mt-4">
-                <InputGroup.Text onChange={(e: React.FormEvent<HTMLInputElement>) => {setGame({...game, description: e.currentTarget.value})}}>Description</InputGroup.Text>
+                <InputGroup.Text >Description</InputGroup.Text>
                 <Form.Control 
                 as="textarea" 
                 aria-label="Description" 
-                placeholder="Come join your friends and family as we play a game of human vs zombies during summer camp 2025"/>
+                placeholder="Come join your friends and family as we play a game of human vs zombies during summer camp 2025"
+                ref={descriptionInputRef}
+            />
             </InputGroup>
         </Modal.Body>
         <Modal.Footer>
