@@ -88,7 +88,7 @@ function AdminModal({ show, setShow, players, game }: { show: boolean, setShow: 
                                     }</p>)) : <Spinner animation="border" size={"sm"} />}
                             </td>
                             <td>
-                                {players.map((x, i)=> <p><button className="btn-delete" key={i} onClick={()=>handleSubmit(x.id)}><CgTrash className="bosspann" size={30}/></button></p>)}
+                                {players.map((x, i)=> <p key={i}><button className="btn-delete"  onClick={()=>handleSubmit(x.id)}><CgTrash className="bosspann" size={30}/></button></p>)}
                             </td>                 
                         </tr>
                     </tbody>
