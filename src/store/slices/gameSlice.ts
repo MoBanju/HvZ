@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { stat } from "fs";
 import { IChatResponse } from "../../components/api/getChatByGameId";
-import StartGameBtn from "../../components/gameDetailsPage/StartGameBtn";
 import keycloak from "../../keycloak";
 import { IChat } from "../../models/IChat";
 import { IGame } from "../../models/IGame";
@@ -86,10 +86,34 @@ const gameSlice = createSlice({
                 players: state.players.filter(item => item.id !== action.payload),
             }
         },
+        updateGameState: (state, action: PayloadAction<IGame>) => {   
+            
+            //HELP 
+            /*
+            let newGame: IGame = {
+                "id": action.payload.id,
+                "name": action.payload.name,
+                "description": action.payload.description,
+                "state": "Progress"
+            }
+            console.log("old game ", action.payload)
+            let myState = {
+                ...state, 
+                game: action.payload
+            }
+            
+            console.log("new game ", newGame)
+            */
+           let game = action.payload
+            return {
+                ...state,
+                game
+            }
+        },
     },
 });
 
 
-export const { setGame, setChat, addChatMsg , updatePlayerState, addPlayer, deletePlayer} = gameSlice.actions;
+export const { setGame, setChat, addChatMsg , updatePlayerState, addPlayer, deletePlayer, updateGameState} = gameSlice.actions;
 
 export default gameSlice.reducer;
