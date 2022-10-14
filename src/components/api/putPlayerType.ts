@@ -18,13 +18,13 @@ export async function PutPlayerType({ gameId, newUser }: IParams): Promise<IPlay
         "biteCode": newUser.biteCode,
         "isPatientZero": newUser.isPatientZero
     }
-    const response: any = await fetch( API_URL + "/game/" + gameId + "/Players/" + newUser.id, {
+    const response= await fetch( API_URL + "/game/" + gameId + "/Player/" + newUser.id, {
         method: "PUT",
         headers,
         body: JSON.stringify(body)
     })
     if (!response.ok) {
-        throw new Error("Couldnt update usertype")
+        throw new Error(await response.text() || response.statusText)
     }
     return newUser;
 }

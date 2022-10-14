@@ -9,11 +9,11 @@ interface IParams {
 
 async function getPlayerById({ gameId, playerId }: IParams ) {
     const headers = await getAuthHeaders();
-    let response = await fetch(`${API_URL}/game/${gameId}/Players/${playerId}`, {
+    let response = await fetch(`${API_URL}/game/${gameId}/Player/${playerId}`, {
         headers
     });
     if(!response.ok)
-        throw new Error(response.statusText);
+        throw new Error(await response.text() || response.statusText);
     let data = await response.json() as IPlayer;
     return data;
 }
