@@ -42,6 +42,14 @@ function GamesTable() {
             </tr>)
         
         return games
+            .slice()
+            .sort((a, b) => {
+                if(b.state === 'Registration')
+                    return 1
+                if(b.state === 'Progress' && a.state === 'Complete')
+                    return 1
+                return -1
+            })
             .slice((sideTall - 1) * GAMES_PER_PAGE, sideTall * GAMES_PER_PAGE)
             .map(game => <GamesTableItem game={game} key={game.id} />)
     }
@@ -64,7 +72,7 @@ function GamesTable() {
                 </tbody>
             </table>
             <div className="d-flex flex-row-reverse">
-                {isAdmin && <button className="btn-create mt-4 float-right"> <AiFillPlusSquare className="bosspann" size={45} onClick={() => { setShowCreateModal(true) }} /> </button>}
+                {isAdmin && <button className="btn-create mt-4 float-right"> <AiFillPlusSquare className="bosspann" size={50} onClick={() => { setShowCreateModal(true) }} /> </button>}
             </div>
             <div className="text-center">
                 <h1 className="text-sz">
