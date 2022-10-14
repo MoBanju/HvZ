@@ -5,12 +5,17 @@ import { RequestsEnum } from "../../store/middleware/requestMiddleware";
 import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
 import { PostGameAction, PostGameRequest } from "../api/postGames";
 
-import {MapContainer, SVGOverlay, TileLayer} from 'react-leaflet'
+import { MapContainer, SVGOverlay, TileLayer } from 'react-leaflet'
+import { LatLngBoundsExpression, LatLngExpression } from 'leaflet'
+import { MAP_TILER_API_KEY } from "../../constants/enviroment";
 
 const bounds = [
-  [51.49, -0.08],
-  [51.5, -0.06],
-]
+    [51.49, -0.08],
+    [51.5, -0.06],
+] as LatLngBoundsExpression;
+const position = [58.9843363, 5.6923114] as LatLngExpression;
+
+
 
 interface IProps {
     show: boolean,
@@ -25,6 +30,7 @@ function CreateGameModal({ show, setShow }: IProps) {
     const descriptionInputRef = useRef() as MutableRefObject<HTMLTextAreaElement>;
 
     const dispatch = useAppDispatch();
+    navigator.geolocation.getCurrentPosition((a) => {console.log(a)})
 
     const submitGame = () => {
         const game: PostGameRequest = {
@@ -59,18 +65,15 @@ function CreateGameModal({ show, setShow }: IProps) {
                         ref={descriptionInputRef}
                     />
                 </InputGroup>
-                <MapContainer zoom={13} scrollWheelZoom={false}>
+                <MapContainer center={position} zoom={13} scrollWheelZoom={false} style={{height: "500px"}}>
                     <TileLayer
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        url={"https://api.maptiler.com/maps/basic-v2-dark/{z}/{x}/{y}.png?key=" + MAP_TILER_API_KEY + "#{z}/{x}/{y}"}
+                        tileSize={512}
+                        zoomOffset={-1}
+                        minZoom={1}
+                        attribution={"\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e"}
+                        crossOrigin={true}
                     />
-                    <SVGOverlay attributes={{ stroke: 'red' }} bounds={bounds}>
-                        <rect x="0" y="0" width="100%" height="100%" fill="blue" />
-                        <circle r="5" cx="10" cy="10" fill="red" />
-                        <text x="50%" y="50%" stroke="white">
-                            text
-                        </text>
-                    </SVGOverlay>
                 </MapContainer>,
             </Modal.Body>
             <Modal.Footer>
