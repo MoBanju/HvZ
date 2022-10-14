@@ -1,4 +1,5 @@
 import { PayloadAction } from "@reduxjs/toolkit";
+import { API_URL } from "../../constants/enviroment";
 import keycloak from "../../keycloak";
 import { IPlayer } from "../../models/IPlayer"
 import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE } from "../../store/middleware/requestMiddleware";
@@ -30,7 +31,7 @@ async function postPlayerInGame({gameId, player}: IParams): Promise<IPlayer>{
         user: player.user
     };
 
-    let response = await fetch(`http://localhost:5072/game/${gameId}/Player`, {
+    let response = await fetch(`${API_URL}/game/${gameId}/Player`, {
         method: "POST",
         headers: 
             await getAuthHeaders()
