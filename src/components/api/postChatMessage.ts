@@ -35,7 +35,7 @@ async function postChatMessage({gameId, chatMsg}: IParams): Promise<IChat>{
         body: JSON.stringify(body),
     });
     if(!response.ok)
-        throw new Error(response.statusText);
+        throw new Error(await response.text() || response.statusText);
     let createdChat = await response.json() as IChatResponse;
     return {
         id: createdChat.id,

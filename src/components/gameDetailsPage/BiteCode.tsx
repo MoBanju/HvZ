@@ -18,9 +18,15 @@ function BiteCode() {
 
   const handleSubmitBiteCode = () => {
     const biteCode = inputBiteCodeRef.current.value;
+    if(biteCode.trim().length === 0)
+      return
     dispatch(PostKillAction(game!.id, currentPlayer!, biteCode, buildsuccessMessage))
+    // Clear the old success message when attemping a new request.
+    setSuccessMessage(undefined);
   }
 
+  // This is a sideeffect to the submit bitecode request.
+  // That means that this functions get run after the request completes with no errors.
   const buildsuccessMessage = () => {
     const victim = players.find(player => player.biteCode === inputBiteCodeRef.current.value);
     if(!victim)

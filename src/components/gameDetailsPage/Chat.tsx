@@ -129,16 +129,17 @@ function Chat({gameId, currentPlayer}: { gameId: number, currentPlayer: IPlayer 
       player: currentPlayer,
     };
 
-    const postMessageAction = PostChatMessageAction(gameId, msg, scrollToBottomOfChat);
-    
-    dispatch(postMessageAction)
-    setChatMessage("");
+    if(msg.message.trim().length !== 0){
+      const postMessageAction = PostChatMessageAction(gameId, msg, scrollToBottomOfChat);
+      dispatch(postMessageAction)
+      setChatMessage("");
+    }
   };
 
 
   return (
     <div>
-    <Container className="bg-dark position-absolute bottom-0 end-0 w-25 p-0 rounded mw-2"style={{marginRight: "15px"}}>
+    <Container className="bg-dark position-absolute bottom-0 end-0 w-25 p-0 rounded mw-2 resp-chat"style={{marginRight: "15px"}}>
         <div id="collapsePanel col-md-auto">
         <ul className="nav nav-tabs rounded-1" role="tablist">
         <Button onClick={initCollapse} className="p-2 text-primary btn-delete" style={{width: "10%"}}>

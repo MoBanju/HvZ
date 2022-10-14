@@ -42,16 +42,21 @@ function GamesTable() {
             </tr>)
         
         return games
+            .slice()
+            .sort((a, b) => {
+                if(b.state === 'Registration')
+                    return 1
+                if(b.state === 'Progress' && a.state === 'Complete')
+                    return 1
+                return -1
+            })
             .slice((sideTall - 1) * GAMES_PER_PAGE, sideTall * GAMES_PER_PAGE)
             .map(game => <GamesTableItem game={game} key={game.id} />)
     }
 
     return (
         <div className="table-responsive">
-            { isLoggedIn &&
-                <p className=" fw-bold justify-content-center d-flex">To access the game details, click on a game title!</p>
-            }
-            <table className="table display-5 table-hover" >
+            <table className="table display-5 table-hover table-resp">
                 <thead>
                     <tr>
                         <th scope="col">Title</th>
@@ -70,7 +75,7 @@ function GamesTable() {
                 {isAdmin && <button className="btn-create mt-4 float-right"> <AiFillPlusSquare className="bosspann" size={50} onClick={() => { setShowCreateModal(true) }} /> </button>}
             </div>
             <div className="text-center">
-                <h1>
+                <h1 className="text-sz">
                     {sideTall > 1 && <button onClick={() => setsideTall(sideTall - 1)} className="btn-delete">{'<'}</button>}
                     {sideTall}
                     {sideTall * GAMES_PER_PAGE < games.length && <button onClick={() => setsideTall(sideTall + 1)} className="btn-delete">{'>'}</button>}</h1>

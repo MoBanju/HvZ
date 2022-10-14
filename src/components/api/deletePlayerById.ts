@@ -13,12 +13,12 @@ interface IParams {
 
 async function deletePlayerById({ gameid, playerid }: IParams) {
     const headers = await getAuthHeaders();
-    const response = await fetch(API_URL + "/game/" + gameid + "/Players/" + playerid, {
+    const response = await fetch(API_URL + "/game/" + gameid + "/Player/" + playerid, {
         headers,
         method: "DELETE",
     });
     if(!response.ok)
-        throw new Error(response.statusText);
+        throw new Error(await response.text() || response.statusText);
     return playerid;
 }
 
