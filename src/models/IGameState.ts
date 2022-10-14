@@ -1,5 +1,5 @@
 export interface IGameState {
-    register: undefined,
-    inprogress: undefined,
-    complete: undefined,
+    Registration: undefined,
+    Progress: undefined,
+    Complete: undefined,
 }

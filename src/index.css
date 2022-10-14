@@ -1,5 +1,9 @@
 @import url("/node_modules/bootstrap/dist/css/bootstrap.css");
 
+:root {
+  --bs-success-rgb: 92, 184, 92;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -7,6 +11,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
 }
 
 code {
@@ -17,8 +22,10 @@ code {
 .modal {
   --bs-modal-bg: rgba(82, 82, 82, 0.7);
   --bs-modal-header-border-color: black;
-  --bs-modal-footer-border-color: black
+  --bs-modal-footer-border-color: black;
+  --bs-modal-color: rgb(189, 189, 189);
 }
+
 
 .table {
   --bs-table-hover-bg: rgba(240, 87, 87, 0.08);
@@ -29,7 +36,7 @@ code {
 }
 
 .input-group-text {
-  background-color: #5cb85c;
+  background-color: #93a5a6;
 }
 
 .form-control {

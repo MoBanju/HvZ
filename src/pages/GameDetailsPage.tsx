@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import BiteCode from "../components/gameDetailsPage/BiteCode";
 import Chat from "../components/gameDetailsPage/Chat";
 import GameDescription from "../components/gameDetailsPage/GameDescription";
@@ -9,12 +9,13 @@ import JoinGameBtn from "../components/gameDetailsPage/JoinGameBtn";
 import ProgressBar from "../components/gameDetailsPage/ProgressBar";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import "./GameDetailsPage.css";
-import {MdBackspace} from "react-icons/md"
+import {MdAdminPanelSettings, MdBackspace, MdOutlineAdminPanelSettings} from "react-icons/md"
 import AdminModal from "../components/gameDetailsPage/AdminModal";
 import keycloak from "../keycloak"
-import { GetGameByIdAction } from "../components/api/getGameById";
 import { namedRequestInProgAndError } from "../store/slices/requestSlice";
 import { RequestsEnum } from "../store/middleware/requestMiddleware";
+import { GetGameAndPlayersByGameIdAction } from "../components/api/getGameAndPlayersByGameId";
+import StartGameBtn from "../components/gameDetailsPage/StartGameBtn";
 
 
 
@@ -23,10 +24,10 @@ function GameDetailsPage() {
     const routeParam = useParams()["id"]
     const dispatch = useAppDispatch()
     useEffect(()=>{
-        dispatch(GetGameByIdAction(Number(routeParam)))
+        dispatch(GetGameAndPlayersByGameIdAction(Number(routeParam)))
     }, [])
     const {game, currentPlayer, players} = useAppSelector(state => state.game)
-    const [requestInProgress, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.GetGameById);
+    const [requestInProgress, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.GetGameAndPlayerByGameId);
     const isAdmin = keycloak.realmAccess?.roles.includes("ADMIN")
 
     if(error){
@@ -37,21 +38,26 @@ function GameDetailsPage() {
         return <div className="background-game"><div className="loader"></div></div>
     }
 
+
     return (
     <Container className="background-game p-sm-4" fluid>
-        <a href="/" className="btn-delete mb-4 btn btn-lg"><MdBackspace/></a>
+        <NavLink to={"/"} className="btn-delete mb-4 btn btn-lg"><MdBackspace/></NavLink>
+        <div className="position-absolute top-0 end-0 m-3">
+            {keycloak.authenticated && <span>Logged in as: {keycloak.tokenParsed?.preferred_username}</span>}
+            {isAdmin && <span> <MdAdminPanelSettings size={30}/> Admin</span>}
+        </div>
         <div className="mt-3 mb-5">
            <ProgressBar gamestate={game.state} />
         </div>
         <div>
-            <GameStateIndicator gamestate={game.state}/>
+            <GameStateIndicator gamestate={game.state} player={currentPlayer}/>
             <GameDescription title={game.name} description={game.description} />
         </div>
         <div>
-            <JoinGameBtn gamestate={game.state}/>
+            <JoinGameBtn gameId={game.id}/>
         </div>
         <div>
-            <BiteCode player={currentPlayer} gamestate={game.state}/>
+            <BiteCode />
         </div>
         <div className="d-flex">
             <Chat currentPlayer={currentPlayer} gameId={game.id}/>
@@ -60,7 +66,10 @@ function GameDetailsPage() {
         <div>
             <button className="btn btn-dark mt-3 mb-3" onClick={() => {setShow(true)}}>Admin-table</button>
             <div>
-                <AdminModal show={show} setShow={setShow} players={players}/>
+                <AdminModal show={show} setShow={setShow} players={players} game={game}/>
+            </div>
+            <div>
+                <StartGameBtn/>
             </div>
         </div>
         }

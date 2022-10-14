@@ -1,55 +1,70 @@
 import React, { Dispatch, useState, useEffect } from "react";
-import { Modal } from "react-bootstrap";
+import { Modal, Spinner } from "react-bootstrap";
+import { IGame } from "../../models/IGame";
 import { IPlayer } from "../../models/IPlayer";
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { RequestsEnum } from "../../store/middleware/requestMiddleware";
+import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
+import { PutPlayerTypeAction } from "../api/putPlayerType";
+import {CgTrash} from "react-icons/cg";
+import { DeletePlayerByIdAction } from "../api/deletePlayerById";
 
 
-function AdminModal({ show, setShow, players }: { show: boolean, setShow: Dispatch<React.SetStateAction<boolean>>, players: IPlayer[] }) {
-    const hide = () => { setShow(false); setLoading(false) };
-    const [loading, setLoading] = useState(false);
-    const [roles, setRoles] = useState<IPlayer[]>(players);
+function AdminModal({ show, setShow, players, game }: { show: boolean, setShow: Dispatch<React.SetStateAction<boolean>>, players: IPlayer[], game: IGame }) {
+    const hide = () => { setShow(false) };
     const dispatch = useAppDispatch();
+    const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PutPlayerType);
+    
+    const handleSubmit = (playerid: number) => {
+        dispatch(DeletePlayerByIdAction(game.id, playerid));
+    };
 
     const afterClick = (e: any) => {
-
-        let newArr: IPlayer[] = []
-        for (let i = 0; i < roles.length; i++) {
-            if (roles[i].id.toString() !== e.target.id) {
-                newArr.push(roles[i])
-            }
-            else {
-                const bitC = roles[i].biteCode
-                if (e.target.value === "human") {
-                    newArr.push({ id: Number(e.target.id), isHuman: true, isPatientZero: false, biteCode: bitC, user: roles[i].user })
-                }
-                else if (e.target.value === "zombie") {
-                    newArr.push({ id: Number(e.target.id), isHuman: false, isPatientZero: false, biteCode: bitC, user: roles[i].user })
-                }
-                else if (e.target.value === "patientZero") {
-                    newArr.push({ id: Number(e.target.id), isHuman: false, isPatientZero: true, biteCode: bitC, user: roles[i].user })
-                }
-            }
-            setRoles(newArr)
+        let selectedPlayer = players.find(player => player.id === Number(e.target.id))!
+        let newPlayer: IPlayer = {
+            id: Number(e.target.id),
+            isHuman: selectedPlayer.isHuman,
+            isPatientZero: selectedPlayer.isPatientZero,
+            biteCode: selectedPlayer.biteCode,
+            user: selectedPlayer.user,
         }
+        if (e.target.value === "human") {
+            newPlayer.isHuman = true
+            newPlayer.isPatientZero = false
+        }
+        else if (e.target.value === "zombie") {
+            newPlayer.isHuman = false
+            newPlayer.isPatientZero = false
+        }
+        else if (e.target.value === "patientZero") {
+            newPlayer.isHuman = false
+            newPlayer.isPatientZero = true
+        }
+        dispatch(PutPlayerTypeAction(game.id, newPlayer))
+        
 
+        return null
     }
-    useEffect(() => { console.log(roles) }, [roles]) //ONLY TO CONSOLE LOG NEW STATE IN ROLE
+
+
     return (
         <Modal show={show} onEscapeKeyDown={hide} onHide={hide}>
             <Modal.Header closeButton>
                 <Modal.Title>Admintable</Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                {error && <p>{error.message}</p>}
                 <table>
                     <tbody>
                         <tr className="fs-5">
                             <th className="pb-3">Player</th>
                             <th className="ps-3 pb-3">Role</th>
+                            <th className="pb-3"> </th>
                         </tr>
                         <tr>
-                            <td className="fw-bold">{roles.map((check, i) => <p key={i}>{check.id}</p>)}</td>
+                            <td className="fw-bold">{players.map((check, i) => <p key={i}>{check.id} {check.user.firstName}</p>)}</td>
                             <td>
-                                {roles.map((check, i) => <p key={i}>
+                                {!loading ? (players.map((check, i) => <p key={i}>
                                     {check.isHuman &&
                                         <select defaultValue={"human"} name="roles" id={check.id.toString()} className="rounded ms-3" onChange={afterClick}>
                                             <option value="patientZero">Patient zero</option>
@@ -70,8 +85,11 @@ function AdminModal({ show, setShow, players }: { show: boolean, setShow: Dispat
                                             <option value="zombie">Zombie</option>
                                             <option value="human">Human</option>
                                         </select>
-                                    }</p>)}
+                                    }</p>)) : <Spinner animation="border" size={"sm"} />}
                             </td>
+                            <td>
+                                {players.map((x, i)=> <p><button className="btn-delete" key={i} onClick={()=>handleSubmit(x.id)}><CgTrash className="bosspann" size={30}/></button></p>)}
+                            </td>                 
                         </tr>
                     </tbody>
                 </table>
