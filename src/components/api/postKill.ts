@@ -41,7 +41,7 @@ async function postKillRequest({ gameId, killer, biteCode }: IParams): Promise<I
         body: JSON.stringify(body)
     })
     if (!response.ok) {
-        throw new Error(await response.text())
+        throw new Error(await response.text() || response.statusText)
     }
     const data = await response.json() as IPostKillResponse;
     const player = await getPlayerById({gameId, playerId: data.playerKills[0].playerId})

@@ -31,7 +31,7 @@ async function postPlayerInGame({gameId, player}: IParams): Promise<IPlayer>{
         user: player.user
     };
 
-    let response = await fetch(`http://localhost:5072/game/${gameId}/Players`, {
+    let response = await fetch(`http://localhost:5072/game/${gameId}/Player`, {
         method: "POST",
         headers: 
             await getAuthHeaders()
@@ -39,7 +39,7 @@ async function postPlayerInGame({gameId, player}: IParams): Promise<IPlayer>{
         body: JSON.stringify(body),
     });
     if(!response.ok)
-        throw new Error(response.statusText);
+        throw new Error(await response.text() || response.statusText);
     let createdPlayer = await response.json() as IPlayerResponse;
     console.log(createdPlayer)
     if(keycloak.tokenParsed?.sub){

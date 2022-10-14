@@ -32,7 +32,7 @@ async function postGames({gameInfo}: IParams): Promise<IGame>{
         body: JSON.stringify(body),
     });
     if(!response.ok)
-        throw new Error(response.statusText);
+        throw new Error(await response.text() || response.statusText);
     let createdGame = await response.json() as IGameResponse;
     return {
         id: createdGame.id,

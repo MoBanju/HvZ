@@ -21,7 +21,7 @@ async function getGames({}: IParams) {
         headers,
     });
     if(!response.ok)
-        throw new Error(response.statusText);
+        throw new Error(await response.text() || response.statusText);
     let data = await response.json() as IGameResponse[];
     return data;
 }
