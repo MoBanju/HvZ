@@ -63,7 +63,7 @@
   }
 
   /* // Small devices (landscape phones, 576px and up) */
-@media (max-width: 414px) { 
+@media (max-width: 540px ){ 
     .login-btn{
         min-width: 100px;
         padding: 2px;
@@ -86,7 +86,8 @@
 
 }
 /* // Medium devices (tablets, 768px and up) */
-@media (min-width: 768px) {  }
+@media (min-width: 1024px) {  
+}
 /* // Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {  }
 /* // X-Large devices (large desktops, 1200px and up) */

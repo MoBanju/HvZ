@@ -6,7 +6,7 @@ function GameDescription({title, description}: {title: string, description: stri
         <h5 className="">{description}</h5>
     </div>
 
-    <div className="float-end me-5 desc m">
+    <div className="float-end me-5 desc resp">
       <h3>Rules</h3>
       <h5>
         <ul>
