@@ -3,7 +3,6 @@ import keycloak from "../../keycloak";
 import { IPlayer } from "../../models/IPlayer"
 import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE } from "../../store/middleware/requestMiddleware";
 import { addPlayer } from "../../store/slices/gameSlice";
-import { IGameResponse } from "./getGames";
 import { IPlayerResponse } from "./getPlayersByGameId";
 import getAuthHeaders from "./setAuthHeaders";
 

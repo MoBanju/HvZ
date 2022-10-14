@@ -5,6 +5,7 @@ export interface IGame {
     name: string,
     description: string,
     state: keyof IGameState,
+    playerCount: number,
 }
 
 
