@@ -42,6 +42,14 @@ function GamesTable() {
             </tr>)
         
         return games
+            .slice()
+            .sort((a, b) => {
+                if(b.state === 'Registration')
+                    return 1
+                if(b.state === 'Progress' && a.state === 'Complete')
+                    return 1
+                return -1
+            })
             .slice((sideTall - 1) * GAMES_PER_PAGE, sideTall * GAMES_PER_PAGE)
             .map(game => <GamesTableItem game={game} key={game.id} />)
     }
