@@ -1,5 +1,5 @@
 import { API_URL } from "../../constants/enviroment";
-import { IGameResponse } from "./getGames";
+import { IGame } from "../../models/IGame";
 import getAuthHeaders from "./setAuthHeaders";
 
 interface IParams {
@@ -13,7 +13,7 @@ async function GetGameById({id}: IParams) {
     });
     if(!response.ok)
         throw new Error(await response.text() || response.statusText);
-    let data = await response.json() as IGameResponse;
+    let data = await response.json() as IGame;
     return data;
 }
 

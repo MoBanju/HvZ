@@ -1,13 +1,18 @@
 import React, { Dispatch, useState } from "react";
+import { Spinner } from "react-bootstrap";
 import keycloak from "../../keycloak";
 import { IGameState } from '../../models/IGameState'
 import { IPlayer } from '../../models/IPlayer'
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { RequestsEnum } from "../../store/middleware/requestMiddleware";
+import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
 import { PostPlayerInGameAction } from '../api/postPlayerInGame';
 
 
 function JoinGameBtn({ gameId }: { gameId: number }) {
   const { game, currentPlayer, players } = useAppSelector(state => state.game)
+  const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.postPlayerInGame)
+
   const dispatch = useAppDispatch();
 
   
@@ -36,9 +41,12 @@ function JoinGameBtn({ gameId }: { gameId: number }) {
     )
   }
   
-  return (
-    <button className='btn btn-dark btn-lg rounded-3' onClick={joinGame}>Join</button>
-  )
+  return (<>
+    {!loading ? (<button className='btn btn-dark btn-lg rounded-3' onClick={joinGame}>Join</button>)
+    : <Spinner animation="border" size={"sm" } /> }
+    </>)
 }
+
+
 export default JoinGameBtn
 
