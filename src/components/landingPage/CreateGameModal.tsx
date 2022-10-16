@@ -5,15 +5,15 @@ import { RequestsEnum } from "../../store/middleware/requestMiddleware";
 import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
 import { PostGameAction, PostGameRequest } from "../api/postGames";
 
-import { MapContainer, SVGOverlay, TileLayer } from 'react-leaflet'
-import { LatLngBoundsExpression, LatLngExpression } from 'leaflet'
-import { MAP_TILER_API_KEY } from "../../constants/enviroment";
+import { MapContainer } from 'react-leaflet'
+import { LatLngBoundsLiteral, LatLngExpression, LatLngTuple } from 'leaflet'
+import DraggableMap from "./DraggableMap";
 
+const startPosition = [58.9843363, 5.6923114] as LatLngTuple;
 const bounds = [
     [51.49, -0.08],
     [51.5, -0.06],
-] as LatLngBoundsExpression;
-const position = [58.9843363, 5.6923114] as LatLngExpression;
+];
 
 
 
@@ -25,12 +25,17 @@ interface IProps {
 function CreateGameModal({ show, setShow }: IProps) {
     const hide = () => { setShow(false); }
     const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PostGame)
+    const [position, setPosition] = useState<LatLngTuple>(startPosition);
+    const [boxBounds, setBoxBounds] = useState<LatLngBoundsLiteral>([
+        [58.9843363 - 0.01, 5.6923114 - 0.01],
+        [58.9843363 + 0.01, 5.6923114 + 0.01]
+    ]);
+
 
     const nameInputRef = useRef() as MutableRefObject<HTMLInputElement>;
     const descriptionInputRef = useRef() as MutableRefObject<HTMLTextAreaElement>;
 
     const dispatch = useAppDispatch();
-    navigator.geolocation.getCurrentPosition((a) => {console.log(a)})
 
     const submitGame = () => {
         const game: PostGameRequest = {
@@ -66,15 +71,8 @@ function CreateGameModal({ show, setShow }: IProps) {
                     />
                 </InputGroup>
                 <MapContainer center={position} zoom={13} scrollWheelZoom={false} style={{height: "500px"}}>
-                    <TileLayer
-                        url={"https://api.maptiler.com/maps/basic-v2-dark/{z}/{x}/{y}.png?key=" + MAP_TILER_API_KEY + "#{z}/{x}/{y}"}
-                        tileSize={512}
-                        zoomOffset={-1}
-                        minZoom={1}
-                        attribution={"\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e"}
-                        crossOrigin={true}
-                    />
-                </MapContainer>,
+                    <DraggableMap boxBounds={boxBounds} setBoxBounds={setBoxBounds}/>
+                </MapContainer>
             </Modal.Body>
             <Modal.Footer>
                 {error &&
