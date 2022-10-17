@@ -36,7 +36,7 @@ function DeleteGameModal({ game, show, setShow }: IProps) {
             </Modal.Header>
             <Modal.Body>
                 <p>Are you sure you want to delete {game.name}</p>
-                <p>Fill in the name inorder to delete the game</p>
+                <p>Fill in the name in order to delete the game</p>
                 <InputGroup>
                     <InputGroup.Text id="title" >Title:</InputGroup.Text>
                     <FormControl
