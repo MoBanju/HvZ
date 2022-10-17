@@ -12,7 +12,7 @@ interface IParams {
 export async function PutGameById({game}: IParams): Promise<IGame> {
 
     const headers = await getAuthHeaders();
-    let body = {
+    const body = {
         "id": game.id,
         "name": game.name,
         "description": game.description,
@@ -27,7 +27,7 @@ export async function PutGameById({game}: IParams): Promise<IGame> {
         throw new Error("Couldnt update gameSTATE")
     }
 
-    let newGame:IGame = {
+    const newGame:IGame = {
         id: game.id,
         name: game.name,
         description: game.description,
