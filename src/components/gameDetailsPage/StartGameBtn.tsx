@@ -14,10 +14,10 @@ function StartGameBtn() {
   const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PutGameById)
   const isAdmin = keycloak.realmAccess?.roles.includes("ADMIN")
   const dispatch = useAppDispatch();
-
+  
   const startGame: any = () => {
     if (game) {
-      dispatch(PutGameByIdAction(game))
+      dispatch(PutGameByIdAction(game, game.state))
     }
   }
 
