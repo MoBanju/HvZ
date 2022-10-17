@@ -35,7 +35,6 @@ export async function PutGameById({game}: IParams): Promise<IGame> {
         state: "Progress"
     }
     //game.state = "Progress" - hvorfor funker ikke dette(?)
-
     return newGame
 }
 
