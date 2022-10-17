@@ -16,6 +16,7 @@ import { namedRequestInProgAndError } from "../store/slices/requestSlice";
 import { RequestsEnum } from "../store/middleware/requestMiddleware";
 import { GetGameAndPlayersByGameIdAction } from "../components/api/getGameAndPlayersByGameId";
 import StartGameBtn from "../components/gameDetailsPage/StartGameBtn";
+import Map from "../components/gameDetailsPage/Map";
 
 
 
@@ -52,6 +53,9 @@ function GameDetailsPage() {
         <div>
             <GameStateIndicator gamestate={game.state} player={currentPlayer}/>
             <GameDescription title={game.name} description={game.description} />
+        </div>
+        <div style={{height: "175px"}}>
+            <Map gameid={game.id}/>
         </div>
         <div>
             <JoinGameBtn gameId={game.id}/>
