@@ -14,24 +14,11 @@ function StartGameBtn() {
   const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PutGameById)
   const isAdmin = keycloak.realmAccess?.roles.includes("ADMIN")
   const dispatch = useAppDispatch();
-
+  
   const startGame: any = () => {
-  if(game){
-    dispatch(PutGameByIdAction(game))
-  }
-
-//Litt prøving og feiling æææ
-/*     if (game) {
-      let newGame:IGame = {
-        id: game.id,
-        name: game.name,
-        description: game.description,
-        state: "Progress"
-      }
-      dispatch(PutGameByIdAction(newGame))
+    if (game) {
+      dispatch(PutGameByIdAction(game, game.state))
     }
-    console.log(game?.name, game?.state)
-   */
   }
 
 
@@ -45,7 +32,7 @@ function StartGameBtn() {
 
   else {
     return (
-      <><div>Game started!!</div></>
+      <><div></div></>
     )
   }
 }
