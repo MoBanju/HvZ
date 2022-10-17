@@ -26,7 +26,17 @@ export async function PutGameById({game}: IParams): Promise<IGame> {
     if (!response.ok) {
         throw new Error("Couldnt update gameSTATE")
     }
-    return game
+
+    let newGame:IGame = {
+        id: game.id,
+        name: game.name,
+        description: game.description,
+        playerCount: game.playerCount,
+        state: "Progress"
+    }
+    //game.state = "Progress" - hvorfor funker ikke dette(?)
+
+    return newGame
 }
 
 
