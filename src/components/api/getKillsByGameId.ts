@@ -1,9 +1,8 @@
 import { API_URL } from "../../constants/enviroment";
-import { IKill } from "../../models/IKill";
 import getAuthHeaders from "./setAuthHeaders";
 
 interface IParams {
-    id: number,
+   id: number,
 }
 
 export interface IKillResponse {

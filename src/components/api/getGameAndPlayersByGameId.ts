@@ -1,12 +1,13 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { IGame } from "../../models/IGame";
-import { IKill } from "../../models/IKill";
 import { IPlayer } from "../../models/IPlayer";
 import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE } from "../../store/middleware/requestMiddleware";
 import { setGamePlayersAndKills } from "../../store/slices/gameSlice";
 import GetGameById from "./getGameById";
 import getKillsByGameId from "./getKillsByGameId";
 import getPlayersByGameId from "./getPlayersByGameId";
+import {IKill} from "../../models/IKill"
+import React from 'react';
 
 interface IParams {
     id: number,
@@ -17,14 +18,14 @@ async function getGamePlayerAndKillsByGameIdRequest({ id }: IParams) {
     let players = await getPlayersByGameId({id});
     let killsResponse = await getKillsByGameId({id})
     let kills = killsResponse
-    .filter(killResponse => {
+    .filter((killResponse: { playerKills: { playerId: number; }[]; }) => {
         if(!players.some(p => p.id === killResponse.playerKills[0].playerId))
             return false;
         if(!players.some(p => p.id === killResponse.playerKills[1].playerId))
             return false;
         return true;
     }) 
-    .map<IKill>((killResponse) => {
+    .map<IKill>((killResponse: { playerKills: { playerId: number; }[]; id: any; description: any; latitude: any; longitude: any; timeDeath: any; }) => {
         let killer = players.find(p => p.id === killResponse.playerKills[0].playerId)!
         let victim = players.find(p => p.id === killResponse.playerKills[1].playerId)!
         return {
@@ -33,7 +34,7 @@ async function getGamePlayerAndKillsByGameIdRequest({ id }: IParams) {
             latitude: killResponse.latitude,
             longitude: killResponse.longitude,
             killer: killer,
-            victirm: victim,
+            victim: victim,
             timeDeath: killResponse.timeDeath,
         }
     });
