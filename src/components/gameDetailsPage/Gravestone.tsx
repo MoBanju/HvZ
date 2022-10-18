@@ -13,15 +13,13 @@ function Gravestone({gameid} : {gameid: number}) {
         popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
     });
     const { kills } = useAppSelector(state => state.game)
-    console.log(kills.map(x => console.log(x)))
-
 
     return  ( 
     <>{
-      kills.filter(x => x.latitude && x.longitude).map((x,i) => (
+      kills.filter((x, i) => x.latitude && x.longitude).map((x,i) => (
         <Marker position={[x.latitude!, x.longitude!]} icon={gravestone}>
           <Popup>
-            <p key={i}> {x.timeDeath} <br /> {x.victim.user.firstName} was killed by {x.killer.user.firstName} </p>
+            <p key={i}> {(x.timeDeath).slice(0,10)} <br /> {(x.timeDeath).slice(11,16)} <br /> {x.victim.user.firstName} was killed by {x.killer.user.firstName}</p>
           </Popup>
         </Marker>
         )
