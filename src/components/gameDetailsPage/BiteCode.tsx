@@ -19,7 +19,7 @@ function BiteCode() {
 
   const handleSubmitBiteCode = () => {
     const biteCode = inputBiteCodeRef.current.value;
-    if(biteCode.trim().length === 0)
+    if (biteCode.trim().length === 0)
       return
 
     dispatch(RequestStarted(RequestsEnum.PostKill));
@@ -58,41 +58,40 @@ function BiteCode() {
   // That means that this functions get run after the request completes with no errors.
   const buildsuccessMessage = () => {
     const victim = players.find(player => player.biteCode === inputBiteCodeRef.current.value);
-    if(!victim)
+    if (!victim)
       return;
-    
+
     setSuccessMessage(`You just turned ${victim.user.firstName} into a ZOMBIE!`);
   }
 
   const buildFeedBackMessage = () => {
-    if(error)
-      return <p style={{fontStyle: "italic"}}>{error.message}</p>
-    if(successMessage) {
-      return <p style={{fontStyle: "italic"}}>{successMessage}</p>
+    if (error)
+      return <p style={{ fontStyle: "italic" }}>{error.message}</p>
+    if (successMessage) {
+      return <p style={{ fontStyle: "italic" }}>{successMessage}</p>
     }
     return null
   }
 
 
-  if (!currentPlayer)
+  if (!currentPlayer || game.state !== 'Progress')
     return null;
-  if (game.state !== 'Progress')
-    return null
-  if (!currentPlayer.isHuman)
-    return (
-      <div>
-        <label className="me-2 fs-2" htmlFor="bitecode-input">Victims bitecode: </label>
-        <input
-          className="rounded mt-3 mb-3 p-2 w-25"
-          type="text" placeholder="Enter bitecode.."
-          name="bitecode-input"
-          ref={inputBiteCodeRef} />
-        <button className="btn-delete" onClick={handleSubmitBiteCode}>{isLoading ? <Spinner animation="border" /> : <IoIosArrowDroprightCircle size={40} />}</button>
-        {buildFeedBackMessage()}
-      </div>)
+
+
+  if (currentPlayer.isHuman)
+    return (<div>
+      <p className="fs-2">Your bitecode: {<span className="bg-black bg rounded p-3 m-2 text-white text-center w-25">{currentPlayer.biteCode}</span>}</p>
+    </div>)
   return (
     <div>
-      <p className="fs-2">Your bitecode: {<span className="bg-black bg rounded p-3 m-2 text-white text-center w-25">{currentPlayer.biteCode}</span>}</p>
+      <label className="me-2 fs-2" htmlFor="bitecode-input">Victims bitecode: </label>
+      <input
+        className="rounded mt-3 mb-3 p-2 w-25"
+        type="text" placeholder="Enter bitecode.."
+        name="bitecode-input"
+        ref={inputBiteCodeRef} />
+      <button className="btn-delete" onClick={handleSubmitBiteCode}>{isLoading ? <Spinner animation="border" /> : <IoIosArrowDroprightCircle size={40} />}</button>
+      {buildFeedBackMessage()}
     </div>)
 
 }
