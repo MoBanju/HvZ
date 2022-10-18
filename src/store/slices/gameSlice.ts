@@ -3,6 +3,7 @@ import { IChatResponse } from "../../components/api/getChatByGameId";
 import keycloak from "../../keycloak";
 import { IChat } from "../../models/IChat";
 import { IGame } from "../../models/IGame";
+import { IKill } from "../../models/IKill";
 import { IPlayer } from "../../models/IPlayer";
 
 interface initialeState {
@@ -10,6 +11,7 @@ interface initialeState {
     currentPlayer: IPlayer | undefined,
     players: IPlayer[],
     chat: IChat[],
+    kills: IKill[],
 }
 
 const initialState: initialeState = {
@@ -17,6 +19,7 @@ const initialState: initialeState = {
     currentPlayer: undefined,
     players: [],
     chat: [],
+    kills: [],
 }
 
 
@@ -24,7 +27,7 @@ const gameSlice = createSlice({
     name: 'game',
     initialState: initialState,
     reducers: {
-        setGame: (state, action: PayloadAction<{ game: IGame, players: IPlayer[] }>) => {
+        setGamePlayersAndKills: (state, action: PayloadAction<{ game: IGame, players: IPlayer[], kills: IKill[] }>) => {
             const currPlayer = action.payload.players.find(player => player.user.keyCloakId === keycloak.tokenParsed?.sub)
             return {
                 ...state,
@@ -97,6 +100,6 @@ const gameSlice = createSlice({
 });
 
 
-export const { setGame, setChat, addChatMsg , updatePlayerState, addPlayer, deletePlayer, updateGameState} = gameSlice.actions;
+export const { setGamePlayersAndKills, setChat, addChatMsg , updatePlayerState, addPlayer, deletePlayer, updateGameState} = gameSlice.actions;
 
 export default gameSlice.reducer;
