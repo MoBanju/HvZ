@@ -1,10 +1,10 @@
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 import { MutableRefObject, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { PostKillAction } from "../api/postKill";
+import { IKillRequest, PostKillAction } from "../api/postKill";
 import { IGame } from "../../models/IGame";
 import { IPlayer } from "../../models/IPlayer";
-import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
+import { namedRequestInProgAndError, RequestStarted } from "../../store/slices/requestSlice";
 import { RequestsEnum } from "../../store/middleware/requestMiddleware";
 import { Spinner } from "react-bootstrap";
 
@@ -20,7 +20,35 @@ function BiteCode() {
     const biteCode = inputBiteCodeRef.current.value;
     if(biteCode.trim().length === 0)
       return
-    dispatch(PostKillAction(game!.id, currentPlayer!, biteCode, buildsuccessMessage))
+
+    dispatch(RequestStarted(RequestsEnum.PostKill));
+    navigator.geolocation.getCurrentPosition(
+      //success getting current users location
+      (location) => {
+        let requset: IKillRequest = {
+          timeDeath: new Date().toJSON(),
+          killerId: currentPlayer!.id,
+          biteCode: biteCode,
+          description: "  ",
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        };
+        const action = PostKillAction(game.id, requset, buildsuccessMessage);
+        dispatch(action);
+      },
+      // error getting current users location
+      () => {
+        let requset: IKillRequest = {
+          timeDeath: new Date().toJSON(),
+          killerId: currentPlayer!.id,
+          biteCode: biteCode,
+          description: "",
+        };
+        const action = PostKillAction(game.id, requset, buildsuccessMessage);
+        dispatch(action);
+
+      },
+    )
     // Clear the old success message when attemping a new request.
     setSuccessMessage(undefined);
   }

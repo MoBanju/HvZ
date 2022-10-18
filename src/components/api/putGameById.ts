@@ -37,7 +37,13 @@ export async function PutGameById({game, state}: IParams): Promise<IGame> {
         name: game.name,
         description: game.description,
         playerCount: game.playerCount,
-        state: "Progress"
+        state: "Progress",
+        ne_lat: game.ne_lat,
+        ne_lng: game.ne_lng,
+        sw_lat: game.sw_lat,
+        sw_lng: game.sw_lng,
+        startTime: game.startTime,
+        endTime: game.endTime,
     }
     if(myPar === 1) newGame.state = "Progress"
     else if(myPar === 2)newGame.state = "Complete"
