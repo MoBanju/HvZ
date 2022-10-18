@@ -48,7 +48,6 @@ function CreateGameModal({ show, setShow }: IProps) {
             startTime: startTimeRef.current!.valueAsDate!.toJSON(),
             endTime: endTimeRef.current!.valueAsDate!.toJSON(),
         }
-        console.log(startTimeRef.current?.value);
         const postGameAction = PostGameAction(game, hide)
         dispatch(postGameAction)
     };

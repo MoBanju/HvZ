@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IGame } from "../../models/IGame";
+import { IKill } from "../../models/IKill";
 
 interface initialeState {
     games: IGame[],

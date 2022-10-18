@@ -22,7 +22,13 @@ export async function PutGameById({game, state}: IParams): Promise<IGame> {
         "id": game.id,
         "name": game.name,
         "description": game.description,
-        "state": myPar
+        "state": myPar,
+        ne_lat: game.ne_lat,
+        ne_lng: game.ne_lng,
+        sw_lat: game.sw_lat,
+        sw_lng: game.sw_lng,
+        startTime: game.startTime,
+        endTime: game.endTime,
     }
     const response: any = await fetch(API_URL + "/game/" + game.id, {
         method: "PUT",
@@ -43,7 +49,7 @@ export async function PutGameById({game, state}: IParams): Promise<IGame> {
         sw_lat: game.sw_lat,
         sw_lng: game.sw_lng,
         startTime: game.startTime,
-        endTime: game.endTime
+        endTime: game.endTime,
     }
     if(myPar === 1) newGame.state = "Progress"
     else if(myPar === 2)newGame.state = "Complete"
