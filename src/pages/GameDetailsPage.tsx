@@ -16,6 +16,7 @@ import { namedRequestInProgAndError } from "../store/slices/requestSlice";
 import { RequestsEnum } from "../store/middleware/requestMiddleware";
 import { GetGameAndPlayersByGameIdAction } from "../components/api/getGameAndPlayersByGameId";
 import StartGameBtn from "../components/gameDetailsPage/StartGameBtn";
+import Map from "../components/gameDetailsPage/Map";
 import EndGameBtn from "../components/gameDetailsPage/EndGameBtn";
 
 
@@ -27,18 +28,18 @@ function GameDetailsPage() {
     useEffect(()=>{
         dispatch(GetGameAndPlayersByGameIdAction(Number(routeParam)))
     }, [])
-    const {game, currentPlayer, players} = useAppSelector(state => state.game)
-    const [requestInProgress, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.GetGameAndPlayerByGameId);
+    const {game, currentPlayer, players, kills} = useAppSelector(state => state.game)
+    const [requestInProgress, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.GetGamePlayerAndKillsByGameId);
     const isAdmin = keycloak.realmAccess?.roles.includes("ADMIN")
-
+    
     if(error){
         return <p>{error.message}</p>
     }
-
+    
     if(requestInProgress || !game){
         return <div className="background-game"><div className="loader"></div></div>
     }
-
+    
 
     return (
     <Container className="background-game p-sm-4" fluid>
@@ -54,11 +55,14 @@ function GameDetailsPage() {
             <GameStateIndicator gamestate={game.state} currentPlayer={currentPlayer} players = {players}/>
             <GameDescription title={game.name} description={game.description} />
         </div>
+        <div style={{marginBottom: "20px", marginTop: "-100px"}}>
+            <Map gameid={game.id}/>
+        </div>
         <div>
             <JoinGameBtn gameId={game.id}/>
         </div>
         <div>
-            <BiteCode />
+            <BiteCode/>
         </div>
         <div className="d-flex">
             <Chat currentPlayer={currentPlayer} gameId={game.id}/>
