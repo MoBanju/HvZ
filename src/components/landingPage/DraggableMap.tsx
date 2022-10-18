@@ -31,6 +31,9 @@ function DraggableMap({ boxBounds, setBoxBounds, setPosition }: IParams) {
     const rectangleRef = useRef<LeafletRectangle>(null)
 
     const dropDragAndResize = (e: LeafletMouseEvent) => {
+        if(drag) {
+            map.flyTo(e.latlng);
+        }
         drag = false;
         resize = false;
         resizeTop = false;
@@ -39,7 +42,7 @@ function DraggableMap({ boxBounds, setBoxBounds, setPosition }: IParams) {
         resizeLeft = false;
         initalMouseDown = undefined;
         initalBoxBounds = undefined;
-        map.dragging.enable();
+        
     };
 
 
@@ -92,8 +95,6 @@ function DraggableMap({ boxBounds, setBoxBounds, setPosition }: IParams) {
         zoomend: () => {
             rectangleRef.current?.redraw();
         },
-        moveend: () => {
-        },
     });
 
 
@@ -108,6 +109,8 @@ function DraggableMap({ boxBounds, setBoxBounds, setPosition }: IParams) {
         }
     }, []);
 
+    map.dragging.disable();
+
     return (<>
         <TileLayer
             url={"https://api.maptiler.com/maps/basic-v2-dark/{z}/{x}/{y}.png?key=" + MAP_TILER_API_KEY + ""}
@@ -116,18 +119,6 @@ function DraggableMap({ boxBounds, setBoxBounds, setPosition }: IParams) {
             zoomOffset={-1}
             attribution={"\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e"}
             crossOrigin={true}
-        />
-        <SVGOverlay
-            bounds={boxBounds}
-            eventHandlers={{
-                drag: () => {}
-            }}
-            
-        >
-        <rect 
-            width={"100%"}    
-            height={"100%"}
-            fill={"tomato"}
         />
 
         <Rectangle
@@ -160,15 +151,10 @@ function DraggableMap({ boxBounds, setBoxBounds, setPosition }: IParams) {
                     }
                     initalMouseDown = [e.latlng.lat, e.latlng.lng];
                     initalBoxBounds = boxBounds;
-                    map.dragging.disable();
                 },
-                load: () => {rectangleRef.current?.bringToFront()},
-                baselayerchange: () => {console.log("CHANGE")}
-    
             }}
             
             />
-        </SVGOverlay>
 
     </>);
 }
