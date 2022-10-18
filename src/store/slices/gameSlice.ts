@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { stat } from "fs";
 import { IChatResponse } from "../../components/api/getChatByGameId";
 import keycloak from "../../keycloak";
 import { IChat } from "../../models/IChat";
@@ -91,22 +90,6 @@ const gameSlice = createSlice({
         },
         updateGameState: (state, action: PayloadAction<IGame>) => {   
             
-            //HELP 
-            /*
-            let newGame: IGame = {
-                "id": action.payload.id,
-                "name": action.payload.name,
-                "description": action.payload.description,
-                "state": "Progress"
-            }
-            console.log("old game ", action.payload)
-            let myState = {
-                ...state, 
-                game: action.payload
-            }
-            
-            console.log("new game ", newGame)
-            */
            let game = action.payload
             return {
                 ...state,

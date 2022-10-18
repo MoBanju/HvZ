@@ -16,6 +16,7 @@ import { namedRequestInProgAndError } from "../store/slices/requestSlice";
 import { RequestsEnum } from "../store/middleware/requestMiddleware";
 import { GetGameAndPlayersByGameIdAction } from "../components/api/getGameAndPlayersByGameId";
 import StartGameBtn from "../components/gameDetailsPage/StartGameBtn";
+import EndGameBtn from "../components/gameDetailsPage/EndGameBtn";
 
 
 
@@ -50,7 +51,7 @@ function GameDetailsPage() {
            <ProgressBar gamestate={game.state} />
         </div>
         <div>
-            <GameStateIndicator gamestate={game.state} player={currentPlayer}/>
+            <GameStateIndicator gamestate={game.state} currentPlayer={currentPlayer} players = {players}/>
             <GameDescription title={game.name} description={game.description} />
         </div>
         <div>
@@ -70,6 +71,9 @@ function GameDetailsPage() {
             </div>
             <div>
                 <StartGameBtn/>
+            </div>
+            <div>
+                <EndGameBtn/>
             </div>
         </div>
         }
