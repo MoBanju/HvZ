@@ -43,15 +43,17 @@ function GameDetailsPage() {
     return (
     <Container className="background-game p-sm-4" fluid>
         <NavLink to={"/"} className="btn-delete mb-4 btn btn-lg"><MdBackspace/></NavLink>
-        <div className="position-absolute top-0 end-0 m-3 log-header">
+        <div className="position-absolute top-0 end-0 m-3 log-header logged-in">
             {keycloak.authenticated && <span>Logged in as: {keycloak.tokenParsed?.preferred_username}</span>}
             {isAdmin && <span> <MdAdminPanelSettings size={30}/> Admin</span>}
         </div>
         <div className="mt-3 mb-5">
            <ProgressBar gamestate={game.state} />
         </div>
+        <div className="mt-3 mb-5">
+        <GameStateIndicator gamestate={game.state} currentPlayer={currentPlayer} players = {players}/>
+        </div>
         <div>
-            <GameStateIndicator gamestate={game.state} currentPlayer={currentPlayer} players = {players}/>
             <GameDescription title={game.name} description={game.description} />
         </div>
         <div>

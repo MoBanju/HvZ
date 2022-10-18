@@ -6,6 +6,12 @@
     overflow-y: auto;
 }
 
+.logged-in{
+    background-color: rgb(232, 219, 174);
+/*     border-style: solid; */
+    padding: 5px;
+}
+
 .card{
     background-color: rgba(82, 82, 82, 0.7);
     align-items: center;
@@ -38,6 +44,10 @@
     background: none;
     margin: 0;
     padding: 0
+}
+
+.btn-delete:hover{
+    color: white;
 }
 
 .alert-container {
