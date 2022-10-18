@@ -16,23 +16,6 @@ function BiteCode() {
   const [successMessage, setSuccessMessage] = useState<string | undefined>(undefined);
   const dispatch = useAppDispatch();
 
-  const PlayersLeft: any = () => {
-    const countHumans = players.filter(player => player.isHuman === true).length
-    if (countHumans === 0) {
-      return "No humans left"
-    }
-    else if (countHumans === 1) {
-      return "1 human left"
-    }
-    let myString = countHumans.toString() + " / " + players.length.toString()
-    return myString + " humans left"
-  }
-const PlayersJoined: any = () => {
-    if (players.length > 1) return " players joined"
-    else return " player joined"
-  }
-
-
 
   const handleSubmitBiteCode = () => {
     const biteCode = inputBiteCodeRef.current.value;
