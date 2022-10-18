@@ -78,7 +78,7 @@ function BiteCode() {
     return null;
   if (game.state !== 'Progress')
     return null
-  if (!currentPlayer.isHuman && PlayersLeft())
+  if (!currentPlayer.isHuman)
     return (
       <div>
         <label className="me-2 fs-2" htmlFor="bitecode-input">Victims bitecode: </label>

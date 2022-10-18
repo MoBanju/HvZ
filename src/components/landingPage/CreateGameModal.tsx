@@ -45,8 +45,8 @@ function CreateGameModal({ show, setShow }: IProps) {
             ne_lng: boxBounds[1][1],
             sw_lat: boxBounds[0][0],
             sw_lng: boxBounds[0][1],
-            startTime: startTimeRef.current!.valueAsDate!.toJSON(),
-            endTime: endTimeRef.current!.valueAsDate!.toJSON(),
+            startTime: startTimeRef.current!.value,
+            endTime: endTimeRef.current!.value,
         }
         const postGameAction = PostGameAction(game, hide)
         dispatch(postGameAction)
