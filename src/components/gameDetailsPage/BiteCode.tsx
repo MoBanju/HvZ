@@ -1,12 +1,16 @@
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 import { MutableRefObject, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { PostKillAction } from "../api/postKill";
+import { IKillRequest, PostKillAction } from "../api/postKill";
 import { IGame } from "../../models/IGame";
 import { IPlayer } from "../../models/IPlayer";
-import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
+import { namedRequestInProgAndError, RequestFinished, RequestStarted } from "../../store/slices/requestSlice";
 import { RequestsEnum } from "../../store/middleware/requestMiddleware";
 import { Spinner } from "react-bootstrap";
+import { LatLngBounds } from "leaflet";
+import InvalidLocationModal from "./InvalidLocationModal";
+
+var biteCodeHolder: () => string
 
 function BiteCode() {
 
@@ -14,15 +18,56 @@ function BiteCode() {
   const { game, currentPlayer, players } = useAppSelector(state => state.game) as { game: IGame, currentPlayer: IPlayer | undefined, players: IPlayer[] }
   const [isLoading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PostKill);
   const [successMessage, setSuccessMessage] = useState<string | undefined>(undefined);
+  const [showModal, setShowModal] = useState(false);
   const dispatch = useAppDispatch();
 
   const handleSubmitBiteCode = () => {
     const biteCode = inputBiteCodeRef.current.value;
     if(biteCode.trim().length === 0)
       return
-    dispatch(PostKillAction(game!.id, currentPlayer!, biteCode, buildsuccessMessage))
+
+    dispatch(RequestStarted(RequestsEnum.PostKill));
+    navigator.geolocation.getCurrentPosition(
+      //success getting current users location
+      (location) => {
+        const gameBounds = new LatLngBounds([game.sw_lat, game.sw_lng], [game.ne_lat, game.ne_lng]);
+        if(!gameBounds.contains([location.coords.latitude, location.coords.longitude])){
+          setShowModal(true);
+          biteCodeHolder = () => biteCode;
+          return
+        }
+        submitWithLocation(biteCode, location);
+      },
+      // error getting current users location
+      () => {
+        submitWithoutLocation(biteCode);
+      },
+    )
     // Clear the old success message when attemping a new request.
     setSuccessMessage(undefined);
+  }
+  const submitWithLocation = (biteCode: string, location: GeolocationPosition) => {
+        let requset: IKillRequest = {
+          timeDeath: new Date().toJSON(),
+          killerId: currentPlayer!.id,
+          biteCode: biteCode,
+          description: "  ",
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        };
+        const action = PostKillAction(game.id, requset, buildsuccessMessage);
+        dispatch(action);
+  }
+  
+  const submitWithoutLocation = (biteCode: string) => {
+        let requset: IKillRequest = {
+          timeDeath: new Date().toJSON(),
+          killerId: currentPlayer!.id,
+          biteCode: biteCode,
+          description: "  ",
+        };
+        const action = PostKillAction(game.id, requset, buildsuccessMessage);
+        dispatch(action);
   }
 
   // This is a sideeffect to the submit bitecode request.
@@ -51,6 +96,7 @@ function BiteCode() {
     return null
   if (!currentPlayer.isHuman)
     return (
+      <>
       <div>
         <label className="me-2 fs-2" htmlFor="bitecode-input">Victims bitecode: </label>
         <input
@@ -60,7 +106,14 @@ function BiteCode() {
           ref={inputBiteCodeRef} />
         <button className="btn-delete" onClick={handleSubmitBiteCode}>{isLoading ? <Spinner animation="border" /> : <IoIosArrowDroprightCircle size={40} />}</button>
         {buildFeedBackMessage()}
-      </div>)
+      </div>
+      <InvalidLocationModal
+        show={showModal}
+        setShow={setShowModal}
+        handleSumbit={() => {submitWithoutLocation(biteCodeHolder()); setShowModal(false);}}
+        handleCancle={() => {dispatch(RequestFinished(RequestsEnum.PostKill))}}
+      />
+      </>)
   return (
     <div>
       <p className="fs-2">Your bitecode: {<span className="bg-black bg rounded p-3 m-2 text-white text-center w-25">{currentPlayer.biteCode}</span>}</p>
