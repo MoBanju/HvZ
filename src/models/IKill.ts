@@ -1,8 +1,11 @@
-// import { IPlayerKills } from "./IPlayerKills";
-import { IPlayerKills } from "./IPlayerKills";
+import { IPlayer } from "./IPlayer";
 
 export interface IKill {
-    id: number,
+    id : number,
     timeDeath: string,
-    playerKills: IPlayerKills,
+    latitude?: number,
+    longitude?: number,
+    description: string,
+    killer: IPlayer,
+    victim: IPlayer,
 }

@@ -11,11 +11,10 @@ import Gravestone from './Gravestone';
 
 function Map({gameid} : {gameid: number}) {
     const { game } = useAppSelector(state => state.game)
-
     return (
-    <MapContainer center={[58.5,6]} zoom={13} scrollWheelZoom={true} style={{
+    <MapContainer center={[game!.ne_lat,game!.sw_lng]} zoom={13} scrollWheelZoom={true} style={{
         height: "500px",
-        width: "700px",
+        width: "600px",
       }}>
 
         <TileLayer
@@ -27,7 +26,7 @@ function Map({gameid} : {gameid: number}) {
             crossOrigin={true}
         />
         { game?.state !== 'Registration' &&
-            <Gravestone></Gravestone>
+            <Gravestone gameid={game!.id}></Gravestone>
         }
     </MapContainer>
     )
