@@ -1,5 +1,5 @@
 import { timeStamp } from 'console';
-import L, { map } from 'leaflet';
+import L, { LatLngTuple, map } from 'leaflet';
 import { SetStateAction, useEffect, useRef, useState } from 'react';
 import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet'
 import { MAP_TILER_API_KEY } from '../../constants/enviroment';
@@ -11,11 +11,12 @@ import Gravestone from './Gravestone';
 
 function Map({gameid} : {gameid: number}) {
     const { game } = useAppSelector(state => state.game)
+    const center = [(game!.ne_lat + game!.sw_lat) / 2, (game!.ne_lng + game!.sw_lng) / 2] as LatLngTuple
     return (
-    <MapContainer center={[game!.ne_lat,game!.sw_lng]} zoom={13} scrollWheelZoom={true} style={{
+    <MapContainer center={center} zoom={13} scrollWheelZoom={true} style={{
         height: "500px",
         width: "600px",
-      }}>
+      }} maxBounds={[[game!.sw_lat, game!.sw_lng], [game!.ne_lat, game!.ne_lng]]}>
 
         <TileLayer
             url={"https://api.maptiler.com/maps/basic-v2-dark/{z}/{x}/{y}.png?key=" + MAP_TILER_API_KEY + ""}
