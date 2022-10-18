@@ -26,18 +26,18 @@ function GameDetailsPage() {
     useEffect(()=>{
         dispatch(GetGameAndPlayersByGameIdAction(Number(routeParam)))
     }, [])
-    const {game, currentPlayer, players} = useAppSelector(state => state.game)
-    const [requestInProgress, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.GetGameAndPlayerByGameId);
+    const {game, currentPlayer, players, kills} = useAppSelector(state => state.game)
+    const [requestInProgress, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.GetGamePlayerAndKillsByGameId);
     const isAdmin = keycloak.realmAccess?.roles.includes("ADMIN")
-
+    
     if(error){
         return <p>{error.message}</p>
     }
-
+    
     if(requestInProgress || !game){
         return <div className="background-game"><div className="loader"></div></div>
     }
-
+    
 
     return (
     <Container className="background-game p-sm-4" fluid>

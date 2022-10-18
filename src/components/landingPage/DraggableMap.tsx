@@ -1,6 +1,6 @@
-import { SVGOverlay as LeafletSVGOverlay, Rectangle as LeafletRectangle, LatLngBoundsLiteral, LatLngTuple, rectangle, LeafletMouseEvent } from 'leaflet'
+import { SVGOverlay as LeafletSVGOverlay, Rectangle as LeafletRectangle, LatLngBoundsLiteral, LatLngTuple, rectangle, LeafletMouseEvent, Path } from 'leaflet'
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
-import { Rectangle, useMapEvents } from 'react-leaflet';
+import { Rectangle, SVGOverlay, useMapEvents } from 'react-leaflet';
 import { TileLayer } from 'react-leaflet';
 import { MAP_TILER_API_KEY } from '../../constants/enviroment';
 
@@ -29,7 +29,6 @@ function floatingEquals(a: number, b: number): boolean {
 
 function DraggableMap({ boxBounds, setBoxBounds, setPosition }: IParams) {
     const rectangleRef = useRef<LeafletRectangle>(null)
-    const [render, setRender] = useState(0);
 
     const dropDragAndResize = (e: LeafletMouseEvent) => {
         drag = false;
@@ -41,8 +40,8 @@ function DraggableMap({ boxBounds, setBoxBounds, setPosition }: IParams) {
         initalMouseDown = undefined;
         initalBoxBounds = undefined;
         map.dragging.enable();
-        setRender((oldRender) => oldRender++);
     };
+
 
 
     const map = useMapEvents({
@@ -118,6 +117,18 @@ function DraggableMap({ boxBounds, setBoxBounds, setPosition }: IParams) {
             attribution={"\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e"}
             crossOrigin={true}
         />
+        <SVGOverlay
+            bounds={boxBounds}
+            eventHandlers={{
+                drag: () => {}
+            }}
+            
+        >
+        <rect 
+            width={"100%"}    
+            height={"100%"}
+            fill={"tomato"}
+        />
 
         <Rectangle
             bounds={boxBounds}
@@ -155,8 +166,9 @@ function DraggableMap({ boxBounds, setBoxBounds, setPosition }: IParams) {
                 baselayerchange: () => {console.log("CHANGE")}
     
             }}
-    
-        />
+            
+            />
+        </SVGOverlay>
 
     </>);
 }
