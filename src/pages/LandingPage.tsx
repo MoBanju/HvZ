@@ -7,6 +7,7 @@ import "./LandingPage.css";
 
 function LandingPage() {
     console.log(keycloak.tokenParsed)
+    console.log(keycloak.token)
     const isAdmin = keycloak.realmAccess?.roles.includes("ADMIN")
     return (
         <>

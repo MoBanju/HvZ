@@ -101,17 +101,22 @@ const gameSlice = createSlice({
         },
         setMissions: (state, action: PayloadAction<IMission[]>) => { 
            let missions = action.payload 
-
-            return { //eller bare overskrive missions hver gang man går inn i nytt game(?)
+            return {
                 ...state,
                 missions
             }
         },
-        
+        addMission: (state, action: PayloadAction<IMission>) => {
+            let mission = action.payload
+            return {
+                ...state, 
+                missions: [...state.missions, mission]
+            }
+        }
     },
 });
 
 
-export const { setGamePlayersAndKills, setChat, addChatMsg , updatePlayerState, addPlayer, deletePlayer, updateGameState, setMissions} = gameSlice.actions;
+export const { setGamePlayersAndKills, setChat, addChatMsg , updatePlayerState, addPlayer, deletePlayer, updateGameState, setMissions, addMission} = gameSlice.actions;
 
 export default gameSlice.reducer;

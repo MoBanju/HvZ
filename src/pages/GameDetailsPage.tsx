@@ -18,6 +18,7 @@ import { GetGameAndPlayersByGameIdAction } from "../components/api/getGameAndPla
 import StartGameBtn from "../components/gameDetailsPage/StartGameBtn";
 import Map from "../components/gameDetailsPage/Map";
 import EndGameBtn from "../components/gameDetailsPage/EndGameBtn";
+import GetMissionBtn from "../components/gameDetailsPage/GetMissionsBtn";
 
 
 
@@ -80,6 +81,9 @@ function GameDetailsPage() {
                     </div>
                     <div>
                         <EndGameBtn />
+                    </div>
+                    <div>
+                        <GetMissionBtn/>
                     </div>
                 </div>
             }

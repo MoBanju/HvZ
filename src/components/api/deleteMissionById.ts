@@ -13,7 +13,7 @@ interface IParams {
 
 async function DeleteMissionById({ game_id, mission_id }: IParams) {
     const headers = await getAuthHeaders();
-    const response = await fetch(API_URL + "/game/" + game_id + "/mission/" + mission_id, {
+    const response = await fetch(API_URL + "/game/" + game_id + "/Mission/" + mission_id, {
         headers,
         method: "DELETE",
     });

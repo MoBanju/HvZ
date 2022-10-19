@@ -12,7 +12,7 @@ interface IParams {
 export async function PutMission({ game_id, mission_id, mission }: IParams): Promise<IMission> {
     const headers = await getAuthHeaders();
 
-    const response = await fetch(API_URL + "/game/" + game_id + "/mission/" + mission_id, {
+    const response = await fetch(API_URL + "/game/" + game_id + "/Mission/" + mission_id, {
         method: "PUT",
         headers,
         body: JSON.stringify(mission)
