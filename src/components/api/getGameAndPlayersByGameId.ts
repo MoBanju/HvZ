@@ -19,6 +19,9 @@ async function getGamePlayerAndKillsByGameIdRequest({ id }: IParams) {
     let killsResponse = await getKillsByGameId({id})
     let kills = killsResponse
     .filter((killResponse: { playerKills: { playerId: number; }[]; }) => {
+        if(!killResponse.playerKills){
+            return false
+        }
         if(!players.some(p => p.id === killResponse.playerKills[0].playerId))
             return false;
         if(!players.some(p => p.id === killResponse.playerKills[1].playerId))

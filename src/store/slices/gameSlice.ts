@@ -4,6 +4,7 @@ import keycloak from "../../keycloak";
 import { IChat } from "../../models/IChat";
 import { IGame } from "../../models/IGame";
 import { IKill } from "../../models/IKill";
+import { IMission } from "../../models/IMission";
 import { IPlayer } from "../../models/IPlayer";
 
 interface initialeState {
@@ -12,6 +13,7 @@ interface initialeState {
     players: IPlayer[],
     chat: IChat[],
     kills: IKill[],
+    missions: IMission[],
 }
 
 const initialState: initialeState = {
@@ -20,6 +22,7 @@ const initialState: initialeState = {
     players: [],
     chat: [],
     kills: [],
+    missions: [],
 }
 
 
@@ -96,10 +99,19 @@ const gameSlice = createSlice({
                 game
             }
         },
+        setMissions: (state, action: PayloadAction<IMission[]>) => { 
+           let missions = action.payload 
+
+            return { //eller bare overskrive missions hver gang man går inn i nytt game(?)
+                ...state,
+                missions
+            }
+        },
+        
     },
 });
 
 
-export const { setGamePlayersAndKills, setChat, addChatMsg , updatePlayerState, addPlayer, deletePlayer, updateGameState} = gameSlice.actions;
+export const { setGamePlayersAndKills, setChat, addChatMsg , updatePlayerState, addPlayer, deletePlayer, updateGameState, setMissions} = gameSlice.actions;
 
 export default gameSlice.reducer;
