@@ -18,6 +18,7 @@ import { GetGameAndPlayersByGameIdAction } from "../components/api/getGameAndPla
 import StartGameBtn from "../components/gameDetailsPage/StartGameBtn";
 import Map from "../components/gameDetailsPage/Map";
 import EndGameBtn from "../components/gameDetailsPage/EndGameBtn";
+import KillList from "../components/gameDetailsPage/KillList";
 
 
 
@@ -54,6 +55,7 @@ function GameDetailsPage() {
         <div className="mt-3 mb-5">
            <ProgressBar gamestate={game.state} />
         </div>
+        <Container className="justify-content-center align-items-center d-flex">
         <Row className="card-deck"> 
             <Col className="m-auto"> 
                 <div className="card m-5 mx-auto card-detail">
@@ -62,7 +64,9 @@ function GameDetailsPage() {
                         { isAdmin && 
                             <div>
                                 <div className="btn-group me-3 ms-3">
-                                    <button className="btn btn-danger mt-3 mb-3 me-2" onClick={() => {setShow(true)}}>Admin-table</button>
+                                    { game.state !== "Complete" &&
+                                        <button className="btn btn-danger mt-3 mb-3 me-2" onClick={() => {setShow(true)}}>Admin-table</button>
+                                    }
                                     <JoinGameBtn gameId={game.id}/>
                                     <StartGameBtn/>
                                     <EndGameBtn/>
@@ -85,11 +89,10 @@ function GameDetailsPage() {
 
 
                     </div>
-                </div>
+            </div>
             </Col>
         </Row>
-       
-        
+        </Container>
         <div className="d-flex">
             <Chat currentPlayer={currentPlayer} gameId={game.id}/>
         </div>
