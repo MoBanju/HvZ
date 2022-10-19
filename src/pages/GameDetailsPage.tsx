@@ -67,12 +67,12 @@ function GameDetailsPage() {
                                     { game.state !== "Complete" &&
                                         <button className="btn btn-danger mt-3 mb-3 me-2" onClick={() => {setShow(true)}}>Admin-table</button>
                                     }
-                                    <JoinGameBtn gameId={game.id}/>
                                     <StartGameBtn/>
                                     <EndGameBtn/>
                                 </div>
                             </div>
                         }
+                        <JoinGameBtn gameId={game.id}/>
                     </div>
                 </div>
             </Col>
