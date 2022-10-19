@@ -7,6 +7,7 @@ import { IGame } from '../../models/IGame';
 import { IKill } from '../../models/IKill';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import Gravestone from './Gravestone';
+import Mission from './Mission';
 
 
 function Map({gameid} : {gameid: number}) {
@@ -27,7 +28,10 @@ function Map({gameid} : {gameid: number}) {
             crossOrigin={true}
         />
         { game?.state !== 'Registration' &&
-            <Gravestone gameid={game!.id}></Gravestone>
+            <div>
+                <Gravestone gameid={game!.id}></Gravestone>
+                <Mission gameid={game!.id}></Mission>
+            </div>
         }
         <Rectangle 
             bounds={[[game!.sw_lat, game!.sw_lng], [game!.ne_lat, game!.ne_lng]]}
