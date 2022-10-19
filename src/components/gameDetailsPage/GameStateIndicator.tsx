@@ -24,24 +24,25 @@ function GameStateIndicator({ gamestate, currentPlayer, players }: { gamestate: 
 
   if (gamestate === "Registration" && !currentPlayer) {
     return (
-      <div>No registered players yet</div>
+      <div className='d-flex align-items-center justify-content-center text-styling'>No registered players yet</div>
     )
   }
   else if (gamestate === "Registration" && currentPlayer) {
     return (<>
-      <div>Joined <BsCheckLg color='green' size={20} /></div>
-      <div>{players.length + PlayersJoined()}</div>
+      <div className='d-flex align-items-center justify-content-center text-styling'>Joined <BsCheckLg color='green' size={40} /></div>
+      <div className='d-flex align-items-center justify-content-center text-styling text-size'>{players.length + PlayersJoined()}</div>
     </>)
   }
   else if (gamestate === "Progress") {
-    return (<>
-      <div>Game in progress..</div>
-      <div>{PlayersLeft()}</div>
-    </>)
+    return (
+    <div className='row'>
+      <div className='h-100 d-flex align-items-center justify-content-center text-styling'>Game in progress..</div>
+      <div className='h-100 d-flex align-items-center justify-content-center text-styling text-size'>{PlayersLeft()}</div>
+    </div>)
   }
   else if (gamestate === "Complete") {
     return (
-      <div>Game completed..</div>
+      <div className='d-flex align-items-center justify-content-center text-styling'>Game completed..</div>
     )
   }
   return null

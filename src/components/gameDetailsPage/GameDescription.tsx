@@ -1,12 +1,12 @@
 function GameDescription({title, description}: {title: string, description: string}) {
   return (
     <div className="clearfix">
-    <div className="me-5 desc float-start">
+    <div className="me-5 ">
         <h1>{title}</h1>
         <h5 className="">{description}</h5>
     </div>
 
-    <div className="float-end me-5 desc resp">
+    <div className="float-end me-5 resp">
       <h3>Rules</h3>
       <h5>
         <ul>

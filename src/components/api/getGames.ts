@@ -8,7 +8,7 @@ import getAuthHeaders from "./setAuthHeaders";
 
 interface IParams { };
 
-async function getGames({}: IParams) {
+async function getGames() {
     const headers = await getAuthHeaders();
     let response = await fetch(API_URL + '/game', {
         headers,

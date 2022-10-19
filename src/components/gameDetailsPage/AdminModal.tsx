@@ -62,7 +62,7 @@ function AdminModal({ show, setShow, players, game }: { show: boolean, setShow: 
                             <th className="pb-3"> </th>
                         </tr>
                         <tr>
-                            <td className="fw-bold">{players.map((check, i) => <p key={i}>{check.id} {check.user.firstName}</p>)}</td>
+                            <td className="fw-bold">{players.map((check, i) => <p className="ms-2" key={i}>{check.user.firstName}</p>)}</td>
                             <td>
                                 {!loading ? (players.map((check, i) => <p key={i}>
                                     {check.isHuman &&
