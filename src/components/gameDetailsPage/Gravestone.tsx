@@ -9,7 +9,7 @@ function Gravestone({gameid} : {gameid: number}) {
     var gravestone = L.icon({
         iconUrl: '../../../gravestone.png',
         iconSize:     [38, 50], // size of the icon
-        iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+        iconAnchor:   [22, 30], // point of the icon which will correspond to marker's location
         popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
     });
     const { kills } = useAppSelector(state => state.game)

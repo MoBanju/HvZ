@@ -1,7 +1,7 @@
 import { timeStamp } from 'console';
 import L, { LatLngTuple, map } from 'leaflet';
 import { SetStateAction, useEffect, useRef, useState } from 'react';
-import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet'
+import { MapContainer, Marker, Popup, Rectangle, TileLayer, useMap, useMapEvents } from 'react-leaflet'
 import { MAP_TILER_API_KEY } from '../../constants/enviroment';
 import { IGame } from '../../models/IGame';
 import { IKill } from '../../models/IKill';
@@ -13,7 +13,7 @@ function Map({gameid} : {gameid: number}) {
     const { game } = useAppSelector(state => state.game)
     const center = [(game!.ne_lat + game!.sw_lat) / 2, (game!.ne_lng + game!.sw_lng) / 2] as LatLngTuple
     return (
-    <MapContainer center={center} zoom={13} scrollWheelZoom={true} style={{
+    <MapContainer center={center} maxZoom={18} minZoom={9} zoom={13} scrollWheelZoom={true} style={{
         height: "500px",
         width: "600px",
       }} maxBounds={[[game!.sw_lat, game!.sw_lng], [game!.ne_lat, game!.ne_lng]]}>
@@ -29,6 +29,14 @@ function Map({gameid} : {gameid: number}) {
         { game?.state !== 'Registration' &&
             <Gravestone gameid={game!.id}></Gravestone>
         }
+        <Rectangle 
+            bounds={[[game!.sw_lat, game!.sw_lng], [game!.ne_lat, game!.ne_lng]]}
+            fill={false}
+            stroke={true}
+            pathOptions={{color: '#ff000077'}}
+            
+        />
+        
     </MapContainer>
     )
 }

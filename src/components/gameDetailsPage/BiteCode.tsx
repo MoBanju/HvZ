@@ -4,9 +4,13 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { IKillRequest, PostKillAction } from "../api/postKill";
 import { IGame } from "../../models/IGame";
 import { IPlayer } from "../../models/IPlayer";
-import { namedRequestInProgAndError, RequestStarted } from "../../store/slices/requestSlice";
+import { namedRequestInProgAndError, RequestFinished, RequestStarted } from "../../store/slices/requestSlice";
 import { RequestsEnum } from "../../store/middleware/requestMiddleware";
 import { Spinner } from "react-bootstrap";
+import { LatLngBounds } from "leaflet";
+import InvalidLocationModal from "./InvalidLocationModal";
+
+var biteCodeHolder: () => string
 
 function BiteCode() {
 
@@ -14,6 +18,7 @@ function BiteCode() {
   const { game, currentPlayer, players } = useAppSelector(state => state.game) as { game: IGame, currentPlayer: IPlayer | undefined, players: IPlayer[] }
   const [isLoading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PostKill);
   const [successMessage, setSuccessMessage] = useState<string | undefined>(undefined);
+  const [showModal, setShowModal] = useState(false);
   const dispatch = useAppDispatch();
 
 
@@ -26,6 +31,23 @@ function BiteCode() {
     navigator.geolocation.getCurrentPosition(
       //success getting current users location
       (location) => {
+        const gameBounds = new LatLngBounds([game.sw_lat, game.sw_lng], [game.ne_lat, game.ne_lng]);
+        if(!gameBounds.contains([location.coords.latitude, location.coords.longitude])){
+          setShowModal(true);
+          biteCodeHolder = () => biteCode;
+          return
+        }
+        submitWithLocation(biteCode, location);
+      },
+      // error getting current users location
+      () => {
+        submitWithoutLocation(biteCode);
+      },
+    )
+    // Clear the old success message when attemping a new request.
+    setSuccessMessage(undefined);
+  }
+  const submitWithLocation = (biteCode: string, location: GeolocationPosition) => {
         let requset: IKillRequest = {
           timeDeath: new Date().toJSON(),
           killerId: currentPlayer!.id,
@@ -36,22 +58,17 @@ function BiteCode() {
         };
         const action = PostKillAction(game.id, requset, buildsuccessMessage);
         dispatch(action);
-      },
-      // error getting current users location
-      () => {
+  }
+  
+  const submitWithoutLocation = (biteCode: string) => {
         let requset: IKillRequest = {
           timeDeath: new Date().toJSON(),
           killerId: currentPlayer!.id,
           biteCode: biteCode,
-          description: "",
+          description: "  ",
         };
         const action = PostKillAction(game.id, requset, buildsuccessMessage);
         dispatch(action);
-
-      },
-    )
-    // Clear the old success message when attemping a new request.
-    setSuccessMessage(undefined);
   }
 
   // This is a sideeffect to the submit bitecode request.
@@ -76,12 +93,28 @@ function BiteCode() {
 
   if (!currentPlayer || game.state !== 'Progress')
     return null;
-
-
-  if (currentPlayer.isHuman)
-    return (<div>
-      <p className="fs-2">Your bitecode: {<span className="bg-black bg rounded p-3 m-2 text-white text-center w-25">{currentPlayer.biteCode}</span>}</p>
-    </div>)
+  if (game.state !== 'Progress')
+    return null
+  if (!currentPlayer.isHuman)
+    return (
+      <>
+      <div>
+        <label className="me-2 fs-2" htmlFor="bitecode-input">Victims bitecode: </label>
+        <input
+          className="rounded mt-3 mb-3 p-2 w-25"
+          type="text" placeholder="Enter bitecode.."
+          name="bitecode-input"
+          ref={inputBiteCodeRef} />
+        <button className="btn-delete" onClick={handleSubmitBiteCode}>{isLoading ? <Spinner animation="border" /> : <IoIosArrowDroprightCircle size={40} />}</button>
+        {buildFeedBackMessage()}
+      </div>
+      <InvalidLocationModal
+        show={showModal}
+        setShow={setShowModal}
+        handleSumbit={() => {submitWithoutLocation(biteCodeHolder()); setShowModal(false);}}
+        handleCancle={() => {dispatch(RequestFinished(RequestsEnum.PostKill))}}
+      />
+      </>)
   return (
     <div>
       <label className="me-2 fs-2" htmlFor="bitecode-input">Victims bitecode: </label>
