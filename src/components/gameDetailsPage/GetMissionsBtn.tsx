@@ -9,6 +9,7 @@ import { namedRequestInProgAndError } from '../../store/slices/requestSlice'
 import { GetMissionsAction } from '../api/getMissions'
 import { IPostMissionRequest, PostMissionInGameAction } from '../api/postMission'
 import { PutGameByIdAction } from '../api/putGameById'
+import { PutMissionAction } from '../api/putMission'
 
 
 
@@ -25,7 +26,6 @@ function GetMissionBtn() {
             dispatch(GetMissionsAction(game.id))
         }
     }
-
 
     const PostMission: any = () => {
         if (game) {
@@ -44,12 +44,31 @@ function GetMissionBtn() {
     }
 
 
+    const PutMission: any = () => {
+        if(game){
+            console.log("buttonWorks")
+            let mission: IMission = {
+                id: 6,
+                name: 'neinei',
+                is_human_visible: false,
+                is_zombie_visible: false,
+                description: "jeees",
+                start_time: "2022-10-19T13:48:57.376Z",
+                end_time: "2022-10-19T13:48:57.376Z",
+                latitude: game.sw_lat + 0.0001,
+                longitude: game.sw_lng + 0.0001
+            }
+                dispatch(PutMissionAction(game.id, 6, mission))
+        }
+    }
+
     console.log(missions)
     if (isAdmin) {
         return (<>
             {!loading ? (<button onClick={GetMission} className="btn btn-dark mt-3 mb-3">Get Missions</button>)
                 : <Spinner animation="border" size={"sm"} />}
             <button onClick={PostMission} className="btn btn-dark mt-3 mb-3">Post Mission</button>
+            <button onClick={PutMission} className="btn btn-dark mt-3 mb-3">Put Mission</button>
 
         </>)
     }

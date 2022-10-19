@@ -112,11 +112,18 @@ const gameSlice = createSlice({
                 ...state, 
                 missions: [...state.missions, mission]
             }
+        },
+        updateMission: (state, action: PayloadAction<IMission>) => {
+            let mission = action.payload
+            return{
+                ...state, 
+                mission
+            }
         }
     },
 });
 
 
-export const { setGamePlayersAndKills, setChat, addChatMsg , updatePlayerState, addPlayer, deletePlayer, updateGameState, setMissions, addMission} = gameSlice.actions;
+export const { setGamePlayersAndKills, setChat, addChatMsg , updatePlayerState, addPlayer, deletePlayer, updateGameState, setMissions, addMission, updateMission} = gameSlice.actions;
 
 export default gameSlice.reducer;

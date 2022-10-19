@@ -1,5 +1,8 @@
+import { PayloadAction } from "@reduxjs/toolkit";
 import { API_URL } from "../../constants/enviroment"
 import { IMission } from "../../models/IMission"
+import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE } from "../../store/middleware/requestMiddleware";
+import { updateMission } from "../../store/slices/gameSlice";
 import getAuthHeaders from "./setAuthHeaders"
 
 
@@ -9,7 +12,7 @@ interface IParams {
     mission: IMission,
 }
 
-export async function PutMission({ game_id, mission_id, mission }: IParams): Promise<IMission> {
+async function PutMission({ game_id, mission_id, mission }: IParams): Promise<IMission> {
     const headers = await getAuthHeaders();
 
     const response = await fetch(API_URL + "/game/" + game_id + "/Mission/" + mission_id, {
@@ -23,4 +26,14 @@ export async function PutMission({ game_id, mission_id, mission }: IParams): Pro
     return mission
 }
 
+
+export const PutMissionAction: (game_id: number, mission_id: number, mission:IMission) => PayloadAction<RequestPayload<IParams, IMission>> = (game_id:number, mission_id:number, mission:IMission) => ({
+    type: REQUEST_ACTION_TYPE,
+    payload: {
+        cbDispatch: updateMission,
+        params: { game_id, mission_id, mission},
+        request: PutMission,
+        requestName: RequestsEnum.PutMission
+    }
+}) 
 
