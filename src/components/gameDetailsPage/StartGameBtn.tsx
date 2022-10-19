@@ -25,7 +25,7 @@ function StartGameBtn() {
   if (game?.state === "Registration" && isAdmin) {
     return (
       <>
-        {!loading ? (<button className="btn btn-dark mt-3 mb-3" onClick={startGame}>Start Game</button>)
+        {!loading ? (<button className="btn btn-danger mt-3 mb-3 me-2" onClick={startGame}>Start Game</button>)
           : <Spinner animation="border" size={"sm"} />}
       </>)
   }

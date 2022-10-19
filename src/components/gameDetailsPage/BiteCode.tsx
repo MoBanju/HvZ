@@ -98,9 +98,9 @@ function BiteCode() {
     return (
       <>
       <div>
-        <label className="me-2 fs-2" htmlFor="bitecode-input">Victims bitecode: </label>
+        <label className="me-2 fs-2 mt-5" htmlFor="bitecode-input">Victims bitecode: </label>
         <input
-          className="rounded mt-3 mb-3 p-2 w-25"
+          className="rounded mt-3 mb-3 p-2"
           type="text" placeholder="Enter bitecode.."
           name="bitecode-input"
           ref={inputBiteCodeRef} />
@@ -116,7 +116,7 @@ function BiteCode() {
       </>)
   return (
     <div>
-      <p className="fs-2">Your bitecode: {<span className="bg-black bg rounded p-3 m-2 text-white text-center w-25">{currentPlayer.biteCode}</span>}</p>
+      <p className="fs-2 mt-5">Your bitecode: {<span className="bg-black bg rounded p-3 m-2 text-white text-center w-25">{currentPlayer.biteCode}</span>}</p>
     </div>)
 
 }

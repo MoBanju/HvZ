@@ -8,7 +8,7 @@ function ProgressBar({gamestate}: {gamestate: keyof IGameState}) {
 
   return (
     <div className="progress">
-        <div className="progress-bar bg-success progress-bar-stripped" role="progressbar" aria-valuenow={25} aria-valuemin = {0} aria-valuemax={100} style={{"width": width + "%"}}></div>
+        <div className="progress-bar bg-danger progress-bar-stripped" role="progressbar" aria-valuenow={25} aria-valuemin = {0} aria-valuemax={100} style={{"width": width + "%"}}></div>
     </div>
   )
 }

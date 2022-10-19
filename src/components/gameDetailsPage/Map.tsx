@@ -13,9 +13,9 @@ function Map({gameid} : {gameid: number}) {
     const { game } = useAppSelector(state => state.game)
     const center = [(game!.ne_lat + game!.sw_lat) / 2, (game!.ne_lng + game!.sw_lng) / 2] as LatLngTuple
     return (
-    <MapContainer center={center} maxZoom={18} minZoom={9} zoom={13} scrollWheelZoom={true} style={{
-        height: "500px",
-        width: "600px",
+    <MapContainer  center={center} zoom={13} scrollWheelZoom={true} maxZoom={18} minZoom={9} style={{
+        height: "30vh",
+        width: "35vh",
       }} maxBounds={[[game!.sw_lat, game!.sw_lng], [game!.ne_lat, game!.ne_lng]]}>
 
         <TileLayer

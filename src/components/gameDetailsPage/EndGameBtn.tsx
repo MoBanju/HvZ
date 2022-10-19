@@ -24,7 +24,7 @@ function EndGameBtn() {
 
     if (game?.state === "Progress" && isAdmin) {
         return (<>
-            {!loading ? (<button onClick={EndGame} className="btn btn-dark mt-3 mb-3">End Game</button>)
+            {!loading ? (<button onClick={EndGame} className="btn btn-danger mt-3 mb-3 me-2">End Game</button>)
                 : <Spinner animation="border" size={"sm"} />}
         </>)
     }
