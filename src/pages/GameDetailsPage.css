@@ -1,11 +1,17 @@
 .background-game{
-    background-color: rgb(198, 232, 195);
+    background-image: url("/public/zombie.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
     height: 100vh;
+    background-size: cover;
+    overflow-y: auto;
 }
+
 
 .chat{
     border-radius: 5px;
     right: 6vh;
+    z-index:999;
 }
 
 .scroll{
@@ -30,7 +36,7 @@
     margin: auto;
     border: 10px solid #EAF0F6;
     border-radius: 50%;
-    border-top: 10px solid #60d1dd;
+    border-top: 10px solid #ff0808;
     width: 100px;
     height: 100px;
     animation: spinner 4s linear infinite;
@@ -60,3 +66,70 @@
   .mw-2{
     max-width: 450px;
   }
+
+  .card-detail{
+    background-color: rgba(35, 35, 35, 0.95) !important;
+  }
+
+  .text-styling{
+    color: red;
+    text-shadow: 2px 0 #fff, -2px 0 #fff, 0 2px #fff, 0 -2px #fff,
+    1px 1px #fff, -1px -1px #fff, 1px -1px #fff, -1px 1px #fff;
+    font-size: 40px;
+    font-weight: 700;
+  }
+
+  .text-size{
+    font-size: 20px !important;
+    font-weight: 500 !important;
+  }
+
+  .map-z{
+    z-index: 1;
+  }
+
+  .chat-z{
+    z-index: 1000;
+  }
+  .sidetall-color{
+    color: black !important;
+  }
+
+
+   /* // Small devices (landscape phones, 576px and up) */
+@media (max-width: 722px) { 
+  .desc{
+    max-width: 100%;
+  }
+
+  .resp{
+    margin-top: 10px;
+    float: left !important;
+    width: 100% !important;
+  }
+
+  .resp-chat{
+    width: 100% !important;
+    margin-right: 0px !important; 
+  }
+
+  .background-game{
+    padding-bottom: 50px;
+}
+
+.log-header{
+  position: relative !important;
+  float: right
+}
+
+
+}
+/* // Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {  }
+/* // Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {  }
+/* // X-Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) { 
+}
+/* // XX-Large devices (larger desktops, 1400px and up) */
+@media (min-width: 1400px) {  }

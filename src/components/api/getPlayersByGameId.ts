@@ -1,9 +1,30 @@
+import { API_URL } from "../../constants/enviroment";
 import { IPlayer } from "../../models/IPlayer";
+import getAuthHeaders from "./setAuthHeaders";
 
-async function getPlayersByGameId(id: number) {
-    let response = await fetch(`http://localhost:5072/game/${id}/Players`);
+export interface IPlayerResponse {
+    id: number,
+    isPatientZero: boolean,
+    isHuman: boolean,
+    biteCode: string,
+    user: {
+        keyCloakId: number,
+        firstName: string,
+        lastName: string
+    }
+}
+
+interface IParams {
+    id: number,
+}
+
+async function getPlayersByGameId({ id }: IParams ) {
+    const headers = await getAuthHeaders();
+    let response = await fetch(`${API_URL}/game/${id}/Player`, {
+        headers
+    });
     if(!response.ok)
-        throw new Error(response.statusText);
+        throw new Error(await response.text() || response.statusText);
     let data = await response.json() as IPlayer[];
     return data;
 }

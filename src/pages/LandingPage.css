@@ -13,10 +13,12 @@
     width: fit-content;
     padding: 70px;
     border-radius: 20px;
-    color: rgb(0, 0, 0);
+    color: rgb(230, 230, 230);
     border: none;
     box-shadow: rgba(0, 0, 0, 0.6) 0px 14px 28px, rgba(0, 0, 0, 0.6) 0px 10px 10px;
     position: relative;
+    min-width: 45vh;
+    max-width: 60vh;
 }
 
 .table {
@@ -28,6 +30,7 @@
     min-width: 300px;
     padding: 10px;
     font-size: 30px;
+    margin-bottom: 10px;
     background-color: rgb(0, 0, 0);
 }
 
@@ -60,3 +63,37 @@
   .title{
     width: 16vh;
   }
+
+  /* // Small devices (landscape phones, 576px and up) */
+@media (max-width: 540px ){ 
+    .login-btn{
+        min-width: 100px;
+        padding: 2px;
+        font-size: 1rem;
+        margin: 5px;
+    }
+    .card{
+        padding:20px;
+        
+    } 
+    .table-resp {
+        width: 100%;
+        overflow: auto;
+        font-size: 1rem;
+    }
+
+    .text-sz{
+        font-size: 20px;
+    }
+
+}
+/* // Medium devices (tablets, 768px and up) */
+@media (min-width: 1024px) {  
+}
+/* // Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {  }
+/* // X-Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) { 
+ }
+/* // XX-Large devices (larger desktops, 1400px and up) */
+@media (min-width: 1400px) {  }

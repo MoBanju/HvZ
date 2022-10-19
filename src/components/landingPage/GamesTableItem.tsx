@@ -5,25 +5,22 @@ import keycloak from "../../keycloak";
 import { removeGame } from "../../store/slices/gamesSlice"
 import { useAppDispatch } from "../../store/hooks";
 import { useNavigate } from "react-router-dom";
-import React from "react";
+import React, { useState } from "react";
+import DeleteGameModal from "./DeleteGameModal";
 
 
 
 function GamesTableItem({ game }: { game: IGame }) {
         const nav = useNavigate();
         const isAdmin = keycloak.realmAccess?.roles.includes("ADMIN")
-        const dispatch = useAppDispatch()
         const isLoggedIn = keycloak.authenticated;
         const [ isAlertVisible, setIsAlertVisible ] = React.useState(false);
+        const [ showDeleteModal, setShowDeleteModal ] = useState(false);
+        
 
 
         const deleteGame = () => {
-                // eslint-disable-next-line no-restricted-globals
-                if (confirm("Are you sure you want to delete this game?")) {
-                        console.log("DELETED")
-                        dispatch(removeGame(game.id))
-                }
-
+                setShowDeleteModal(true);
         }
 
         const handleClick = () => {
@@ -38,6 +35,7 @@ function GamesTableItem({ game }: { game: IGame }) {
                 }
         };
 
+
         return (<>
                 {isAlertVisible && 
                 <tr className='alert-container'>
@@ -45,10 +43,11 @@ function GamesTableItem({ game }: { game: IGame }) {
                 </tr>}
                 <tr className="ms-6" >
                         <td onClick={handleClick} role={"button"}> {game.name} </td>
-                        <td className="ps-5">22</td>
+                        <td className="ps-5">{game.playerCount}</td>
                         <td>{game.state}</td>
                         <td>{isAdmin && <button onClick={deleteGame} className="btn-delete"><CgTrash className="bosspann" /></button>} </td>
                 </tr>
+                <DeleteGameModal show={showDeleteModal} setShow={setShowDeleteModal} game={game} />
         </>)
 
 
