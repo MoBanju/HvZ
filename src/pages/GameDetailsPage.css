@@ -91,6 +91,10 @@
   .chat-z{
     z-index: 1000;
   }
+  .sidetall-color{
+    color: black !important;
+  }
+
 
    /* // Small devices (landscape phones, 576px and up) */
 @media (max-width: 722px) { 
