@@ -32,7 +32,7 @@ export async function PostMission({ game_id, mission }: IParams): Promise<IMissi
         body: JSON.stringify(mission)
     })
     if (!response.ok) {
-        throw new Error("couldnt post missions")
+        throw new Error(await response.text() || response.statusText)
     }
     let data = await response.json() as IMission
 

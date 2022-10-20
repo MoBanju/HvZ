@@ -28,12 +28,12 @@ function KillList() {
                         existingItem.kills += 1;
                         return killList;
                     } else {
-                        return [... killList, {player: kill.killer, kills: 1}];
+                        return [...killList, {player: kill.killer, kills: 1}];
                     }
 
                 },[]).map((x,i) => (
 
-                        <tr>
+                        <tr key={i}>
                             <td className=""> <p key={i}>{x.player.user.firstName}</p></td> 
                             <td className=""><p key={i}>{x.kills}</p></td>
                         </tr>

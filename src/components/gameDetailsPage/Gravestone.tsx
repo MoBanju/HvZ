@@ -17,7 +17,7 @@ function Gravestone({gameid} : {gameid: number}) {
     return  ( 
     <>{
       kills.filter((x, i) => x.latitude && x.longitude).map((x,i) => (
-        <Marker position={[x.latitude!, x.longitude!]} icon={gravestone}>
+        <Marker key={i} position={[x.latitude!, x.longitude!]} icon={gravestone}>
           <Popup>
             <p key={i}> {(x.timeDeath).slice(0,10)} <br /> {(x.timeDeath).slice(11,16)} <br /> {x.victim.user.firstName} was killed by {x.killer.user.firstName}</p>
           </Popup>

@@ -101,7 +101,7 @@ const gameSlice = createSlice({
                 ...state,
                 currentPlayer: currPlayer,
                 players: state.players.filter(item => item.id !== action.payload),
-            }
+            }   
         },
         deleteKill: (state, action: PayloadAction<number>) => {
             return {

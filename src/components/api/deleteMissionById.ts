@@ -19,7 +19,7 @@ async function DeleteMissionById({ game_id, mission_id }: IParams) {
         method: "DELETE",
     });
     if (!response.ok)
-        throw new Error("DeleteMissionById request failed");
+        throw new Error(await response.text() || response.statusText)
 
     return mission_id;
 }
