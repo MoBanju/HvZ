@@ -8,7 +8,7 @@ import { namedRequestInProgAndError, RequestFinished, RequestStarted } from "../
 import { RequestsEnum } from "../../store/middleware/requestMiddleware";
 import { Spinner } from "react-bootstrap";
 import { LatLngBounds } from "leaflet";
-import InvalidLocationModal from "./InvalidLocationModal";
+import CustomConfirmModal from "../shared/CustomConfirmModal";
 
 var biteCodeHolder: () => string
 
@@ -108,7 +108,10 @@ function BiteCode() {
         <button className="btn-delete" onClick={handleSubmitBiteCode}>{isLoading ? <Spinner animation="border" /> : <IoIosArrowDroprightCircle size={40} />}</button>
         {buildFeedBackMessage()}
       </div>
-      <InvalidLocationModal
+      <CustomConfirmModal
+        title="woops"
+        body="It looks like your current location is outside of the designated playing area.You can choose to submit your kill without giving it a location, and later contact an admin inorder to fix the issue. Or you can try to submit the bitecode again later."
+        submitBtn="Submit without coordinates"
         show={showModal}
         setShow={setShowModal}
         handleSumbit={() => {submitWithoutLocation(biteCodeHolder()); setShowModal(false);}}

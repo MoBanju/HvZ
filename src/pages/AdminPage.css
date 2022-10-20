@@ -1,0 +1,36 @@
+form {
+    width: 100%;
+}
+
+.input-group-text {
+    width: 25%;
+    white-space: break-spaces;
+}
+
+.input-group {
+    margin-bottom: 8px;
+}
+
+input:read-only, input:read-only:focus {
+    background-color: grey;
+    cursor: default;
+}
+
+
+.form-control:focus-visible, .form-select:focus-visible, .form-check-input:focus-visible{
+    outline: none;
+}
+
+.form-control:focus, .form-select:focus, .form-check-input:focus{
+    border-color: crimson;
+    box-shadow: 0 0 0 0.25rem rgba(255, 122, 122, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: crimson;
+    border-color: crimson;
+}
+
+.form-select {
+    margin-bottom: 8px;
+}

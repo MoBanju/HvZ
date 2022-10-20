@@ -75,6 +75,18 @@ const gameSlice = createSlice({
             }
 
         },
+        updateKill: (state, action: PayloadAction<IKill>) => {
+            let kills = state.kills.map(kill => {
+                if(kill.id === action.payload.id)
+                    return action.payload;
+                return kill;
+            })
+
+            return {
+                ...state,
+                kills,
+            }
+        },
         addPlayer: (state, action: PayloadAction<IPlayer>) => {
             const currPlayer = action.payload.user.keyCloakId === keycloak.tokenParsed?.sub ? action.payload : undefined;
             return {
@@ -90,6 +102,12 @@ const gameSlice = createSlice({
                 currentPlayer: currPlayer,
                 players: state.players.filter(item => item.id !== action.payload),
             }   
+        },
+        deleteKill: (state, action: PayloadAction<number>) => {
+            return {
+                ...state,
+                kills: state.kills.filter(kill => kill.id !== action.payload),
+            };
         },
         updateGameState: (state, action: PayloadAction<IGame>) => {   
             
@@ -136,6 +154,6 @@ const gameSlice = createSlice({
 });
 
 
-export const { setGamePlayersAndKills, setChat, addChatMsg , updatePlayerState, addPlayer, deletePlayer, updateGameState, setMissions, addMission, updateMission, deleteMission} = gameSlice.actions;
+export const { setGamePlayersAndKills, setChat, addChatMsg , updatePlayerState, addPlayer, deletePlayer, updateGameState, setMissions, addMission, updateMission, deleteMission, updateKill, deleteKill } = gameSlice.actions;
 
 export default gameSlice.reducer;

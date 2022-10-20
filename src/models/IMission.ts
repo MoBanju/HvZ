@@ -8,8 +8,8 @@ export interface IMission {
     description?:string,
     start_time?:string,
     end_time?:string,
-    longitude?:number,
-    latitude?:number,
+    longitude:number,
+    latitude:number,
 }
 
 
