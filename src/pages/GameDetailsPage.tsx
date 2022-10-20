@@ -9,16 +9,15 @@ import JoinGameBtn from "../components/gameDetailsPage/JoinGameBtn";
 import ProgressBar from "../components/gameDetailsPage/ProgressBar";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import "./GameDetailsPage.css";
-import {MdAdminPanelSettings, MdBackspace, MdOutlineAdminPanelSettings} from "react-icons/md"
+import { MdAdminPanelSettings, MdBackspace, MdOutlineAdminPanelSettings } from "react-icons/md"
 import AdminModal from "../components/gameDetailsPage/AdminModal";
 import keycloak from "../keycloak"
 import { namedRequestInProgAndError } from "../store/slices/requestSlice";
 import { RequestsEnum } from "../store/middleware/requestMiddleware";
-import { GetGameAndPlayersByGameIdAction } from "../components/api/getGameAndPlayersByGameId";
+import { GetGamePlayersAndKillsByGameIdAction } from "../components/api/getGameAndPlayersByGameId";
 import StartGameBtn from "../components/gameDetailsPage/StartGameBtn";
 import Map from "../components/gameDetailsPage/Map";
 import EndGameBtn from "../components/gameDetailsPage/EndGameBtn";
-import KillList from "../components/gameDetailsPage/KillList";
 
 
 
@@ -27,7 +26,7 @@ function GameDetailsPage() {
     const routeParam = useParams()["id"]
     const dispatch = useAppDispatch()
     useEffect(()=>{
-        dispatch(GetGameAndPlayersByGameIdAction(Number(routeParam)))
+        dispatch(GetGamePlayersAndKillsByGameIdAction(Number(routeParam)))
     }, [])
     const {game, currentPlayer, players, kills} = useAppSelector(state => state.game)
     const [requestInProgress, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.GetGamePlayerAndKillsByGameId);
@@ -62,17 +61,15 @@ function GameDetailsPage() {
                     <div className="card-text"> 
                         <GameDescription title={game.name} description={game.description} />
                         { isAdmin && 
-                            <div>
                                 <div className="btn-group me-3 ms-3">
                                     { game.state !== "Complete" &&
                                         <button className="btn btn-danger mt-3 mb-3 me-2" onClick={() => {setShow(true)}}>Admin-table</button>
                                     }
-                                    <JoinGameBtn gameId={game.id}/>
                                     <StartGameBtn/>
                                     <EndGameBtn/>
                                 </div>
-                            </div>
                         }
+                        <JoinGameBtn gameId={game.id}/>
                     </div>
                 </div>
             </Col>

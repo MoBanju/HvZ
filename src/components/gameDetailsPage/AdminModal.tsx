@@ -16,7 +16,7 @@ function AdminModal({ show, setShow, players, game }: { show: boolean, setShow: 
     const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PutPlayerType);
     
     const handleSubmit = (playerid: number) => {
-        dispatch(DeletePlayerByIdAction(game.id, playerid));
+        dispatch(DeletePlayerByIdAction(game.id, playerid, undefined));
     };
 
     const afterClick = (e: any) => {
