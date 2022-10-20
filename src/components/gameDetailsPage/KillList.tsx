@@ -33,7 +33,7 @@ function KillList() {
 
                 },[]).map((x,i) => (
 
-                        <tr>
+                        <tr key={i}>
                             <td className=""> <p key={i}>{x.player.user.firstName}</p></td> 
                             <td className=""><p key={i}>{x.kills}</p></td>
                         </tr>

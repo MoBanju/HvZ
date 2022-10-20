@@ -13,9 +13,10 @@ interface IParams {
 
 export async function PutGameById({game, state}: IParams): Promise<IGame> {
 
-    let myPar = 1
-    if(state === "Registration") myPar = 1
-    else if(state === "Progress") myPar = 2
+    let myPar = 0
+    if(state === "Registration") myPar = 0
+    else if(state === "Progress") myPar = 1
+    else if(state === "Complete") myPar = 2
 
     const headers = await getAuthHeaders();
     const body = {
@@ -51,7 +52,8 @@ export async function PutGameById({game, state}: IParams): Promise<IGame> {
         startTime: game.startTime,
         endTime: game.endTime,
     }
-    if(myPar === 1) newGame.state = "Progress"
+    if(myPar === 0) newGame.state = "Registration"
+    else if(myPar === 1)newGame.state = "Progress"
     else if(myPar === 2)newGame.state = "Complete"
 
     return newGame

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import BiteCode from "../components/gameDetailsPage/BiteCode";
 import Chat from "../components/gameDetailsPage/Chat";
 import GameDescription from "../components/gameDetailsPage/GameDescription";
@@ -25,6 +25,7 @@ function GameDetailsPage() {
     const [show, setShow] = useState(false);
     const routeParam = useParams()["id"]
     const dispatch = useAppDispatch()
+    const nav = useNavigate()
     useEffect(() => {
         dispatch(GetGamePlayersAndKillsByGameIdAction(Number(routeParam)))
     }, [])
@@ -40,13 +41,16 @@ function GameDetailsPage() {
         return <div className="background-game"><div className="loader"></div></div>
     }
 
+    const handleClick =  () => {
+        nav("/admin/" + game.id)
+    }
 
     return (
         <Container className="background-game p-sm-4" fluid>
             <NavLink to={"/"} className="btn-delete mb-4 btn btn-lg"><MdBackspace /></NavLink>
-            <div className="position-absolute top-0 end-0 m-3 log-header">
+            <div className="position-absolute top-0 end-0 m-3 log-header logged-in">
                 {keycloak.authenticated && <span>Logged in as: {keycloak.tokenParsed?.preferred_username}</span>}
-                {isAdmin && <span> <MdAdminPanelSettings size={30} /> Admin</span>}
+                {isAdmin && <button className="logged-in" onClick={() => handleClick()}> <MdAdminPanelSettings size={30} />Admin</button>}
             </div>
             <AdminModal show={show} setShow={setShow} players={players} game={game} />
 
