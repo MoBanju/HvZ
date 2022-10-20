@@ -18,6 +18,8 @@ import { GetGamePlayersAndKillsByGameIdAction } from "../components/api/getGameA
 import StartGameBtn from "../components/gameDetailsPage/StartGameBtn";
 import Map from "../components/gameDetailsPage/Map";
 import EndGameBtn from "../components/gameDetailsPage/EndGameBtn";
+import Squad from "../components/gameDetailsPage/Squad";
+import KillList from "../components/gameDetailsPage/KillList";
 
 
 
@@ -46,58 +48,69 @@ function GameDetailsPage() {
     }
 
     return (
-        <Container className="background-game p-sm-4" fluid>
-            <NavLink to={"/"} className="btn-delete mb-4 btn btn-lg"><MdBackspace /></NavLink>
-            <div className="position-absolute top-0 end-0 m-3 log-header logged-in">
-                {keycloak.authenticated && <span>Logged in as: {keycloak.tokenParsed?.preferred_username}</span>}
-                {isAdmin && <button className="logged-in" onClick={() => handleClick()}> <MdAdminPanelSettings size={30} />Admin</button>}
-            </div>
-            <AdminModal show={show} setShow={setShow} players={players} game={game} />
+    <Container className="background-game p-sm-4" fluid>
+        <NavLink to={"/"} className="btn-delete mb-4 btn btn-lg"><MdBackspace/></NavLink>
+        <div className="position-absolute top-0 end-0 m-3 log-header">
+            {keycloak.authenticated && <span>Logged in as: {keycloak.tokenParsed?.preferred_username}</span>}
+            {isAdmin && <button className="logged-in" onClick={() => handleClick()}> <MdAdminPanelSettings size={30} />Admin</button>}
+        </div>
+        <AdminModal show={show} setShow={setShow} players={players} game={game}/>
 
-            <GameStateIndicator gamestate={game.state} currentPlayer={currentPlayer} players={players} />
-            <div className="mt-3 mb-5">
-                <ProgressBar gamestate={game.state} />
-            </div>
-            <Container className="justify-content-center align-items-center d-flex">
-                <Row className="card-deck">
-                    <Col className="m-auto">
-                        <div className="card m-5 mx-auto card-detail">
-                            <div className="card-text">
-                                <GameDescription title={game.name} description={game.description} />
-                                <JoinGameBtn gameId={game.id} />
-                                {isAdmin &&
-                                    <div className="btn-group me-3 ms-3">
-                                        {game.state !== "Complete" &&
-                                            <button className="btn btn-danger mt-3 mb-3 me-2" onClick={() => { setShow(true) }}>Admin-table</button>
+        <GameStateIndicator gamestate={game.state} currentPlayer={currentPlayer} players = {players}/>
+        <div className="mt-3 mb-5">
+           <ProgressBar gamestate={game.state} />
+        </div>
+        <Container className="justify-content-center align-items-center d-flex">
+        <Row className="card-deck"> 
+            <Col className="m-auto"> 
+                <div className="card m-5 mx-auto card-detail">
+                    <div className="card-text"> 
+                        <GameDescription title={game.name} description={game.description} />
+                        
+                            <div className="btn-group">
+                                { isAdmin &&
+                                    <div>
+                                        { game.state !== "Complete" &&
+                                            <button className="btn btn-danger mt-3 mb-3 me-2" onClick={() => {setShow(true)}}>Admin-table</button>
                                         }
-                                        <StartGameBtn />
-                                        <EndGameBtn />
+                                        <StartGameBtn/>
+                                        <EndGameBtn/>
                                     </div>
                                 }
+                        <JoinGameBtn gameId={game.id}/>
                             </div>
+                        
+                    </div>
+                </div>
+            </Col>
+            <Col>
+            <div className="card m-5 mx-auto card-detail">
+                    <div className="card-text">
+                        <div style={{marginBottom: "20px", marginTop: "20px"}} className="map-z">
+                            <Map gameid={game.id}/>
                         </div>
-                    </Col>
-                    <Col>
-                        <div className="card m-5 mx-auto card-detail">
-                            <div className="card-text">
-                                <div style={{ marginBottom: "20px", marginTop: "20px" }} className="map-z">
-                                    <Map gameid={game.id} />
-                                </div>
 
-                                <div>
-                                    <BiteCode />
-                                </div>
-
-
-                            </div>
+                        <div>
+                            <BiteCode/>
                         </div>
-                    </Col>
-                </Row>
-            </Container>
-            <div className="d-flex">
-                <Chat currentPlayer={currentPlayer} gameId={game.id} />
+
+
+                    </div>
             </div>
-        </Container>)
+            </Col>
+            <Col>
+            <div className="card m-5 mx-auto card-detail">
+                    <div className="card-text">
+                        <Squad gameid={game.id}></Squad>
+                    </div>
+            </div>
+            </Col>
+        </Row>
+        </Container>
+        <div className="d-flex">
+            <Chat currentPlayer={currentPlayer} gameId={game.id}/>
+        </div>
+    </Container>)
 }
 
 export default GameDetailsPage;

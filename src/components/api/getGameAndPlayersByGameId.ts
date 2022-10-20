@@ -8,6 +8,8 @@ import getKillsByGameId from "./getKillsByGameId";
 import getPlayersByGameId from "./getPlayersByGameId";
 import {IKill} from "../../models/IKill"
 import React from 'react';
+import getSquadsByGameId from "./getSquadsByGameId";
+import { ISquad } from "../../models/ISquad";
 
 interface IParams {
     id: number,
@@ -17,6 +19,7 @@ async function getGamePlayerAndKillsByGameIdRequest({ id }: IParams) {
     let game = await GetGameById({id});
     let players = await getPlayersByGameId({id});
     let killsResponse = await getKillsByGameId({id})
+    let squads = await getSquadsByGameId({id})
     let kills = killsResponse
     .filter((killResponse: { playerKills: { playerId: number; }[]; }) => {
         if(killResponse.playerKills.length != 2)
@@ -44,6 +47,7 @@ async function getGamePlayerAndKillsByGameIdRequest({ id }: IParams) {
         game,
         players,
         kills,
+        squads
     }
 }
 
@@ -51,7 +55,7 @@ async function getGamePlayerAndKillsByGameIdRequest({ id }: IParams) {
 
 
 
-export function GetGamePlayersAndKillsByGameIdAction(id: number): PayloadAction<RequestPayload<IParams, {game: IGame, players: IPlayer[], kills: IKill[] }>> {
+export function GetGameAndPlayersByGameIdAction(id: number): PayloadAction<RequestPayload<IParams, {game: IGame, players: IPlayer[], kills: IKill[], squads: ISquad[] }>> {
     return {
         type: REQUEST_ACTION_TYPE,
         payload: {

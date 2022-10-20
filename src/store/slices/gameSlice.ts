@@ -6,6 +6,8 @@ import { IGame } from "../../models/IGame";
 import { IKill } from "../../models/IKill";
 import { IMission } from "../../models/IMission";
 import { IPlayer } from "../../models/IPlayer";
+import { ISquad } from "../../models/ISquad";
+import { ISquadMember } from "../../models/ISquadMember";
 
 interface initialeState {
     game: IGame | undefined,
@@ -14,6 +16,8 @@ interface initialeState {
     chat: IChat[],
     kills: IKill[],
     missions: IMission[],
+    squads: ISquad[],
+    squadMembers: ISquadMember[],
 }
 
 const initialState: initialeState = {
@@ -23,6 +27,8 @@ const initialState: initialeState = {
     chat: [],
     kills: [],
     missions: [],
+    squads: [],
+    squadMembers: [],
 }
 
 
@@ -30,7 +36,7 @@ const gameSlice = createSlice({
     name: 'game',
     initialState: initialState,
     reducers: {
-        setGamePlayersAndKills: (state, action: PayloadAction<{ game: IGame, players: IPlayer[], kills: IKill[] }>) => {
+        setGamePlayersAndKills: (state, action: PayloadAction<{ game: IGame, players: IPlayer[], kills: IKill[], squads: ISquad[] }>) => {
             const currPlayer = action.payload.players.find(player => player.user.keyCloakId === keycloak.tokenParsed?.sub)
             return {
                 ...state,
@@ -95,6 +101,19 @@ const gameSlice = createSlice({
                 players: [...state.players!, action.payload],
             }
         },
+        addSquadMember: (state, action: PayloadAction<ISquadMember>) =>{
+            return{
+                ...state,
+                squadMembers: [...state.squadMembers, action.payload]
+            }
+        },
+        addSquad: (state, action: PayloadAction<ISquad>) => {
+            console.log(action.payload)
+            return {
+                ...state,
+                squads: [...state.squads, action.payload]
+            }
+        },
         deletePlayer: (state, action: PayloadAction<number>) => {
             const currPlayer = state.currentPlayer?.id === action.payload ? undefined : state.currentPlayer;
             return{
@@ -154,6 +173,6 @@ const gameSlice = createSlice({
 });
 
 
-export const { setGamePlayersAndKills, setChat, addChatMsg , updatePlayerState, addPlayer, deletePlayer, updateGameState, setMissions, addMission, updateMission, deleteMission, updateKill, deleteKill } = gameSlice.actions;
+export const { setGamePlayersAndKills, setChat, addChatMsg , updatePlayerState, addPlayer, deletePlayer, updateGameState, setMissions, addMission, updateMission, deleteMission, updateKill, deleteKill,addSquad, addSquadMember } = gameSlice.actions;
 
 export default gameSlice.reducer;
