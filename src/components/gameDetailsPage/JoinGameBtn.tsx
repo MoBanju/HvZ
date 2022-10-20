@@ -42,7 +42,7 @@ function JoinGameBtn({ gameId }: { gameId: number }) {
   }
   
   return (<>
-    {!loading ? (<button className='btn btn-dark btn-lg rounded-3' onClick={joinGame}>Join</button>)
+    {!loading ? (<button className='btn btn-danger mt-3 mb-3 me-2' onClick={joinGame}>Join</button>)
     : <Spinner animation="border" size={"sm" } /> }
     </>)
 }

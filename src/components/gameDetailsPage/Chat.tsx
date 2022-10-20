@@ -138,7 +138,7 @@ function Chat({gameId, currentPlayer}: { gameId: number, currentPlayer: IPlayer 
 
 
   return (
-    <div>
+    <div className="chat-z">
     <Container className="bg-dark position-absolute bottom-0 end-0 w-25 p-0 rounded mw-2 resp-chat"style={{marginRight: "15px"}}>
         <div id="collapsePanel col-md-auto">
         <ul className="nav nav-tabs rounded-1" role="tablist">

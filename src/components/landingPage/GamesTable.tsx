@@ -75,7 +75,7 @@ function GamesTable() {
                 {isAdmin && <button className="btn-create mt-4 float-right"> <AiFillPlusSquare className="bosspann" size={50} onClick={() => { setShowCreateModal(true) }} /> </button>}
             </div>
             <div className="text-center">
-                <h1 className="text-sz">
+                <h1 className="text-sz sidetall-color">
                     {sideTall > 1 && <button onClick={() => setsideTall(sideTall - 1)} className="btn-delete">{'<'}</button>}
                     {sideTall}
                     {sideTall * GAMES_PER_PAGE < games.length && <button onClick={() => setsideTall(sideTall + 1)} className="btn-delete">{'>'}</button>}</h1>
