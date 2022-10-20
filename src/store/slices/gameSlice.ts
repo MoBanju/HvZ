@@ -89,7 +89,7 @@ const gameSlice = createSlice({
                 ...state,
                 currentPlayer: currPlayer,
                 players: state.players.filter(item => item.id !== action.payload),
-            }
+            }   
         },
         updateGameState: (state, action: PayloadAction<IGame>) => {   
             

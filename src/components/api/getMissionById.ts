@@ -15,11 +15,11 @@ interface IParams {
 
 async function getMissionById({ mission_id, game_id }: IParams) {
     const headers = await getAuthHeaders()
-    let response = await fetch(API_URL + "/game/" + game_id + "Mission" + mission_id, {
+    let response = await fetch(API_URL + "/game/" + game_id + "/Mission/" + mission_id, {
         headers
     })
     if (!response.ok) {
-        throw new Error("getMissionById: couldnt fetch missions")
+        throw new Error(await response.text() || response.statusText)
     }
     let data = await response.json() as IMission
 

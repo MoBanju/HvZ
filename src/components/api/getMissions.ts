@@ -18,7 +18,7 @@ async function getMissions({ game_id }: IParams) {
         headers
     })
     if (!response.ok) {
-        throw new Error("couldnt fetch missions")
+        throw new Error(await response.text() || response.statusText)
     }
     const data = await response.json() as IMission[]
     return data

@@ -28,7 +28,7 @@ function KillList() {
                         existingItem.kills += 1;
                         return killList;
                     } else {
-                        return [... killList, {player: kill.killer, kills: 1}];
+                        return [...killList, {player: kill.killer, kills: 1}];
                     }
 
                 },[]).map((x,i) => (

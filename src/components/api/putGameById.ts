@@ -36,7 +36,7 @@ export async function PutGameById({game, state}: IParams): Promise<IGame> {
         body: JSON.stringify(body)
     })
     if (!response.ok) {
-        throw new Error("Couldnt update gameSTATE")
+        throw new Error(await response.text() || response.statusText)
     }
     const newGame: IGame = {
         id: game.id,

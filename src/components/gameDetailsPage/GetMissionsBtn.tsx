@@ -9,7 +9,6 @@ import { namedRequestInProgAndError } from '../../store/slices/requestSlice'
 import { DeleteMissionByIdAction } from '../api/deleteMissionById'
 import { GetMissionsAction } from '../api/getMissions'
 import { IPostMissionRequest, PostMissionInGameAction } from '../api/postMission'
-import { PutGameByIdAction } from '../api/putGameById'
 import { PutMissionAction } from '../api/putMission'
 
 
@@ -68,7 +67,6 @@ function GetMissionBtn() {
         }
     }
 
-    console.log(missions)
     if (isAdmin) {
         return (<>
             {!loading ? (<button onClick={GetMission} className="btn btn-dark mt-3 mb-3">Get Missions</button>)
