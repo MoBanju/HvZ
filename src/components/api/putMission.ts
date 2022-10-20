@@ -23,7 +23,7 @@ async function PutMission({ game_id, mission_id, mission }: IParams): Promise<IM
         body: JSON.stringify(mission)
     })
     if (!response.ok) {
-        throw new Error("putmission not working")
+        throw new Error(await response.text() || response.statusText)
     }
 
     return mission

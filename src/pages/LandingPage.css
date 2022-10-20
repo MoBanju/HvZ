@@ -9,6 +9,7 @@
 .logged-in{
     background-color: rgb(232, 219, 174);
 /*     border-style: solid; */
+    border: none;
     padding: 5px;
 }
 

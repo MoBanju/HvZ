@@ -30,7 +30,7 @@ function Map({gameid} : {gameid: number}) {
         { game?.state !== 'Registration' &&
             <div>
                 <Gravestone gameid={game!.id}></Gravestone>
-                <Mission gameid={game!.id}></Mission>
+                <Mission></Mission>
             </div>
         }
         <Rectangle 
