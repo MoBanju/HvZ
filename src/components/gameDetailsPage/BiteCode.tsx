@@ -8,7 +8,7 @@ import { namedRequestInProgAndError, RequestFinished, RequestStarted } from "../
 import { RequestsEnum } from "../../store/middleware/requestMiddleware";
 import { Spinner } from "react-bootstrap";
 import { LatLngBounds } from "leaflet";
-import InvalidLocationModal from "./InvalidLocationModal";
+import CustomConfirmModal from "../shared/CustomConfirmModal";
 
 var biteCodeHolder: () => string
 
@@ -21,9 +21,10 @@ function BiteCode() {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useAppDispatch();
 
+
   const handleSubmitBiteCode = () => {
     const biteCode = inputBiteCodeRef.current.value;
-    if(biteCode.trim().length === 0)
+    if (biteCode.trim().length === 0)
       return
 
     dispatch(RequestStarted(RequestsEnum.PostKill));
@@ -74,23 +75,23 @@ function BiteCode() {
   // That means that this functions get run after the request completes with no errors.
   const buildsuccessMessage = () => {
     const victim = players.find(player => player.biteCode === inputBiteCodeRef.current.value);
-    if(!victim)
+    if (!victim)
       return;
-    
+
     setSuccessMessage(`You just turned ${victim.user.firstName} into a ZOMBIE!`);
   }
 
   const buildFeedBackMessage = () => {
-    if(error)
-      return <p style={{fontStyle: "italic"}}>{error.message}</p>
-    if(successMessage) {
-      return <p style={{fontStyle: "italic"}}>{successMessage}</p>
+    if (error)
+      return <p style={{ fontStyle: "italic" }}>{error.message}</p>
+    if (successMessage) {
+      return <p style={{ fontStyle: "italic" }}>{successMessage}</p>
     }
     return null
   }
 
 
-  if (!currentPlayer)
+  if (!currentPlayer || game.state !== 'Progress')
     return null;
   if (game.state !== 'Progress')
     return null
@@ -107,7 +108,10 @@ function BiteCode() {
         <button className="btn-delete" onClick={handleSubmitBiteCode}>{isLoading ? <Spinner animation="border" /> : <IoIosArrowDroprightCircle size={40} />}</button>
         {buildFeedBackMessage()}
       </div>
-      <InvalidLocationModal
+      <CustomConfirmModal
+        title="woops"
+        body="It looks like your current location is outside of the designated playing area.You can choose to submit your kill without giving it a location, and later contact an admin inorder to fix the issue. Or you can try to submit the bitecode again later."
+        submitBtn="Submit without coordinates"
         show={showModal}
         setShow={setShowModal}
         handleSumbit={() => {submitWithoutLocation(biteCodeHolder()); setShowModal(false);}}

@@ -4,6 +4,7 @@ import keycloak from "../../keycloak";
 import { IChat } from "../../models/IChat";
 import { IGame } from "../../models/IGame";
 import { IKill } from "../../models/IKill";
+import { IMission } from "../../models/IMission";
 import { IPlayer } from "../../models/IPlayer";
 
 interface initialeState {
@@ -12,6 +13,7 @@ interface initialeState {
     players: IPlayer[],
     chat: IChat[],
     kills: IKill[],
+    missions: IMission[],
 }
 
 const initialState: initialeState = {
@@ -20,6 +22,7 @@ const initialState: initialeState = {
     players: [],
     chat: [],
     kills: [],
+    missions: [],
 }
 
 
@@ -72,6 +75,18 @@ const gameSlice = createSlice({
             }
 
         },
+        updateKill: (state, action: PayloadAction<IKill>) => {
+            let kills = state.kills.map(kill => {
+                if(kill.id === action.payload.id)
+                    return action.payload;
+                return kill;
+            })
+
+            return {
+                ...state,
+                kills,
+            }
+        },
         addPlayer: (state, action: PayloadAction<IPlayer>) => {
             const currPlayer = action.payload.user.keyCloakId === keycloak.tokenParsed?.sub ? action.payload : undefined;
             return {
@@ -88,6 +103,12 @@ const gameSlice = createSlice({
                 players: state.players.filter(item => item.id !== action.payload),
             }
         },
+        deleteKill: (state, action: PayloadAction<number>) => {
+            return {
+                ...state,
+                kills: state.kills.filter(kill => kill.id !== action.payload),
+            };
+        },
         updateGameState: (state, action: PayloadAction<IGame>) => {   
             
            let game = action.payload
@@ -96,10 +117,43 @@ const gameSlice = createSlice({
                 game
             }
         },
+        setMissions: (state, action: PayloadAction<IMission[]>) => { 
+           let missions = action.payload 
+            return {
+                ...state,
+                missions
+            }
+        },
+        addMission: (state, action: PayloadAction<IMission>) => {
+            let mission = action.payload
+            return {
+                ...state, 
+                missions: [...state.missions, mission]
+            }
+        },
+        updateMission: (state, action: PayloadAction<IMission>) => {
+            let missions = state.missions.map(mission => {
+                if(mission.id === action.payload.id){
+                    return action.payload
+                }
+                return mission
+            })
+            return {
+                ...state,
+                missions
+            }
+        },
+        deleteMission: (state, action: PayloadAction<number>) =>{
+            
+            return{
+                ...state,
+                missions: state.missions.filter(mission => mission.id !== action.payload)
+            }
+        },
     },
 });
 
 
-export const { setGamePlayersAndKills, setChat, addChatMsg , updatePlayerState, addPlayer, deletePlayer, updateGameState} = gameSlice.actions;
+export const { setGamePlayersAndKills, setChat, addChatMsg , updatePlayerState, addPlayer, deletePlayer, updateGameState, setMissions, addMission, updateMission, deleteMission, updateKill, deleteKill } = gameSlice.actions;
 
 export default gameSlice.reducer;
