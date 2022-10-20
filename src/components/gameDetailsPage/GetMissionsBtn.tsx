@@ -46,7 +46,7 @@ function GetMissionBtn() {
 
 
     const PutMission: any = () => {
-        if(game){
+        if (game) {
             let mission: IMission = {
                 id: 10,
                 name: 'vebjørn',
@@ -58,13 +58,13 @@ function GetMissionBtn() {
                 latitude: game.sw_lat + 0.0001,
                 longitude: game.sw_lng + 0.0001
             }
-                dispatch(PutMissionAction(game.id, 10, mission))
+            dispatch(PutMissionAction(game.id, 10, mission))
         }
     }
 
     const DeleteMission: any = () => {
-        if(game){
-            dispatch(DeleteMissionByIdAction(game.id,11))
+        if (game) {
+            dispatch(DeleteMissionByIdAction(game.id, 11))
         }
     }
 
@@ -79,9 +79,9 @@ function GetMissionBtn() {
 
         </>)
     }
-    return (
-        <div>notADMIN</div>
-    )
+    return (<>
+        <button onClick={GetMission} className="btn btn-dark mt-3 mb-3">Get Missions</button>
+    </>)
 }
 
 
