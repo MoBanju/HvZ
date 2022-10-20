@@ -5,9 +5,14 @@ import { RequestsEnum } from "../../store/middleware/requestMiddleware";
 import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
 import { PostGameAction, IPostGameRequest } from "../api/postGames";
 
-import { MapContainer } from 'react-leaflet'
-import { LatLngBoundsLiteral, LatLngTuple, Map as LeafletMap } from 'leaflet'
+import { FeatureGroup, MapContainer, TileLayer } from 'react-leaflet'
+import L, { LatLngBoundsLiteral, LatLngTuple, Map as LeafletMap } from 'leaflet'
+import { EditControl } from 'react-leaflet-draw';
+import 'leaflet-draw';
 import DraggableMap from "./DraggableMap";
+import { MAP_TILER_API_KEY } from "../../constants/enviroment";
+
+//import "react-leaflet-fullscreen/dist/styles.css";
 
 const START_POSITION = [58.9843363, 5.6923114] as LatLngTuple;
 const DEFAULT_ZOOM = 12;
@@ -28,6 +33,31 @@ function CreateGameModal({ show, setShow }: IProps) {
         [START_POSITION[0] + 0.01, START_POSITION[1] + 0.01]
     ]);
     
+
+    /* Test */
+    const [editableFG, setEditableFG] = useState<any>(null);
+
+    const onCreated = (e:any) => {
+        console.log(e);
+        console.log(editableFG);
+
+        const drawnItems = editableFG.leafletElement._layers;
+        console.log(drawnItems);
+        if (Object.keys(drawnItems).length > 1) {
+            Object.keys(drawnItems).forEach((layerid, index) => {
+                if (index > 0) return;
+                const layer = drawnItems[layerid];
+                editableFG.leafletElement.removeLayer(layer);
+            });
+            console.log(drawnItems);
+        }
+    };
+
+    const onFeatureGroupReady = (reactFGref: any) => {
+        // store the ref for future access to content
+        setEditableFG(reactFGref);
+    };
+    /* Test */
     
     const mapRef = useRef<LeafletMap>(null)
     const nameInputRef = useRef() as MutableRefObject<HTMLInputElement>;
@@ -109,14 +139,48 @@ function CreateGameModal({ show, setShow }: IProps) {
                     />
                 </InputGroup>
                 <MapContainer center={position} zoom={DEFAULT_ZOOM} scrollWheelZoom={false} style={{ height: "500px", width: "100%" }} ref={mapRef}>
-                    <DraggableMap
+                    <TileLayer
+                        url={"https://api.maptiler.com/maps/basic-v2-dark/{z}/{x}/{y}.png?key=" + MAP_TILER_API_KEY + ""}
+                        tileSize={512}
+                        minZoom={1}
+                        zoomOffset={-1}
+                        attribution={"\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e"}
+                        crossOrigin={true}
+                    />
+                {/* <DraggableMap
                         boxBounds={boxBounds}
                         setBoxBounds={setBoxBounds}
                         position={position}
                         setPosition={setPosition}
 
-                    />
-                </MapContainer>
+                    /> */}
+                    {/**/} <FeatureGroup
+                         /**/ref={featureGroupRef => {
+                            onFeatureGroupReady(featureGroupRef);
+                        }}>
+                        <EditControl 
+                            
+                            draw={{
+                                polyline: false,
+                                polygon: false,
+                                rectangle: {
+                                    icon: new L.DivIcon({
+                                        iconSize: new L.Point(8, 8),
+                                        className: "leaflet-div-icon leaflet-editing-icon"
+                                    }),
+                                    shapeOptions: {
+                                        guidelineDistance: 10,
+                                        color: "navy",
+                                        weight: 3
+                                    }
+                                },
+                                circlemarker: false,
+                                circle: false,
+                                marker: false,
+                            }}
+                            position="bottomright" onCreated={onCreated} />
+                    </FeatureGroup>
+                </MapContainer> 
                 <Button variant="dark" onClick={moveMapToCurrentLocation}>Move map to your position</Button>
             </Modal.Body>
             <Modal.Footer>
