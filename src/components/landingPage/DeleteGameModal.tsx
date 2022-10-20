@@ -56,7 +56,7 @@ function DeleteGameModal({ game, show, setShow }: IProps) {
                 >
                     {loading ?
                         <Spinner animation="border" as="span" />
-                        : <span>delete</span>}
+                        : <span>Delete</span>}
                 </Button>
             </Modal.Footer>
         </Modal>);

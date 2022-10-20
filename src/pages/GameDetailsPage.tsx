@@ -61,18 +61,20 @@ function GameDetailsPage() {
                 <div className="card m-5 mx-auto card-detail">
                     <div className="card-text"> 
                         <GameDescription title={game.name} description={game.description} />
-                        { isAdmin && 
-                            <div>
-                                <div className="btn-group me-3 ms-3">
-                                    { game.state !== "Complete" &&
-                                        <button className="btn btn-danger mt-3 mb-3 me-2" onClick={() => {setShow(true)}}>Admin-table</button>
-                                    }
-                                    <StartGameBtn/>
-                                    <EndGameBtn/>
-                                </div>
-                            </div>
-                        }
+                        
+                            <div className="btn-group">
+                                { isAdmin &&
+                                    <div>
+                                        { game.state !== "Complete" &&
+                                            <button className="btn btn-danger mt-3 mb-3 me-2" onClick={() => {setShow(true)}}>Admin-table</button>
+                                        }
+                                        <StartGameBtn/>
+                                        <EndGameBtn/>
+                                    </div>
+                                }
                         <JoinGameBtn gameId={game.id}/>
+                            </div>
+                        
                     </div>
                 </div>
             </Col>
