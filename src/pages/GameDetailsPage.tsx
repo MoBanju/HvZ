@@ -19,6 +19,7 @@ import StartGameBtn from "../components/gameDetailsPage/StartGameBtn";
 import Map from "../components/gameDetailsPage/Map";
 import EndGameBtn from "../components/gameDetailsPage/EndGameBtn";
 import KillList from "../components/gameDetailsPage/KillList";
+import Squad from "../components/gameDetailsPage/Squad";
 
 
 
@@ -90,6 +91,13 @@ function GameDetailsPage() {
                         </div>
 
 
+                    </div>
+            </div>
+            </Col>
+            <Col>
+            <div className="card m-5 mx-auto card-detail">
+                    <div className="card-text">
+                        <Squad gameid={game.id}></Squad>
                     </div>
             </div>
             </Col>
