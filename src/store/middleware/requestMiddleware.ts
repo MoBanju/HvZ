@@ -34,7 +34,8 @@ export enum RequestsEnum {
     PutGameById,
     GetMissions,
     PostMission,
-    PutMission
+    PutMission,
+    DeleteMissionById,
 }
 
 export interface RequestPayload<P, T> {

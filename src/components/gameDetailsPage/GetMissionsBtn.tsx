@@ -6,6 +6,7 @@ import { IMission } from '../../models/IMission'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { RequestsEnum } from '../../store/middleware/requestMiddleware'
 import { namedRequestInProgAndError } from '../../store/slices/requestSlice'
+import { DeleteMissionByIdAction } from '../api/deleteMissionById'
 import { GetMissionsAction } from '../api/getMissions'
 import { IPostMissionRequest, PostMissionInGameAction } from '../api/postMission'
 import { PutGameByIdAction } from '../api/putGameById'
@@ -46,10 +47,9 @@ function GetMissionBtn() {
 
     const PutMission: any = () => {
         if(game){
-            console.log("buttonWorks")
             let mission: IMission = {
-                id: 6,
-                name: 'neinei',
+                id: 10,
+                name: 'vebjørn',
                 is_human_visible: false,
                 is_zombie_visible: false,
                 description: "jeees",
@@ -58,7 +58,13 @@ function GetMissionBtn() {
                 latitude: game.sw_lat + 0.0001,
                 longitude: game.sw_lng + 0.0001
             }
-                dispatch(PutMissionAction(game.id, 6, mission))
+                dispatch(PutMissionAction(game.id, 10, mission))
+        }
+    }
+
+    const DeleteMission: any = () => {
+        if(game){
+            dispatch(DeleteMissionByIdAction(game.id,11))
         }
     }
 
@@ -69,6 +75,7 @@ function GetMissionBtn() {
                 : <Spinner animation="border" size={"sm"} />}
             <button onClick={PostMission} className="btn btn-dark mt-3 mb-3">Post Mission</button>
             <button onClick={PutMission} className="btn btn-dark mt-3 mb-3">Put Mission</button>
+            <button onClick={DeleteMission} className="btn btn-dark mt-3 mb-3">Delete Mission</button>
 
         </>)
     }

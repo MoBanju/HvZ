@@ -114,16 +114,28 @@ const gameSlice = createSlice({
             }
         },
         updateMission: (state, action: PayloadAction<IMission>) => {
-            let mission = action.payload
-            return{
-                ...state, 
-                mission
+            let missions = state.missions.map(mission => {
+                if(mission.id === action.payload.id){
+                    return action.payload
+                }
+                return mission
+            })
+            return {
+                ...state,
+                missions
             }
-        }
+        },
+        deleteMission: (state, action: PayloadAction<number>) =>{
+            
+            return{
+                ...state,
+                missions: state.missions.filter(mission => mission.id !== action.payload)
+            }
+        },
     },
 });
 
 
-export const { setGamePlayersAndKills, setChat, addChatMsg , updatePlayerState, addPlayer, deletePlayer, updateGameState, setMissions, addMission, updateMission} = gameSlice.actions;
+export const { setGamePlayersAndKills, setChat, addChatMsg , updatePlayerState, addPlayer, deletePlayer, updateGameState, setMissions, addMission, updateMission, deleteMission} = gameSlice.actions;
 
 export default gameSlice.reducer;
