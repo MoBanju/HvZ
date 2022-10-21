@@ -50,8 +50,8 @@ async function getGameState({ id }: IParams): Promise<GameState> {
         return true;
     }) 
     .map<IKill>((killResponse: { playerKills: { playerId: number; }[]; id: any; description: any; latitude: any; longitude: any; timeDeath: any; }) => {
-        let killer = players.find(p => p.id === killResponse.playerKills[0].playerId)!
-        let victim = players.find(p => p.id === killResponse.playerKills[1].playerId)!
+        let killer = players.find(p => p.id === killResponse.playerKills[1].playerId)!
+        let victim = players.find(p => p.id === killResponse.playerKills[0].playerId)!
         return {
             ...killResponse,
             killer,
