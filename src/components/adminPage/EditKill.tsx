@@ -1,5 +1,5 @@
 import { LatLngTuple } from "leaflet";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { Button, Container, Form, FormControl, InputGroup, Spinner } from "react-bootstrap"
 import { useForm } from "react-hook-form";
 import { IGame } from "../../models/IGame";
@@ -11,11 +11,12 @@ import { DeleteKillByIdAction } from "../api/deleteKillById";
 import { PutKillAction } from "../api/putKillById";
 import CustomConfirmModal from "../shared/CustomConfirmModal";
 import DraggableMarkerMap, { DraggableMarkerType } from "./DraggableMarkerMap";
+import { HideEditFormFnc } from "./EditItem";
 
 interface IParams {
     game: IGame,
     kill: IKill,
-    closeForm: () => void,
+    closeForm: HideEditFormFnc,
 }
 
 interface IFormValues {
@@ -26,26 +27,32 @@ interface IFormValues {
 }
 
 function EditKill({ game, kill, closeForm }: IParams) {
+
+    const hasLocation = useMemo<boolean>(() => Boolean(kill.latitude), [kill]);
+    const center = useMemo(() => [(game!.ne_lat + game!.sw_lat) / 2, (game!.ne_lng + game!.sw_lng) / 2], [game]) as LatLngTuple
+    
     const { handleSubmit, register, setValue, formState } = useForm<IFormValues>();
-    const [markerPosition, setMarkerPosition] = useState<LatLngTuple>([kill.latitude || 0, kill.longitude || 0]);
-    const [showMap, setShowMap] = useState<boolean>((typeof kill.latitude != "undefined"))
+    const [markerPosition, setMarkerPosition] = useState<LatLngTuple>(hasLocation ? [kill.latitude!, kill.longitude!] : [center[0], center[1]]);
+    const [showMap, setShowMap] = useState<boolean>(hasLocation)
     const [requestPutLoading, requestPutError] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PutKillById);
     const [requestDeleteLoading, requestDeleteError] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.DeleteKillById);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const dispatch = useAppDispatch();
-
+    
     useEffect(() => {
-        setValue("latitude", markerPosition[0]);
-        setValue("longtitude", markerPosition[1]);
+        setValue("latitude", markerPosition ? markerPosition[0] : center[0]);
+        setValue("longtitude", markerPosition ? markerPosition[1] : center[1]);
     }, [markerPosition]);
-
+    
     useEffect(() => {
-        setMarkerPosition([kill.latitude || 0, kill.longitude || 0]);
+        setMarkerPosition(hasLocation ? [kill.latitude!, kill.longitude!] : [center[0], center[1]]);
+        setShowMap(hasLocation);
     }, [kill])
-
+    
     const toggleHasLocation = () => {
         setShowMap((prevShowMap) => !prevShowMap);
     }
+    console.log(kill.latitude, hasLocation, showMap)
 
     const handleOnSubmit = handleSubmit((data) => {
         const updatedKill: IKill = {
@@ -57,12 +64,12 @@ function EditKill({ game, kill, closeForm }: IParams) {
             killer: kill.killer,
             victim: kill.victim,
         }
-        const action = PutKillAction(game.id, updatedKill);
+        const action = PutKillAction(game.id, updatedKill, () => {closeForm(`Successfully edited kills ${kill.id}`)});
         dispatch(action);
     });
 
     const handleDeleteKill = () => {
-        const action = DeleteKillByIdAction(game.id, kill.id, closeForm);
+        const action = DeleteKillByIdAction(game.id, kill.id, () => {closeForm(undefined)});
         dispatch(action);
     }
 
@@ -110,9 +117,16 @@ function EditKill({ game, kill, closeForm }: IParams) {
                     <FormControl
                         aria-label="timedeath"
                         aria-describedby="timedeath"
-                        defaultValue={kill.timeDeath}
-                        {...register('timeDeath')}
+                        type="datetime-local"
+                        defaultValue={new Date(kill.timeDeath).toISOString().slice(0, -8)}
+                        {...register('timeDeath', {
+                            required: {value: true, message: "Please provide a description"},
+                            maxLength: {value: 200, message: "Description cant be longer than 200 chars"}
+                        })}
                     />
+                    <FormControl.Feedback type="invalid" style={{display: "unset"}}>
+                        {formState.errors.timeDeath && formState.errors.timeDeath.message}
+                    </FormControl.Feedback> 
                 </InputGroup>
                 <InputGroup >
                     <InputGroup.Text id="description">Description</InputGroup.Text>
@@ -134,7 +148,7 @@ function EditKill({ game, kill, closeForm }: IParams) {
                     id="has-location"
                     label="Has location"
                     onChange={toggleHasLocation}
-                    defaultChecked={showMap}
+                    checked={showMap}
                 />
                 {
                     showMap &&

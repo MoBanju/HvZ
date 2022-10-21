@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { Col, Container, Row, Table } from "react-bootstrap"
-import { useParams } from "react-router-dom"
+import { Col, Container, Row, Spinner, Table } from "react-bootstrap"
+import { NavLink, useParams } from "react-router-dom"
 import { getGameStateAction } from "../components/api/getGameAndPlayersByGameId"
 import { useAppDispatch, useAppSelector } from "../store/hooks"
 import { RequestsEnum } from "../store/middleware/requestMiddleware"
@@ -16,7 +16,7 @@ import { AiOutlineEdit } from "react-icons/ai"
 import './AdminPage.css'
 import { IMission } from "../models/IMission"
 import MissionTableItem from "../components/adminPage/MissionTableItem"
-import { GetMissionsAction } from "../components/api/getMissions"
+import { MdBackspace } from "react-icons/md"
 
 
 export enum EditState {
@@ -50,13 +50,26 @@ function AdminPage() {
 
 
     if(loading || !game)
-        return <p>LOADING</p>
+        return <div className="background">
+            <Spinner
+                animation="border"
+                style={{
+                    position: 'fixed',
+                    left: '40%',
+                    top: '40%',
+                    width: '150px',
+                    height: '150px',
+                }}
+            />
+        </div>
 
     return (
-    <Row className="background">
+    <Container className="background">
+    <NavLink to={`/game/${game.id}`} className="btn-delete mb-4 btn btn-lg"><MdBackspace /></NavLink>
+    <Row >
         <Col className="card">
             <h5>Game</h5>
-            <Table hover>
+            <Table hover className="admin-table">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -136,7 +149,7 @@ function AdminPage() {
                 setItem={setEditItem}
             />
         </Col>
-    </Row>);
+    </Row></Container>);
 }
 
 

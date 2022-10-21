@@ -1,7 +1,7 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { API_URL } from "../../constants/enviroment";
 import { IKill } from "../../models/IKill";
-import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE } from "../../store/middleware/requestMiddleware";
+import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE, sideEffect } from "../../store/middleware/requestMiddleware";
 import { updateKill } from "../../store/slices/gameSlice";
 import getAuthHeaders from "./setAuthHeaders";
 
@@ -38,7 +38,7 @@ async function putKillById({ gameId, updatedKill}: IParams) {
     return updatedKill;
 }
 
-export function PutKillAction(gameId: number, updatedKill: IKill): PayloadAction<RequestPayload<IParams, IKill>> {
+export function PutKillAction(gameId: number, updatedKill: IKill, sideEffect: sideEffect): PayloadAction<RequestPayload<IParams, IKill>> {
     return {
         type: REQUEST_ACTION_TYPE,
         payload: {
@@ -46,6 +46,7 @@ export function PutKillAction(gameId: number, updatedKill: IKill): PayloadAction
             params: { gameId, updatedKill},
             request: putKillById,
             requestName: RequestsEnum.PutKillById,
+            sideEffect,
         },
     }
 };

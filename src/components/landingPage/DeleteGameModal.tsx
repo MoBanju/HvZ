@@ -10,19 +10,15 @@ interface IProps {
     game: IGame,
     show: boolean,
     setShow: Dispatch<React.SetStateAction<boolean>>,
+    handleSubmit: () => void,
 }
 
-function DeleteGameModal({ game, show, setShow }: IProps) {
-    const dispatch = useAppDispatch();
+function DeleteGameModal({ game, show, setShow, handleSubmit }: IProps) {
     const [ , setInput] = useState("");
     const [ canDelete, setCanDelete ] = useState(false);
     const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.DeleteGameById);
 
     const hide = () => {setShow(false)};
-
-    const handleSubmit = () => {
-        dispatch(DeleteGameByIdAction(game.id, hide));
-    };
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setInput(e.currentTarget.value);
