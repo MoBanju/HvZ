@@ -34,55 +34,63 @@ function CreateGameModal({ show, setShow }: IProps) {
     ]);
 
     /* Test */
-    const [mapLayer, setMaplayer] = useState<L.Layer | undefined>(undefined); 
+    const [maplayer, setMaplayer] = useState<L.FeatureGroup | undefined>(undefined); 
 
     const onCreated = (e:any) => {
 
-        console.log(e);
+       // console.log(e);
 
-        console.log(mapRef);
-        console.log(mapRef.current);
+      //  console.log(mapRef);
+      //  console.log(mapRef.current);
         
         const {layerType, layer} = e;
 
 
-        const {_leaflet_id} = layer;
+        //const {_leaflet_id} = layer;
         
+        var soLayer : L.Layer = layer;
         
-        var LayerSpecific : L.Layer = layer; 
+        var layers = [];
+        layers.push(soLayer);
+        var FeatureGroup : L.FeatureGroup = L.featureGroup(layers);
+        console.log(FeatureGroup);
+        //var test = mapRef.current?.hasLayer(layer);
 
-        console.log(LayerSpecific);
 
-        setMaplayer(LayerSpecific);
-        console.log(mapLayer);
-
-        console.log(layer)
-
-        var test = mapRef.current?.hasLayer(layer);
+        var lc = document.getElementsByClassName('leaflet-draw-draw-rectangle')  as HTMLCollectionOf<HTMLElement>;
         
-        console.log("Layers to follow");
-        mapRef.current?.eachLayer((rectLayer : L.Layer)  => {
-            console.log(rectLayer);
-        });
+        console.log(lc);
+
+        lc[0].style.visibility = 'hidden';
+      
+        var Bounds = FeatureGroup.getBounds();
+        if(Bounds !== undefined){
+        var NELng = Bounds.getNorthEast().lng;
+        var NELat = Bounds.getNorthEast().lat;
+        var SWLng = Bounds.getSouthWest().lng;
+        var SWLat = Bounds.getSouthWest().lat;
+
+        let BoxBoundsNew : L.LatLngBoundsLiteral = boxBounds;
+        BoxBoundsNew[1][0] = NELat;
+        BoxBoundsNew[1][1] = NELng;
+        BoxBoundsNew[0][0] = SWLat;
+        BoxBoundsNew[0][1] = SWLng;
+        
+        setBoxBounds(BoxBoundsNew);
 
 
-        if(test){
-            var lc = document.getElementsByClassName('leaflet-draw-draw-rectangle')  as HTMLCollectionOf<HTMLElement>;
-            lc[0].style.visibility = 'hidden';
+        console.log("BOX TO BE SAVED");
+        console.log(BoxBoundsNew);
+
+
         }
-
-        //Diable the rectangle button
-
-        console.log(test);
     };
 
     const onDeleted = (e:any) => {
-
-        console.log("Maplayer to follow");
-        console.log(mapLayer);
-
         var lc = document.getElementsByClassName('leaflet-draw-draw-rectangle')  as HTMLCollectionOf<HTMLElement>;
         lc[0].style.visibility = 'visible';
+         
+
     }
 
 
@@ -111,6 +119,15 @@ function CreateGameModal({ show, setShow }: IProps) {
             startTime: startTimeRef.current!.value,
             endTime: endTimeRef.current!.value,
         }
+
+        console.log("DO YOU EVEN POST ??")
+        console.log(game)
+        console.log(game.ne_lat)
+        console.log(game.ne_lng)
+        console.log(game.sw_lat)
+        console.log(game.sw_lng)
+
+
         const postGameAction = PostGameAction(game, hide)
         dispatch(postGameAction)
     };
