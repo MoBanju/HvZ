@@ -6,11 +6,15 @@ import GetGameById from "./getGameById";
 import getKillsByGameId from "./getKillsByGameId";
 import getPlayersByGameId from "./getPlayersByGameId";
 import {IKill} from "../../models/IKill"
+import React from 'react';
+import getSquadsByGameId from "./getSquadsByGameId";
+import { ISquad } from "../../models/ISquad";
 import { getMissions } from "./getMissions";
 import { IMission } from "../../models/IMission";
 import { setGameState } from "../../store/slices/gameSlice";
 
 interface IParams {
+
     id: number,
 }
 
@@ -19,9 +23,10 @@ async function getGameState({ id }: IParams) {
     let players       = await getPlayersByGameId({id});
     let killsResponse = await getKillsByGameId({id});
     let missions      = await getMissions({game_id: id});
+    let squads = await getSquadsByGameId({id})
     let kills = killsResponse
         .filter((killResponse: { playerKills: { playerId: number; }[]; }) => {
-            if(killResponse.playerKills.length != 2)
+            if(killResponse.playerKills.length !== 2)
                 return false;
             if(!players.some(p => p.id === killResponse.playerKills[0].playerId))
                 return false;
@@ -46,6 +51,7 @@ async function getGameState({ id }: IParams) {
         game,
         players,
         kills,
+        squads,
         missions,
     }
 }
@@ -54,7 +60,7 @@ async function getGameState({ id }: IParams) {
 
 
 
-export function getGameStateAction(id: number, initialeRequest: boolean, sideEffect: sideEffect): PayloadAction<RequestPayload<IParams, {game: IGame, players: IPlayer[], kills: IKill[], missions: IMission[] }>> {
+export function getGameStateAction(id: number, initialeRequest: boolean, sideEffect: sideEffect): PayloadAction<RequestPayload<IParams, {game: IGame, players: IPlayer[], kills: IKill[], missions: IMission[], squads: ISquad[] }>> {
     return {
         type: REQUEST_ACTION_TYPE,
         payload: {
