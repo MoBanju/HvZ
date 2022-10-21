@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
 import { RequestsEnum } from "../../store/middleware/requestMiddleware";
+import { IPostCheckinRequest, PostCheckinAction } from "../api/postCheckin";
 
 interface IParams {
     show: boolean,
@@ -25,6 +26,15 @@ function PostCheckinModal({ show, setShow, coords }: IParams) {
 
     const hide = () => { setShow({show: false, coords: undefined}); }
     const handleOnSubmit = handleSubmit((data) => {
+        const request: IPostCheckinRequest = {
+            start_time: data.startTime,
+            end_time: data.endTime,
+            latitude: coords!.lat,
+            longitude: coords!.lng,
+            squad_MemberId: currentPlayer!.squadMemberId!,
+        }
+        const action = PostCheckinAction(game!.id, currentPlayer!.squadId!, request, hide);
+        dispatch(action);
     });
     if(!coords) return null
     return (
@@ -79,7 +89,7 @@ function PostCheckinModal({ show, setShow, coords }: IParams) {
             <Modal.Footer>
                 <Button variant="danger" onClick={hide}>Cancel</Button>
                 {requestError && <span style={{ fontStyle: 'italic' }}>{requestError.message}</span>}
-                <Button variant="dark" type="submit">
+                <Button variant="dark" type="submit" onClick={handleOnSubmit}>
                     {requestLoading ? <Spinner animation="border" /> : <span>Submit</span>}
                 </Button>
             </Modal.Footer>

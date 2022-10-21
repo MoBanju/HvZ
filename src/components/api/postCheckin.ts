@@ -23,7 +23,7 @@ export interface IPostCheckinRequest {
 
 async function postCheckin({ gameId, squadId, request }: IParams): Promise<ICheckin> {
     const headers = await getAuthHeaders();
-    const response = await fetch(API_URL + "/game/" + gameId + "/Squad/" + squadId + "check-in", {
+    const response = await fetch(API_URL + "/game/" + gameId + "/Squad/" + squadId + "/check-in", {
         method: "POST",
         headers,
         body: JSON.stringify(request)
