@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IChatResponse } from "../../components/api/getChatByGameId";
+import Squad from "../../components/gameDetailsPage/Squad";
 import keycloak from "../../keycloak";
 import { IChat } from "../../models/IChat";
 import { IGame } from "../../models/IGame";
@@ -36,7 +37,7 @@ const gameSlice = createSlice({
     name: 'game',
     initialState: initialState,
     reducers: {
-        setGameState: (state, action: PayloadAction<{ game: IGame, players: IPlayer[], kills: IKill[],missions:IMission[], squads: ISquad[] }>) => {
+        setGameState: (state, action: PayloadAction<{ game: IGame, players: IPlayer[], kills: IKill[], missions: IMission[], squads: ISquad[] }>) => {
             const currPlayer = action.payload.players.find(player => player.user.keyCloakId === keycloak.tokenParsed?.sub)
             return {
                 ...state,
@@ -57,7 +58,7 @@ const gameSlice = createSlice({
                         isZombieGlobal: chatResponse.isZombieGlobal,
                         player: player,
                     };
-            });
+                });
             return {
                 ...state,
                 chat,
@@ -69,7 +70,7 @@ const gameSlice = createSlice({
         }),
         updatePlayerState: (state, action: PayloadAction<IPlayer>) => {
             let players = state.players.map(player => {
-                if(player.id === action.payload.id){
+                if (player.id === action.payload.id) {
                     return action.payload
                 }
                 return player
@@ -83,7 +84,7 @@ const gameSlice = createSlice({
         },
         updateKill: (state, action: PayloadAction<IKill>) => {
             let kills = state.kills.map(kill => {
-                if(kill.id === action.payload.id)
+                if (kill.id === action.payload.id)
                     return action.payload;
                 return kill;
             })
@@ -101,11 +102,24 @@ const gameSlice = createSlice({
                 players: [...state.players!, action.payload],
             }
         },
-        addSquadMember: (state, action: PayloadAction<ISquadMember>) =>{
-            console.log(action.payload)
-            return{
+        addSquadMember: (state, action: PayloadAction<any>) => {
+            console.log("action.payload [0]", action.payload[0])
+            console.log("addSquadMember", action.payload[1])
+
+
+            return {
                 ...state,
-                squadMembers: [...state.squadMembers, action.payload]
+                squads: state.squads.map(squad => {
+                    if (squad.id !== action.payload[1]) {
+                        console.log("not s", squad.id, action.payload[1])
+                        return squad
+                    }
+                    return {
+                        ...squad,
+                        squadMember: [...squad.squadMember, action.payload[0]], //why not work???
+                    }
+                }
+                )
             }
         },
         addSquad: (state, action: PayloadAction<ISquad>) => {
@@ -116,11 +130,11 @@ const gameSlice = createSlice({
         },
         deletePlayer: (state, action: PayloadAction<number>) => {
             const currPlayer = state.currentPlayer?.id === action.payload ? undefined : state.currentPlayer;
-            return{
+            return {
                 ...state,
                 currentPlayer: currPlayer,
                 players: state.players.filter(item => item.id !== action.payload),
-            }   
+            }
         },
         deleteKill: (state, action: PayloadAction<number>) => {
             return {
@@ -128,16 +142,16 @@ const gameSlice = createSlice({
                 kills: state.kills.filter(kill => kill.id !== action.payload),
             };
         },
-        updateGameState: (state, action: PayloadAction<IGame>) => {   
-            
-           let game = action.payload
+        updateGameState: (state, action: PayloadAction<IGame>) => {
+
+            let game = action.payload
             return {
                 ...state,
                 game
             }
         },
-        setMissions: (state, action: PayloadAction<IMission[]>) => { 
-           let missions = action.payload 
+        setMissions: (state, action: PayloadAction<IMission[]>) => {
+            let missions = action.payload
             return {
                 ...state,
                 missions
@@ -146,13 +160,13 @@ const gameSlice = createSlice({
         addMission: (state, action: PayloadAction<IMission>) => {
             let mission = action.payload
             return {
-                ...state, 
+                ...state,
                 missions: [...state.missions, mission]
             }
         },
         updateMission: (state, action: PayloadAction<IMission>) => {
             let missions = state.missions.map(mission => {
-                if(mission.id === action.payload.id){
+                if (mission.id === action.payload.id) {
                     return action.payload
                 }
                 return mission
@@ -162,9 +176,9 @@ const gameSlice = createSlice({
                 missions
             }
         },
-        deleteMission: (state, action: PayloadAction<number>) =>{
-            
-            return{
+        deleteMission: (state, action: PayloadAction<number>) => {
+
+            return {
                 ...state,
                 missions: state.missions.filter(mission => mission.id !== action.payload)
             }
@@ -176,7 +190,7 @@ const gameSlice = createSlice({
 export const {
     setGameState,
     setChat,
-    addChatMsg ,
+    addChatMsg,
     updatePlayerState,
     addPlayer,
     deletePlayer,
@@ -187,7 +201,7 @@ export const {
     deleteMission,
     updateKill,
     deleteKill,
-    addSquad, 
+    addSquad,
     addSquadMember,
 } = gameSlice.actions;
 
