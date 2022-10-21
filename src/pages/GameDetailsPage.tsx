@@ -9,28 +9,28 @@ import JoinGameBtn from "../components/gameDetailsPage/JoinGameBtn";
 import ProgressBar from "../components/gameDetailsPage/ProgressBar";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import "./GameDetailsPage.css";
-import { MdAdminPanelSettings, MdBackspace, MdOutlineAdminPanelSettings } from "react-icons/md"
+import { MdAdminPanelSettings, MdBackspace } from "react-icons/md"
 import AdminModal from "../components/gameDetailsPage/AdminModal";
 import keycloak from "../keycloak"
 import { namedRequestInProgAndError } from "../store/slices/requestSlice";
 import { RequestsEnum } from "../store/middleware/requestMiddleware";
-import { GetGamePlayersAndKillsByGameIdAction } from "../components/api/getGameAndPlayersByGameId";
+import { getGameStateAction } from "../components/api/getGameAndPlayersByGameId";
 import StartGameBtn from "../components/gameDetailsPage/StartGameBtn";
 import Map from "../components/gameDetailsPage/Map";
 import EndGameBtn from "../components/gameDetailsPage/EndGameBtn";
-
+import GameStateRefreshCountdown from "../components/gameDetailsPage/GameStateRefreshCountdown";
 
 
 function GameDetailsPage() {
     const [show, setShow] = useState(false);
     const routeParam = useParams()["id"]
     const dispatch = useAppDispatch()
-    const nav = useNavigate()
-    useEffect(() => {
-        dispatch(GetGamePlayersAndKillsByGameIdAction(Number(routeParam)))
+    useEffect(()=>{
+        dispatch(getGameStateAction(Number(routeParam), true, undefined))
     }, [])
-    const { game, currentPlayer, players, kills } = useAppSelector(state => state.game)
-    const [requestInProgress, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.GetGamePlayerAndKillsByGameId);
+    const {game, currentPlayer, players, kills} = useAppSelector(state => state.game)
+    const [requestInProgress, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.GetGameStateInital);
+    const nav = useNavigate()
     const isAdmin = keycloak.realmAccess?.roles.includes("ADMIN")
 
     if (error) {
@@ -51,6 +51,7 @@ function GameDetailsPage() {
             <div className="position-absolute top-0 end-0 m-3 log-header logged-in">
                 {keycloak.authenticated && <span>Logged in as: {keycloak.tokenParsed?.preferred_username}</span>}
                 {isAdmin && <button className="logged-in" onClick={() => handleClick()}> <MdAdminPanelSettings size={30} />Admin</button>}
+                <GameStateRefreshCountdown id={game.id}/>
             </div>
             <AdminModal show={show} setShow={setShow} players={players} game={game} />
 

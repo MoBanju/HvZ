@@ -17,7 +17,7 @@ function Map({gameid} : {gameid: number}) {
     <MapContainer  center={center} zoom={13} scrollWheelZoom={true} maxZoom={18} minZoom={9} style={{
         height: "30vh",
         width: "35vh",
-      }} maxBounds={[[game!.sw_lat, game!.sw_lng], [game!.ne_lat, game!.ne_lng]]}>
+      }} maxBounds={[[game!.sw_lat - 0.1, game!.sw_lng - 0.1], [game!.ne_lat + 0.1, game!.ne_lng + 0.1]]}>
 
         <TileLayer
             url={"https://api.maptiler.com/maps/basic-v2-dark/{z}/{x}/{y}.png?key=" + MAP_TILER_API_KEY + ""}
