@@ -1,47 +1,76 @@
-import { timeStamp } from 'console';
-import L, { LatLngTuple, map } from 'leaflet';
-import { SetStateAction, useEffect, useRef, useState } from 'react';
-import { MapContainer, Marker, Popup, Rectangle, TileLayer, useMap, useMapEvents } from 'react-leaflet'
+import { LatLng, LatLngBoundsLiteral, LatLngTuple, LeafletMouseEvent } from 'leaflet';
+import { useMemo, useState } from 'react';
+import { MapContainer, Rectangle, TileLayer } from 'react-leaflet'
 import { MAP_TILER_API_KEY } from '../../constants/enviroment';
-import { IGame } from '../../models/IGame';
-import { IKill } from '../../models/IKill';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { useAppSelector } from '../../store/hooks';
 import Gravestone from './Gravestone';
 import Mission from './Mission';
+import PostCheckinModal from './PostCheckinModal';
 
 
-function Map({gameid} : {gameid: number}) {
-    const { game } = useAppSelector(state => state.game)
-    const center = [(game!.ne_lat + game!.sw_lat) / 2, (game!.ne_lng + game!.sw_lng) / 2] as LatLngTuple
-    return (
-    <MapContainer  center={center} zoom={13} scrollWheelZoom={true} maxZoom={18} minZoom={9} style={{
-        height: "30vh",
-        width: "35vh",
-      }} maxBounds={[[game!.sw_lat - 0.1, game!.sw_lng - 0.1], [game!.ne_lat + 0.1, game!.ne_lng + 0.1]]}>
+function Map({ gameid }: { gameid: number }) {
+    const { game, currentPlayer } = useAppSelector(state => state.game)
+    const [center, bounds] = useMemo(() =>
+        [
+            [(game!.ne_lat + game!.sw_lat) / 2, (game!.ne_lng + game!.sw_lng) / 2] as LatLngTuple,
+            [[game!.sw_lat, game!.sw_lng], [game!.ne_lat, game!.ne_lng]] as LatLngBoundsLiteral,
+        ], [game]);
+    const [showCheckinModal, setShowCheckinModal] = useState<{show: boolean, coords: LatLng | undefined}>({show: false, coords: undefined});
 
-        <TileLayer
-            url={"https://api.maptiler.com/maps/basic-v2-dark/{z}/{x}/{y}.png?key=" + MAP_TILER_API_KEY + ""}
-            tileSize={512}
-            minZoom={1}
-            zoomOffset={-1}
-            attribution={"\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e"}
-            crossOrigin={true}
-        />
-        { game?.state !== 'Registration' &&
-            <div>
-                <Gravestone gameid={game!.id}></Gravestone>
-                <Mission></Mission>
-            </div>
+    const handleMapAreaClicked = (e: LeafletMouseEvent) => {
+        if(game?.state === "Progress" && currentPlayer && currentPlayer.squadId && currentPlayer.squadMemberId ) {
+            setShowCheckinModal({show: true, coords: e.latlng})
         }
-        <Rectangle 
-            bounds={[[game!.sw_lat, game!.sw_lng], [game!.ne_lat, game!.ne_lng]]}
-            fill={false}
-            stroke={true}
-            pathOptions={{color: '#ff000077'}}
-            
+    };
+
+    return (
+        <>
+        <MapContainer
+            center={center}
+            zoom={13}
+            scrollWheelZoom={true}
+            maxZoom={18}
+            minZoom={9}
+            style={{
+                height: "30vh",
+                width: "35vh",
+            }}
+            maxBounds={[
+                [bounds[0][0] - 0.1, bounds[0][1] - 0.1],
+                [bounds[1][0] + 0.1, bounds[1][1] + 0.1]
+            ]}>
+
+            <TileLayer
+                url={"https://api.maptiler.com/maps/basic-v2-dark/{z}/{x}/{y}.png?key=" + MAP_TILER_API_KEY + ""}
+                tileSize={512}
+                minZoom={1}
+                zoomOffset={-1}
+                attribution={"\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e"}
+                crossOrigin={true}
+            />
+            {game?.state !== 'Registration' &&
+                <div>
+                    <Gravestone gameid={game!.id}></Gravestone>
+                    <Mission></Mission>
+                </div>
+            }
+            <Rectangle
+                bounds={bounds}
+                fillColor='#000000ff'
+                stroke={true}
+                pathOptions={{ color: '#ff000077' }}
+                eventHandlers={{
+                    click: handleMapAreaClicked,
+            }}
+            />
+
+        </MapContainer>
+        <PostCheckinModal
+            show={showCheckinModal.show}
+            setShow={setShowCheckinModal}
+            coords={showCheckinModal.coords!}
         />
-        
-    </MapContainer>
+        </>
     )
 }
 export default Map

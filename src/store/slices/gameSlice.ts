@@ -3,6 +3,7 @@ import { IChatResponse } from "../../components/api/getChatByGameId";
 import Squad from "../../components/gameDetailsPage/Squad";
 import keycloak from "../../keycloak";
 import { IChat } from "../../models/IChat";
+import { ICheckin } from "../../models/ICheckin";
 import { IGame } from "../../models/IGame";
 import { IKill } from "../../models/IKill";
 import { IMission } from "../../models/IMission";
@@ -17,6 +18,7 @@ interface initialeState {
     chat: IChat[],
     kills: IKill[],
     missions: IMission[],
+    checkins: ICheckin[],
     squads: ISquad[],
     squadMembers: ISquadMember[],
 }
@@ -28,6 +30,7 @@ const initialState: initialeState = {
     chat: [],
     kills: [],
     missions: [],
+    checkins: [],
     squads: [],
     squadMembers: [],
 }
@@ -111,11 +114,16 @@ const gameSlice = createSlice({
                     }
                     return {
                         ...squad,
-                        squad_Members: [...squad.squad_Members, action.payload[0]], 
                     }
                 }
                 )
             }
+        },
+        addCheckin: (state, action: PayloadAction<ICheckin>) => {
+            return {
+                ...state,
+                checkins: [... state.checkins, action.payload],
+            };
         },
         addSquad: (state, action: PayloadAction<ISquad>) => {
             return {
@@ -198,6 +206,7 @@ export const {
     deleteKill,
     addSquad,
     addSquadMember,
+    addCheckin,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;
