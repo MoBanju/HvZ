@@ -6,6 +6,7 @@ import { ISquad } from "../../models/ISquad";
 import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE } from "../../store/middleware/requestMiddleware";
 import { addPlayer, addSquad } from "../../store/slices/gameSlice";
 import { IPlayerResponse } from "./getPlayersByGameId";
+import { ISquadResponse } from "./getSquadsByGameId";
 import getAuthHeaders from "./setAuthHeaders";
 
 export interface PostSquadInGameRequest {
@@ -14,7 +15,6 @@ export interface PostSquadInGameRequest {
     squadMember: {
         rank: string,
         playerId: number
-
     }
 }
 
@@ -34,16 +34,17 @@ async function postSquad({gameId, squad}: IParams): Promise<ISquad>{
     });
     if(!response.ok)
         throw new Error(await response.text() || response.statusText);
-    let createdSquad = await response.json() as ISquad;
+    let createdSquad = await response.json() as ISquadResponse;
     if(keycloak.tokenParsed?.sub){
         return {
             id: createdSquad.id,
             name: createdSquad.name,
             is_human: createdSquad.is_human,
-            squadMember: {
+            deseasedPlayers: createdSquad.deseasedPlayers,
+            squadMember: [{
                 rank: createdSquad.squadMember.rank,
                 playerId: createdSquad.squadMember.playerId
-            }
+            }]
         };
     }  
     throw new Error("Post squad ingame failed")

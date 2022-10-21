@@ -34,13 +34,13 @@ export enum RequestsEnum {
     PutPlayerType,
     DeletePlayerById,
     PutGameById,
+    PostSquad,
+    postPlayerInSquad,
     PutKillById,
     GetMissions,
     PostMission,
     PutMission,
     DeleteMissionById,
-    PostSquad,
-    postPlayerInSquad,
 }
 
 export interface RequestPayload<P, T> {

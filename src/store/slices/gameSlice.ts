@@ -102,16 +102,16 @@ const gameSlice = createSlice({
             }
         },
         addSquadMember: (state, action: PayloadAction<ISquadMember>) =>{
+            console.log(action.payload)
             return{
                 ...state,
                 squadMembers: [...state.squadMembers, action.payload]
             }
         },
         addSquad: (state, action: PayloadAction<ISquad>) => {
-            console.log(action.payload)
             return {
                 ...state,
-                squads: [...state.squads, action.payload]
+                squads: [...state.squads, action.payload],
             }
         },
         deletePlayer: (state, action: PayloadAction<number>) => {
