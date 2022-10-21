@@ -13,8 +13,14 @@ import Mission from './Mission';
 function Map({gameid} : {gameid: number}) {
     const { game } = useAppSelector(state => state.game)
     const center = [(game!.ne_lat + game!.sw_lat) / 2, (game!.ne_lng + game!.sw_lng) / 2] as LatLngTuple
+    const areaG = (game!.ne_lng - game!.sw_lng) * (game!.ne_lat - game!.sw_lat)
+    const times = 10
+    console.log(areaG)
+    console.log("x: " + game!.ne_lat + " + " + game!.sw_lat)
+    console.log("y: " + game!.ne_lng + " + " + game!.sw_lng)
+    console.log(areaG + times)
     return (
-    <MapContainer  center={center} zoom={13} scrollWheelZoom={true} maxZoom={18} minZoom={9} style={{
+    <MapContainer  center={center} zoom={ 13 } scrollWheelZoom={true} maxZoom={18} minZoom={9} style={{
         height: "30vh",
         width: "35vh",
       }} maxBounds={[[game!.sw_lat - 0.1, game!.sw_lng - 0.1], [game!.ne_lat + 0.1, game!.ne_lng + 0.1]]}>
