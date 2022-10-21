@@ -23,8 +23,6 @@ function Map({ gameid }: { gameid: number }) {
             setShowCheckinModal({show: true, coords: e.latlng})
         }
     };
-    if(game!.state === "Registration")
-        return null;
 
     return (
         <>
@@ -51,9 +49,9 @@ function Map({ gameid }: { gameid: number }) {
                 attribution={"\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e"}
                 crossOrigin={true}
             />
-            {missions.map(mission => <Mission mission={mission} />)}
-            {kills.map(kill => <Gravestone kill={kill} />)}
-            {checkins.map(checkin => <Checkin checkin={checkin} />)}
+            {game!.state !== "Registration" &&  missions.map(mission => <Mission key={mission.id} mission={mission} />)}
+            {game!.state !== "Registration" && kills.map(kill => <Gravestone key={kill.id} kill={kill} />)}
+            {game!.state !== "Registration"  && checkins.map(checkin => <Checkin key={checkin.id} checkin={checkin} />)}
             <Rectangle
                 bounds={bounds}
                 fillColor='#000000ff'
