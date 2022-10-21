@@ -16,7 +16,7 @@ function Squad({gameid, gamestate} : {gameid: number, gamestate: keyof IGameStat
     const nameInputRef = useRef() as MutableRefObject<HTMLInputElement>;
     const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.postPlayerInSquad)
   
-    let isInSquad = squads.some(squad => squad.squad_Members?.some(member => member.playerId))
+    let isInSquad = squads.some(squad => squad.squad_Members?.some(member => member.playerId === currentPlayer?.id))
     
     console.log("currPlayer id: " + currentPlayer?.id)
     console.log("is in squad: " + isInSquad)
@@ -27,7 +27,7 @@ function Squad({gameid, gamestate} : {gameid: number, gamestate: keyof IGameStat
             name: nameInputRef.current.value,
             is_human: currentPlayer!.isHuman,
             squadMember: {
-                rank: "",
+                rank: "Captain",
                 playerId: currentPlayer!.id,
             }
         }
@@ -72,9 +72,9 @@ function Squad({gameid, gamestate} : {gameid: number, gamestate: keyof IGameStat
                     squads.map((squad, i) => 
                     <tr key={i}>
                         <td className="pt-3" >{squad.name}</td>
-                        <td className="pt-3">12</td>
+                        <td className="pt-3">{squad.squad_Members.length}</td>
                         <td className="pt-3" >{squad.deseasedPlayers}</td>
-                        {gamestate !== "Complete" && currentPlayer &&
+                        {gamestate !== "Complete" && currentPlayer && !isInSquad &&
                         <td>{!loading ? (<button className="btn-delete ms-4" onClick={() => joinSquad(squad.id)}><BiPlusMedical color="red"/></button>) : <Spinner animation="border" size={"sm" }></Spinner> }</td>
                         }
                     </tr>)

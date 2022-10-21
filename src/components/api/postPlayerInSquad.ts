@@ -19,14 +19,17 @@ export interface PostPlayerInSquadRequest {
 }
 
 export async function postPlayerInSquad({gameId, squadId, squadMember}: IParams): Promise<any>{
+    console.log("lala", squadMember)
     let response = await fetch(`${API_URL}/game/${gameId}/Squad/${squadId}/join`, {
         method: "POST",
         headers: 
             await getAuthHeaders(),
         body: JSON.stringify(squadMember),
     });
-    if(!response.ok)
+    if(!response.ok){
+        console.log("Huaeoeiaj")
         throw new Error(await response.text() || response.statusText);
+    }
     let joinedMember = await response.json() as ISquadMember;
     console.log("POSTPLAYErINSQUAD", joinedMember)
     if(keycloak.tokenParsed?.sub){
@@ -35,7 +38,7 @@ export async function postPlayerInSquad({gameId, squadId, squadMember}: IParams)
     throw new Error("Post player in squad failed")
 }
 
-export const PostPlayerInSquadAction: (gameId: number, squadId: number, squadMember: ISquadMember) => PayloadAction<RequestPayload<IParams, ISquadMember>> = (gameId: number, squadId: number, squadMember: ISquadMember) => ({
+export const PostPlayerInSquadAction: (gameId: number, squadId: number, squadMember: PostPlayerInSquadRequest) => PayloadAction<RequestPayload<IParams, PostPlayerInSquadRequest>> = (gameId: number, squadId: number, squadMember: PostPlayerInSquadRequest) => ({
     type: REQUEST_ACTION_TYPE,
     payload: {
         cbDispatch: addSquadMember,

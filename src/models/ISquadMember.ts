@@ -1,5 +1,7 @@
 
 export interface ISquadMember{
     playerId: number,
-    rank: string
+    rank: string,
+    squadId: number, 
+    id: number
 }
