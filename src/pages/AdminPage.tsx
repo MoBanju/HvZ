@@ -54,7 +54,7 @@ function AdminPage() {
         return <p>LOADING</p>
 
     return (
-    <Row >
+    <Row className="background">
         <Col className="card">
             <h5>Game</h5>
             <Table hover>
