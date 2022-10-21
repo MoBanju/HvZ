@@ -18,22 +18,19 @@ export interface PostPlayerInSquadRequest {
     rank: string
 }
 
-export async function postPlayerInSquad({gameId, squadId, squadMember}: IParams): Promise<ISquadMember>{
+export async function postPlayerInSquad({gameId, squadId, squadMember}: IParams): Promise<any>{
     let response = await fetch(`${API_URL}/game/${gameId}/Squad/${squadId}/join`, {
         method: "POST",
         headers: 
-            await getAuthHeaders()
-        ,
+            await getAuthHeaders(),
         body: JSON.stringify(squadMember),
     });
     if(!response.ok)
         throw new Error(await response.text() || response.statusText);
     let joinedMember = await response.json() as ISquadMember;
+    console.log("POSTPLAYErINSQUAD", joinedMember)
     if(keycloak.tokenParsed?.sub){
-        return {
-            playerId: joinedMember.playerId,
-            rank: joinedMember.rank
-        }; 
+        return [joinedMember, squadId]
     }
     throw new Error("Post player in squad failed")
 }

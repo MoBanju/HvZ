@@ -15,10 +15,10 @@ export interface ISquadResponse {
     name: string,
     is_human: boolean,
     deseasedPlayers: number,
-    squadMember: {
+    squadMember: [{
         playerId: number,
         rank: string
-    }
+    }]
 }
 
 async function getSquadsByGameId({ id }: IParams ) {

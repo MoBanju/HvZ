@@ -12,15 +12,15 @@ import { IGameState } from "../../models/IGameState";
 
 function Squad({gameid, gamestate} : {gameid: number, gamestate: keyof IGameState}) {
     const dispatch = useAppDispatch()
-    const { squads, currentPlayer} = useAppSelector(state => state.game)
+    const { squads, currentPlayer, squadMembers} = useAppSelector(state => state.game)
     const nameInputRef = useRef() as MutableRefObject<HTMLInputElement>;
     const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.postPlayerInSquad)
   
     let isInSquad = squads.some(squad => squad.squadMember?.some(member => member.playerId))
     
-    squads.some(squad=> console.log(squad.squadMember))
     console.log("currPlayer id: " + currentPlayer?.id)
     console.log("is in squad: " + isInSquad)
+    console.log("squad", squads)
 
     const submitSquad = () => {
         const squad: PostSquadInGameRequest = {

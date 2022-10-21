@@ -28,10 +28,10 @@ function GameDetailsPage() {
     const [show, setShow] = useState(false);
     const routeParam = useParams()["id"]
     const dispatch = useAppDispatch()
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(getGameStateAction(Number(routeParam), true, undefined))
     }, [])
-    const {game, currentPlayer, players, kills} = useAppSelector(state => state.game)
+    const { game, currentPlayer, players, kills } = useAppSelector(state => state.game)
     const [requestInProgress, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.GetGameStateInital);
     const nav = useNavigate()
     const isAdmin = keycloak.realmAccess?.roles.includes("ADMIN")
@@ -44,7 +44,7 @@ function GameDetailsPage() {
         return <div className="background-game"><div className="loader"></div></div>
     }
 
-    const handleClick =  () => {
+    const handleClick = () => {
         nav("/admin/" + game.id)
     }
 
@@ -54,7 +54,7 @@ function GameDetailsPage() {
             <div className="position-absolute top-0 end-0 m-3 log-header logged-in">
                 {keycloak.authenticated && <span>Logged in as: {keycloak.tokenParsed?.preferred_username}</span>}
                 {isAdmin && <button className="logged-in" onClick={() => handleClick()}> <MdAdminPanelSettings size={30} />Admin</button>}
-                <GameStateRefreshCountdown id={game.id}/>
+                <GameStateRefreshCountdown id={game.id} />
             </div>
             <AdminModal show={show} setShow={setShow} players={players} game={game} />
 
@@ -91,11 +91,19 @@ function GameDetailsPage() {
                                 <div>
                                     <BiteCode />
                                 </div>
-                                
+
 
                             </div>
                         </div>
                     </Col>
+                    <Col>
+                        <div className="card m-5 mx-auto card-detail">
+                            <div className="card-text">
+                                <Squad gameid={game.id} gamestate={game.state}></Squad>
+                            </div>
+                        </div>
+                    </Col>
+
                 </Row>
             </Container>
             <div className="d-flex">
