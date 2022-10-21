@@ -10,6 +10,17 @@ interface IParams {
     id: number,
 }
 
+export interface ISquadResponse {
+    id: number,
+    name: string,
+    is_human: boolean,
+    deseasedPlayers: number,
+    squadMember: {
+        playerId: number,
+        rank: string
+    }
+}
+
 async function getSquadsByGameId({ id }: IParams ) {
     const headers = await getAuthHeaders();
     let response = await fetch(`${API_URL}/game/${id}/Squad`, {

@@ -5,5 +5,6 @@ export interface ISquad{
     id: number,
     name: string,
     is_human: boolean,
-    squadMember: ISquadMember,
+    deseasedPlayers: number,
+    squadMember: ISquadMember[],
 }

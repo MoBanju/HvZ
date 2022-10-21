@@ -9,7 +9,7 @@ import JoinGameBtn from "../components/gameDetailsPage/JoinGameBtn";
 import ProgressBar from "../components/gameDetailsPage/ProgressBar";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import "./GameDetailsPage.css";
-import {MdAdminPanelSettings, MdBackspace, MdOutlineAdminPanelSettings} from "react-icons/md"
+import { MdAdminPanelSettings, MdBackspace, MdOutlineAdminPanelSettings } from "react-icons/md"
 import AdminModal from "../components/gameDetailsPage/AdminModal";
 import keycloak from "../keycloak"
 import { namedRequestInProgAndError } from "../store/slices/requestSlice";
@@ -62,20 +62,16 @@ function GameDetailsPage() {
                 <div className="card m-5 mx-auto card-detail">
                     <div className="card-text"> 
                         <GameDescription title={game.name} description={game.description} />
-                        
-                            <div className="btn-group">
-                                { isAdmin &&
-                                    <div>
-                                        { game.state !== "Complete" &&
-                                            <button className="btn btn-danger mt-3 mb-3 me-2" onClick={() => {setShow(true)}}>Admin-table</button>
-                                        }
-                                        <StartGameBtn/>
-                                        <EndGameBtn/>
-                                    </div>
-                                }
+                        { isAdmin && 
+                                <div className="btn-group me-3 ms-3">
+                                    { game.state !== "Complete" &&
+                                        <button className="btn btn-danger mt-3 mb-3 me-2" onClick={() => {setShow(true)}}>Admin-table</button>
+                                    }
+                                    <StartGameBtn/>
+                                    <EndGameBtn/>
+                                </div>
+                        }
                         <JoinGameBtn gameId={game.id}/>
-                            </div>
-                        
                     </div>
                 </div>
             </Col>
@@ -97,7 +93,7 @@ function GameDetailsPage() {
             <Col>
             <div className="card m-5 mx-auto card-detail">
                     <div className="card-text">
-                        <Squad gameid={game.id}></Squad>
+                        <Squad gameid={game.id} gamestate={game.state}></Squad>
                     </div>
             </div>
             </Col>
