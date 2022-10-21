@@ -9,6 +9,7 @@ import { FeatureGroup, MapContainer, TileLayer } from 'react-leaflet'
 import L, { LatLngBoundsLiteral, LatLngTuple, Map as LeafletMap } from 'leaflet'
 import { EditControl } from 'react-leaflet-draw';
 import 'leaflet-draw';
+import 'leaflet-draw/dist/leaflet.draw.css';
 import DraggableMap from "./DraggableMap";
 import { MAP_TILER_API_KEY } from "../../constants/enviroment";
 
@@ -36,24 +37,63 @@ function CreateGameModal({ show, setShow }: IProps) {
     /* Test */
     const [maplayer, setMaplayer] = useState<L.FeatureGroup | undefined>(undefined); 
 
+
+    const onEditComplete = (e:any) => {
+        const {layers} = e;
+
+        console.log(e);
+        console.log(layers);
+
+        console.log("layers to follow");
+        layers.eachLayer((a : any) =>{
+                    //console.log(layers);
+            var soLayer : L.Layer = a;
+            var oneLayerArray = [];
+            oneLayerArray.push(soLayer);
+            var FeatureGroup : L.FeatureGroup = L.featureGroup(oneLayerArray);
+            
+            var Bounds = FeatureGroup.getBounds();
+            if(Bounds !== undefined){
+            var NELng = Bounds.getNorthEast().lng;
+            var NELat = Bounds.getNorthEast().lat;
+            var SWLng = Bounds.getSouthWest().lng;
+            var SWLat = Bounds.getSouthWest().lat;
+
+            let BoxBoundsNew : L.LatLngBoundsLiteral = boxBounds;
+            BoxBoundsNew[1][0] = NELat;
+            BoxBoundsNew[1][1] = NELng;
+            BoxBoundsNew[0][0] = SWLat;
+            BoxBoundsNew[0][1] = SWLng;
+            
+            setBoxBounds(BoxBoundsNew);
+
+
+            console.log("BOX TO BE SAVED");
+            console.log(BoxBoundsNew);
+            }
+        });
+
+
+    }
+
     const onCreated = (e:any) => {
 
-       // console.log(e);
-
-      //  console.log(mapRef);
-      //  console.log(mapRef.current);
-        
+        console.log(e);
         const {layerType, layer} = e;
 
 
         //const {_leaflet_id} = layer;
-        
+        console.log("error?");
         var soLayer : L.Layer = layer;
+        console.log("no error yet");
         
         var layers = [];
         layers.push(soLayer);
+        console.log("No errors ever");
+        console.log(layers);
         var FeatureGroup : L.FeatureGroup = L.featureGroup(layers);
         console.log(FeatureGroup);
+        
         //var test = mapRef.current?.hasLayer(layer);
 
 
@@ -87,10 +127,17 @@ function CreateGameModal({ show, setShow }: IProps) {
     };
 
     const onDeleted = (e:any) => {
-        var lc = document.getElementsByClassName('leaflet-draw-draw-rectangle')  as HTMLCollectionOf<HTMLElement>;
-        lc[0].style.visibility = 'visible';
-         
+        //Should only have the clearallAction
+        console.log(e);
+        const {layers } = e;
+        console.log(e);
+        console.log(layers);
 
+        console.log("layers to follow");
+        layers.eachLayer((a : any) =>{
+            var lc = document.getElementsByClassName('leaflet-draw-draw-rectangle')  as HTMLCollectionOf<HTMLElement>;
+            lc[0].style.visibility = 'visible';
+        })
     }
 
 
@@ -230,7 +277,7 @@ function CreateGameModal({ show, setShow }: IProps) {
                                 circle: false,
                                 marker: false,
                             }}
-                            position="bottomright" onCreated={onCreated} onDeleted={onDeleted} />
+                            position="topright" onCreated={onCreated} onDeleted={onDeleted} onEdited={onEditComplete} />
                     </FeatureGroup>
                     {/* <FullscreenControl /> */} 
                 </MapContainer> 
