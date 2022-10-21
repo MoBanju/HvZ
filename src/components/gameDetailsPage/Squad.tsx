@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { RequestsEnum } from "../../store/middleware/requestMiddleware";
 import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
-import { GetGameAndPlayersByGameIdAction } from "../api/getGameAndPlayersByGameId";
+import { GetGamePlayersAndKillsByGameIdAction } from "../api/getGameAndPlayersByGameId";
 import getSquadsByGameId from "../api/getSquadsByGameId";
 import { PostPlayerInSquadAction, PostPlayerInSquadRequest } from "../api/postPlayerInSquad";
 import { PostSquadAction, PostSquadInGameRequest } from "../api/PostSquad";
@@ -61,8 +61,8 @@ function Squad({gameid} : {gameid: number}) {
             </thead>
             <tbody>
                 {
-                    squads.map(squad => 
-                    <tr>
+                    squads.map((squad, i) => 
+                    <tr key={i}>
                         <td className="pt-3" >{squad.name}</td>
                         <td className="pt-3" >5</td>
                         <td className="pt-3" >1</td>

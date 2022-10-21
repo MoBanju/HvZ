@@ -12,6 +12,7 @@ import getSquadsByGameId from "./getSquadsByGameId";
 import { ISquad } from "../../models/ISquad";
 
 interface IParams {
+
     id: number,
 }
 
@@ -55,7 +56,7 @@ async function getGamePlayerAndKillsByGameIdRequest({ id }: IParams) {
 
 
 
-export function GetGameAndPlayersByGameIdAction(id: number): PayloadAction<RequestPayload<IParams, {game: IGame, players: IPlayer[], kills: IKill[], squads: ISquad[] }>> {
+export function GetGamePlayersAndKillsByGameIdAction(id: number): PayloadAction<RequestPayload<IParams, {game: IGame, players: IPlayer[], kills: IKill[], squads: ISquad[] }>> {
     return {
         type: REQUEST_ACTION_TYPE,
         payload: {
