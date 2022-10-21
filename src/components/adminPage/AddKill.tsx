@@ -24,25 +24,34 @@ interface IFormValues {
 
 function AddKill({ game }: IParams) {
     const { players } = useAppSelector(state => state.game);
-    const { handleSubmit, register, setValue } = useForm<IFormValues>();
+    const { handleSubmit, register, setValue, formState, setError } = useForm<IFormValues>();
     const center = [(game!.ne_lat + game!.sw_lat) / 2, (game!.ne_lng + game!.sw_lng) / 2] as LatLngTuple
     const [markerPosition, setMarkerPosition] = useState<LatLngTuple>(center);
     const [showMap, setShowMap] = useState<boolean>(false)
     const [requestLoading, requestError] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PostKill);
     const dispatch = useAppDispatch();
-    
+
     useEffect(() => {
         setValue("latitude", markerPosition[0]);
         setValue("longtitude", markerPosition[1]);
     }, [markerPosition]);
-    
+
     const toggleHasLocation = () => {
         setShowMap((prevShowMap) => !prevShowMap);
     }
     const handleOnSubmit = handleSubmit((data) => {
+        console.log(data)
         let victim = players.find(player => player.id === Number(data.victim));
         let killer = players.find(player => player.id === Number(data.killer));
-        if(!victim || !killer) return;
+        if(!victim) {
+            setError("victim", {message: "Please select a victim"})
+        }
+        if(!killer) {
+            setError("killer", {message: "Please select a killer"})
+        }
+        if (!victim || !killer) {
+            return
+        };
         const request: IKillRequest = {
             timeDeath: data.timeDeath,
             killerId: killer.id,
@@ -51,37 +60,48 @@ function AddKill({ game }: IParams) {
             latitude: showMap ? data.latitude : undefined,
             longitude: showMap ? data.longtitude : undefined,
         }
-        const action = PostKillAction(game.id, request, () => {});
+        const action = PostKillAction(game.id, request, () => { });
         dispatch(action);
     });
 
     return (<>
         <h1>Add a new kill to game #{game.id}</h1>
         <Form onSubmit={handleOnSubmit}>
-            <Form.Select defaultValue={0} {...register("killer")}>
-                <option value={0}>Killer</option>
-                {players
-                    .filter(killer => !killer.isHuman)
-                    .map(player => 
-                    <option value={player.id} key={player.id}>
-                        {player.user.firstName}
-                    </option>
-                )}
-            </Form.Select>
-            <Form.Select defaultValue={0} {...register("victim")}>
-                <option value={0}>Victim</option>
-                {players
-                    .filter(player => player.isHuman)
-                    .map(victim => 
-                    <option value={victim.id} key={victim.id}>
-                        {victim.user.firstName}
-                    </option>
-                )}
-            </Form.Select>
+            <InputGroup>
+                <Form.Select defaultValue={0} {...register("killer")}>
+                    <option value={0}>Killer</option>
+                    {players
+                        .filter(killer => !killer.isHuman)
+                        .map(player =>
+                            <option value={player.id} key={player.id}>
+                                {player.user.firstName}
+                            </option>
+                        )}
+                </Form.Select>
+                <FormControl.Feedback type="invalid" style={{ display: "unset" }}>
+                    {formState.errors.killer && formState.errors.killer.message}
+                </FormControl.Feedback>
+            </InputGroup>
+            <InputGroup>
+                <Form.Select defaultValue={0} {...register("victim")}>
+                    <option value={0}>Victim</option>
+                    {players
+                        .filter(player => player.isHuman)
+                        .map(victim =>
+                            <option value={victim.id} key={victim.id}>
+                                {victim.user.firstName}
+                            </option>
+                        )}
+                </Form.Select>
+                <FormControl.Feedback type="invalid" style={{ display: "unset" }}>
+                    {formState.errors.victim && formState.errors.victim.message}
+                </FormControl.Feedback>
+            </InputGroup>
             <InputGroup >
                 <InputGroup.Text id="timedeath">Time of death</InputGroup.Text>
                 <FormControl
                     aria-label="timedeath"
+                    type="datetime-local"
                     aria-describedby="timedeath"
                     defaultValue={new Date().toISOString()}
                     {...register('timeDeath')}
@@ -93,8 +113,14 @@ function AddKill({ game }: IParams) {
                     as="textarea"
                     aria-label="description"
                     aria-describedby="description"
-                    {...register('description')}
+                    {...register('description', {
+                        maxLength: {value: 200, message: "Description cant be more than 200 characters"},
+                        required: {value: true, message: "Please provide a description"}
+                    })}
                 />
+                <FormControl.Feedback type="invalid" style={{ display: "unset" }}>
+                    {formState.errors.description && formState.errors.description.message}
+                </FormControl.Feedback>
             </InputGroup>
             <Form.Check
                 type="switch"

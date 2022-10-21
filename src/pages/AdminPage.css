@@ -2,6 +2,38 @@ form {
     width: 100%;
 }
 
+.background{
+    background-image: url("/public/zombie.jpg");
+    min-height: 100vh;
+    max-width: 100vw;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow-y: auto;
+}
+
+.card {
+    background-color: rgba(82, 82, 82, 0.96);
+    margin: 5px;
+}
+
+.table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.table tr {
+    display: flex;
+}
+
+.table td, .table th {
+    flex: 80px 1;
+    width: 10%;
+    max-height: 3em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 .input-group-text {
     width: 25%;
     white-space: break-spaces;
