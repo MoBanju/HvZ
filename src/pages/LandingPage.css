@@ -16,15 +16,15 @@
 .card{
     background-color: rgba(82, 82, 82, 0.7);
     align-items: center;
-    height: fit-content;
-    width: fit-content;
+    height: fit-content !important;
+    width: fit-content !important;
     padding: 70px;
     border-radius: 20px;
     color: rgb(230, 230, 230);
     border: none;
     box-shadow: rgba(0, 0, 0, 0.6) 0px 14px 28px, rgba(0, 0, 0, 0.6) 0px 10px 10px;
-    position: relative;
-    min-width: 45vh;
+    position: relative ;
+    min-width: 45vh !important;
 }
 
 .table {

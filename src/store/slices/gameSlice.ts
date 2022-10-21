@@ -113,6 +113,7 @@ const gameSlice = createSlice({
                     }
                     return {
                         ...squad,
+                        squad_Members: [...squad.squad_Members, action.payload[0]], 
                     }
                 }
                 )

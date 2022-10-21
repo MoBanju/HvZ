@@ -16,16 +16,16 @@ form {
     margin: 5px;
 }
 
-.table {
+.table-admin {
     table-layout: fixed;
     width: 100%;
 }
 
-.table tr {
+.table-admin tr {
     display: flex;
 }
 
-.table td, .table th {
+.table-admin td, .table-admin th {
     flex: 80px 1;
     width: 10%;
     max-height: 3em;
