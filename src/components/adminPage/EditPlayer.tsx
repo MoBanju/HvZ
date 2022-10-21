@@ -11,11 +11,12 @@ import { useAppSelector } from "../../store/hooks";
 import { RequestsEnum } from "../../store/middleware/requestMiddleware";
 import { DeletePlayerByIdAction } from "../api/deletePlayerById";
 import CustomConfirmModal from "../shared/CustomConfirmModal";
+import { HideEditFormFnc } from "./EditItem";
 
 interface IParams {
     game: IGame,
     player: IPlayer,
-    closeForm: () => void,
+    closeForm: HideEditFormFnc,
 }
 
 interface IFormValues {
@@ -56,12 +57,12 @@ function EditPlayer({ game, player, closeForm }: IParams) {
         }
         else return;
         
-        const action = PutPlayerTypeAction(game.id, newPlayer);
+        const action = PutPlayerTypeAction(game.id, newPlayer, () => {closeForm(`Successfully edited player ${player.id}`)});
         dispatch(action)
     });
     
     const handleDeletePlayer = () => {
-        const action = DeletePlayerByIdAction(game.id, player.id, closeForm);
+        const action = DeletePlayerByIdAction(game.id, player.id, () => {closeForm(undefined)});
         dispatch(action);
     }
 

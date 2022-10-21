@@ -17,7 +17,7 @@ function StartGameBtn() {
   
   const startGame: any = () => {
     if (game) {
-      dispatch(PutGameByIdAction(game, "Progress"))
+      dispatch(PutGameByIdAction(game, "Progress", undefined))
     }
   }
 

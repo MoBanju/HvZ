@@ -2,7 +2,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { API_URL } from "../../constants/enviroment";
 import { IGame } from "../../models/IGame";
 import { IGameState } from "../../models/IGameState";
-import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE } from "../../store/middleware/requestMiddleware";
+import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE, sideEffect } from "../../store/middleware/requestMiddleware";
 import { updateGameState } from "../../store/slices/gameSlice";
 import getAuthHeaders from "./setAuthHeaders";
 
@@ -60,12 +60,15 @@ export async function PutGameById({game, state}: IParams): Promise<IGame> {
 }
 
 
-export const PutGameByIdAction: (game: IGame, state: keyof IGameState) => PayloadAction<RequestPayload<IParams, IGame>> = (game: IGame, state: keyof IGameState) => ({
-    type: REQUEST_ACTION_TYPE,
-    payload: {
-        cbDispatch: updateGameState,
-        params: { game, state },
-        request: PutGameById,
-        requestName: RequestsEnum.PutGameById,
-    },
-})
+export function PutGameByIdAction(game: IGame, state: keyof IGameState, sideEffect: sideEffect): PayloadAction<RequestPayload<IParams, IGame>> {
+    return {
+        type: REQUEST_ACTION_TYPE,
+        payload: {
+            cbDispatch: updateGameState,
+            params: { game, state },
+            request: PutGameById,
+            requestName: RequestsEnum.PutGameById,
+            sideEffect,
+        },
+    }
+};

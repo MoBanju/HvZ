@@ -11,11 +11,12 @@ import { DeleteMissionByIdAction } from "../api/deleteMissionById";
 import { PutMissionAction } from '../api/putMission'
 import CustomConfirmModal from "../shared/CustomConfirmModal";
 import DraggableMarkerMap, { DraggableMarkerType } from "./DraggableMarkerMap";
+import { HideEditFormFnc } from "./EditItem";
 
 interface IParams {
     game: IGame,
     mission: IMission,
-    closeForm: () => void,
+    closeForm: HideEditFormFnc,
 }
 
 interface IFormValues {
@@ -23,14 +24,14 @@ interface IFormValues {
     description: string,
     isHumanVisible: boolean,
     isZombieVisible: boolean,
-    startTime: Date,
-    endTime: Date,
+    startTime: string,
+    endTime: string,
     longtitude: number,
     latitude: number,
 }
 
 function EditMission({ game, mission, closeForm }: IParams) {
-    const { handleSubmit, register, setValue } = useForm<IFormValues>();
+    const { handleSubmit, register, setValue, formState } = useForm<IFormValues>();
     const [markerPosition, setMarkerPosition] = useState<LatLngTuple>([mission.latitude, mission.longitude]);
     const [requestPutLoading, requestPutError] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PutMission);
     const [requestDeleteLoading, requestDeleteError] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.DeleteMissionById);
@@ -52,17 +53,19 @@ function EditMission({ game, mission, closeForm }: IParams) {
             id: mission.id,
             name: data.name,
             description: data.description,
+            start_time: new Date(data.startTime).toISOString(),
+            end_time: new Date(data.endTime).toISOString(),
             is_human_visible: data.isHumanVisible,
             is_zombie_visible: data.isZombieVisible,
             latitude: data.latitude,
             longitude: data.longtitude,
         }
-        const action = PutMissionAction(game.id, mission.id, updatedMission);
+        const action = PutMissionAction(game.id, mission.id, updatedMission, () => {closeForm(`Successfully edited mission ${mission.id}`)});
         dispatch(action)
     });
 
     const handleDeleteMission = () => {
-        const action = DeleteMissionByIdAction(game.id, mission.id, closeForm);
+        const action = DeleteMissionByIdAction(game.id, mission.id, () => {closeForm(undefined)});
         dispatch(action);
     }
 
@@ -100,8 +103,14 @@ function EditMission({ game, mission, closeForm }: IParams) {
                     aria-label="name"
                     aria-describedby="name"
                     defaultValue={mission.name}
-                    {...register('name')}
+                    {...register('name', {
+                        required: {value: true, message: "Please proivde a name"},
+                        maxLength: {value: 100, message: "A name cant be longer than 100 characters."}
+                    })}
                 />
+                <FormControl.Feedback type="invalid" style={{ display: "unset" }}>
+                {formState.errors.name && formState.errors.name.message}
+                </FormControl.Feedback>
             </InputGroup>
             <InputGroup >
                 <InputGroup.Text id="description">Description</InputGroup.Text>
@@ -110,8 +119,14 @@ function EditMission({ game, mission, closeForm }: IParams) {
                     aria-label="description"
                     aria-describedby="description"
                     defaultValue={mission.description}
-                    {...register('description')}
+                    {...register('description', {
+                        required: {value: true, message: "Please proivde a description"},
+                        maxLength: {value: 2000, message: "A description cant be longer than 2000 characters."}
+                    })}
                 />
+                <FormControl.Feedback type="invalid" style={{ display: "unset" }}>
+                {formState.errors.description && formState.errors.description.message}
+                </FormControl.Feedback>
             </InputGroup>
             <Container className="btn-group">
                 <Form.Check
@@ -134,6 +149,7 @@ function EditMission({ game, mission, closeForm }: IParams) {
                     aria-label="startTime"
                     aria-describedby="startTime"
                     type="datetime-local"
+                    defaultValue={mission.start_time ? new Date(mission.start_time).toISOString().slice(0, -8) : new Date().toISOString().slice(0, -8)}
                     {...register('startTime', {
                         required: true,
                     })}
@@ -145,6 +161,7 @@ function EditMission({ game, mission, closeForm }: IParams) {
                     aria-label="endTime"
                     aria-describedby="endTime"
                     type="datetime-local"
+                    defaultValue={mission.start_time ? new Date(mission.start_time).toISOString().slice(0, -8) : new Date().toISOString().slice(0, -8)}
                     {...register('endTime')}
                 />
             </InputGroup>

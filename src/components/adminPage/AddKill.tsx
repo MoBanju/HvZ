@@ -1,5 +1,5 @@
 import { LatLngTuple } from "leaflet";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button, Container, Form, FormControl, InputGroup, Spinner } from "react-bootstrap"
 import { useForm } from "react-hook-form";
 import { IGame } from "../../models/IGame"
@@ -8,9 +8,11 @@ import { RequestsEnum } from "../../store/middleware/requestMiddleware";
 import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
 import { IKillRequest, PostKillAction } from "../api/postKill";
 import DraggableMarkerMap, { DraggableMarkerType } from "./DraggableMarkerMap"
+import { HideEditFormFnc } from "./EditItem";
 
 interface IParams {
     game: IGame,
+    closeForm: HideEditFormFnc,
 }
 
 interface IFormValues {
@@ -22,10 +24,11 @@ interface IFormValues {
     longtitude: number,
 }
 
-function AddKill({ game }: IParams) {
+function AddKill({ game, closeForm }: IParams) {
+    const center = useMemo(() => [(game!.ne_lat + game!.sw_lat) / 2, (game!.ne_lng + game!.sw_lng) / 2], [game]) as LatLngTuple
+
     const { players } = useAppSelector(state => state.game);
     const { handleSubmit, register, setValue, formState, setError } = useForm<IFormValues>();
-    const center = [(game!.ne_lat + game!.sw_lat) / 2, (game!.ne_lng + game!.sw_lng) / 2] as LatLngTuple
     const [markerPosition, setMarkerPosition] = useState<LatLngTuple>(center);
     const [showMap, setShowMap] = useState<boolean>(false)
     const [requestLoading, requestError] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PostKill);
@@ -40,7 +43,6 @@ function AddKill({ game }: IParams) {
         setShowMap((prevShowMap) => !prevShowMap);
     }
     const handleOnSubmit = handleSubmit((data) => {
-        console.log(data)
         let victim = players.find(player => player.id === Number(data.victim));
         let killer = players.find(player => player.id === Number(data.killer));
         if(!victim) {
@@ -60,7 +62,7 @@ function AddKill({ game }: IParams) {
             latitude: showMap ? data.latitude : undefined,
             longitude: showMap ? data.longtitude : undefined,
         }
-        const action = PostKillAction(game.id, request, () => { });
+        const action = PostKillAction(game.id, request, () => { closeForm(`Successfully added a new kill to game ${game.id}`)});
         dispatch(action);
     });
 
@@ -103,7 +105,7 @@ function AddKill({ game }: IParams) {
                     aria-label="timedeath"
                     type="datetime-local"
                     aria-describedby="timedeath"
-                    defaultValue={new Date().toISOString()}
+                    defaultValue={new Date().toISOString().slice(0, -8)}
                     {...register('timeDeath')}
                 />
             </InputGroup>

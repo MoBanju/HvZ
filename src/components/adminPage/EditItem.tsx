@@ -1,4 +1,4 @@
-import { Dispatch, useMemo } from "react";
+import { Dispatch, useMemo, useState } from "react";
 import { IGame } from "../../models/IGame";
 import { IKill } from "../../models/IKill";
 import { IMission } from "../../models/IMission";
@@ -18,15 +18,28 @@ interface IParams {
     setItem: Dispatch<React.SetStateAction<{ item: Item; itemType: EditState; }>>
 }
 
+export type HideEditFormFnc = (successMessage: string | undefined) => void;
 
 function EditItem({ game, item, itemType, setItem }: IParams) {
 
-    const hideEditForm = () => { setItem({ item: undefined, itemType: EditState.None }) }
+    const hideEditForm: HideEditFormFnc = (successMessage: string | undefined) => { 
+        if(successMessage) {
+            setSuccessMessage(successMessage);
+        }
+        setItem({ item: undefined, itemType: EditState.None });
+    }
+
+    const [successMessage, setSuccessMessage] = useState<string | undefined>(undefined);
 
     const itemComponent = useMemo(() => {
+        if(itemType !== EditState.None)
+            setSuccessMessage(undefined);
         switch (itemType) {
             case EditState.UpdateGame:
-                return <EditGame game={item as IGame} />
+                return <EditGame
+                    game={item as IGame}
+                    closeForm={hideEditForm}
+                />
             case EditState.UpdatePlayer:
                 return <EditPlayer
                     game={game}
@@ -46,9 +59,15 @@ function EditItem({ game, item, itemType, setItem }: IParams) {
                     closeForm={hideEditForm}
                 />
             case EditState.CreateKill:
-                return <AddKill game={game} />
+                return <AddKill
+                    game={game} 
+                    closeForm={hideEditForm}
+                />
             case EditState.CreateMission:
-                return <AddMission game={game} />
+                return <AddMission
+                    game={game}
+                    closeFrom={hideEditForm}
+                />
             default:
                 return <p>Select an item in one of the tables to edit</p>;
         }
@@ -56,6 +75,7 @@ function EditItem({ game, item, itemType, setItem }: IParams) {
 
 
     return (<>
+        {successMessage && <p>{successMessage}</p>}
         {itemComponent}
     </>)
 }

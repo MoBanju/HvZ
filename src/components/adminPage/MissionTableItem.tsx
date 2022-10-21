@@ -17,8 +17,8 @@ function MissionTableItem({ mission, setEditItem }: IParams) {
             <td>{mission.id}</td>
             <td>{mission.name}</td>
             <td>{mission.description ? mission.description : 'No description'}</td>
-            <td>{mission.is_human_visible}</td>
-            <td>{mission.is_zombie_visible}</td>
+            <td>{mission.is_human_visible ? "Yes" : "No"}</td>
+            <td>{mission.is_zombie_visible ? "Yes" : "No"}</td>
             <td> <AiOutlineEdit onClick={editMission}/> </td>
         </tr>
     )

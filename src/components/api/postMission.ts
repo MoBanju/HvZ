@@ -1,7 +1,7 @@
 import { PayloadAction } from "@reduxjs/toolkit"
 import { API_URL } from "../../constants/enviroment"
 import { IMission } from "../../models/IMission"
-import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE } from "../../store/middleware/requestMiddleware"
+import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE, sideEffect } from "../../store/middleware/requestMiddleware"
 import { addMission } from "../../store/slices/gameSlice"
 import getAuthHeaders from "./setAuthHeaders"
 
@@ -41,15 +41,18 @@ export async function PostMission({ game_id, mission }: IParams): Promise<IMissi
 
 
 
-export const PostMissionInGameAction: (game_id: number, mission: IPostMissionRequest) => PayloadAction<RequestPayload<IParams, IMission>> = (game_id: number, mission: IPostMissionRequest) => ({
-    type: REQUEST_ACTION_TYPE,
-    payload: {
-        cbDispatch: addMission,
-        params: { game_id, mission },
-        request: PostMission,
-        requestName: RequestsEnum.PostMission,
-    },
-});
+export function PostMissionInGameAction(game_id: number, mission: IPostMissionRequest, sideEffect: sideEffect): PayloadAction<RequestPayload<IParams, IMission>> {
+    return {
+        type: REQUEST_ACTION_TYPE,
+        payload: {
+            cbDispatch: addMission,
+            params: { game_id, mission },
+            request: PostMission,
+            requestName: RequestsEnum.PostMission,
+            sideEffect,
+        },
+    }
+};
 
 
 
