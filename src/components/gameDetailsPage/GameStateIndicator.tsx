@@ -24,9 +24,10 @@ function GameStateIndicator({ gamestate, currentPlayer, players }: { gamestate: 
 
   if (gamestate === "Registration" && !currentPlayer) {
     return (
-      <div className='d-flex align-items-center justify-content-center text-styling'>No registered players yet</div>
+      <div className='d-flex align-items-center justify-content-center text-styling'>{players.length} registered players</div>
     )
   }
+
   else if (gamestate === "Registration" && currentPlayer) {
     return (<>
       <div className='d-flex align-items-center justify-content-center text-styling'>Joined <BsCheckLg color='green' size={40} /></div>

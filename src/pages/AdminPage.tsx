@@ -69,7 +69,7 @@ function AdminPage() {
     <Row >
         <Col className="card">
             <h5>Game</h5>
-            <Table hover className="admin-table">
+            <Table hover className="admin-table table-admin">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -94,7 +94,7 @@ function AdminPage() {
                 </tbody>
             </Table>
             <h5>Players</h5>
-            <Table hover>
+            <Table hover className="table-admin">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -109,7 +109,7 @@ function AdminPage() {
                 </tbody>
             </Table>
             <h5>Kills</h5>
-            <Table hover>
+            <Table hover className="table-admin">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -125,7 +125,7 @@ function AdminPage() {
                 </tbody>
             </Table>
             <h5>Missions</h5>
-            <Table hover>
+            <Table hover className="table-admin">
                 <thead>
                     <tr>
                         <th>#</th>
