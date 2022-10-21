@@ -1,5 +1,4 @@
 import { PayloadAction } from '@reduxjs/toolkit'
-import React from 'react'
 import { API_URL } from '../../constants/enviroment'
 import { IMission } from '../../models/IMission'
 import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE } from '../../store/middleware/requestMiddleware'
@@ -12,7 +11,7 @@ interface IParams {
 }
 //mangler: This should only return missions that are faction appropriate.
 
-async function getMissions({ game_id }: IParams) {
+export async function getMissions({ game_id }: IParams) {
     const headers = await getAuthHeaders()
     let response = await fetch(API_URL + "/game/" + game_id + "/Mission", {
         headers
