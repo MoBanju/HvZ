@@ -1,5 +1,5 @@
 import { LatLngBoundsLiteral, LatLngTuple } from "leaflet";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button, Container, Form, FormControl, InputGroup, Spinner } from "react-bootstrap"
 import { useForm } from "react-hook-form";
 import { MapContainer } from "react-leaflet";
@@ -31,14 +31,13 @@ interface IFormValues {
 }
 
 function EditGame({ game }: IParams) {
-  const { handleSubmit, register, setValue } = useForm<IFormValues>();
+  const { handleSubmit, register, setValue, formState } = useForm<IFormValues>();
   const center = [(game!.ne_lat + game!.sw_lat) / 2, (game!.ne_lng + game!.sw_lng) / 2] as LatLngTuple
   const [boxBounds, setBoxBounds] = useState<LatLngBoundsLiteral>([[game.sw_lat, game.sw_lng], [game.ne_lat, game.ne_lng]]);
   const [requestPutLoading, requestPutError] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PutGameById);
   const [requestDeleteLoading, requestDeleteError] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.DeleteGameById);
   const nav = useNavigate();
   const dispatch = useAppDispatch();
-
   useEffect(() => {
     setValue('sw_latitude'  , boxBounds[0][0])
     setValue('sw_longtitude', boxBounds[0][1])
@@ -51,8 +50,11 @@ function EditGame({ game }: IParams) {
     dispatch(action);
   };
 
+  console.log(formState)
+
   const handleOnSubmit = handleSubmit((data) => {
     const state = data.state as keyof IGameState;
+    
     const updatedGame: IGame = {
       id: game.id,
       name: data.name,
@@ -69,6 +71,7 @@ function EditGame({ game }: IParams) {
     const action = PutGameByIdAction(updatedGame, state);
     dispatch(action);
   });
+
 
   return (<>
     <h1>Edit {game.name}</h1>
@@ -88,8 +91,16 @@ function EditGame({ game }: IParams) {
           aria-label="name"
           aria-describedby="name"
           defaultValue={game.name}
-          {...register("name")}
-        />
+          required
+          {...register("name", {
+            required: {value: true, message: "Name is required for a game"},
+            maxLength: {value: 50, message: "Name cant be longer than 50 characters"},
+
+          })}
+          />
+          <FormControl.Feedback type="invalid" style={{display: "unset"}}>
+            {formState.errors.name && formState.errors.name.message}
+          </FormControl.Feedback> 
       </InputGroup>
       <InputGroup >
         <InputGroup.Text id="description">Description</InputGroup.Text>
@@ -98,9 +109,16 @@ function EditGame({ game }: IParams) {
           aria-label="description"
           aria-describedby="description"
           defaultValue={game.description}
-          {...register("description")}
+          required
+          {...register("description", {
+            required: true,
+            maxLength: 800,
+          })}
         />
       </InputGroup>
+          <FormControl.Feedback type="invalid" style={{display: "unset"}}>
+            {formState.errors.description && formState.errors.description.message}
+          </FormControl.Feedback> 
       <Form.Select {...register("state")}>
         <option value="Registration">Register</option>
         <option value="Progress">Progress</option>

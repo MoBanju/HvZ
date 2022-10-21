@@ -102,8 +102,10 @@ function AddMission({ game }: IParams) {
                 <FormControl
                     aria-label="startTime"
                     aria-describedby="startTime"
-                    {...register('startTime')}
-                    defaultValue={new Date().toISOString()}
+                    type="datetime-local"
+                    {...register('startTime', {
+                        required: true,
+                    })}
                 />
             </InputGroup>
             <InputGroup >
@@ -111,6 +113,7 @@ function AddMission({ game }: IParams) {
                 <FormControl
                     aria-label="endTime"
                     aria-describedby="endTime"
+                    type="datetime-local"
                     {...register('endTime')}
                 />
             </InputGroup>

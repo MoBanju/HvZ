@@ -36,7 +36,7 @@ const gameSlice = createSlice({
     name: 'game',
     initialState: initialState,
     reducers: {
-        setGamePlayersAndKills: (state, action: PayloadAction<{ game: IGame, players: IPlayer[], kills: IKill[], squads: ISquad[] }>) => {
+        setGameState: (state, action: PayloadAction<{ game: IGame, players: IPlayer[], kills: IKill[],missions:IMission[], squads: ISquad[] }>) => {
             const currPlayer = action.payload.players.find(player => player.user.keyCloakId === keycloak.tokenParsed?.sub)
             return {
                 ...state,
@@ -173,6 +173,22 @@ const gameSlice = createSlice({
 });
 
 
-export const { setGamePlayersAndKills, setChat, addChatMsg , updatePlayerState, addPlayer, deletePlayer, updateGameState, setMissions, addMission, updateMission, deleteMission, updateKill, deleteKill,addSquad, addSquadMember } = gameSlice.actions;
+export const {
+    setGameState,
+    setChat,
+    addChatMsg ,
+    updatePlayerState,
+    addPlayer,
+    deletePlayer,
+    updateGameState,
+    setMissions,
+    addMission,
+    updateMission,
+    deleteMission,
+    updateKill,
+    deleteKill,
+    addSquad, 
+    addSquadMember,
+} = gameSlice.actions;
 
 export default gameSlice.reducer;

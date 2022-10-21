@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { RequestsEnum } from "../../store/middleware/requestMiddleware";
 import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
-import { GetGamePlayersAndKillsByGameIdAction } from "../api/getGameAndPlayersByGameId";
 import getSquadsByGameId from "../api/getSquadsByGameId";
 import { PostPlayerInSquadAction, PostPlayerInSquadRequest } from "../api/postPlayerInSquad";
 import { PostSquadAction, PostSquadInGameRequest } from "../api/PostSquad";

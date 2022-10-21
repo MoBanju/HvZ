@@ -22,7 +22,8 @@ export const REQUEST_ACTION_TYPE = "request/iniateRequest";
 
 export enum RequestsEnum {
     GetGames,
-    GetGamePlayerAndKillsByGameId,
+    GetGameStateInital,
+    GetGameStatePeriodicaly,
     DeleteGameById,
     DeleteKillById,
     GetChatByGameId,

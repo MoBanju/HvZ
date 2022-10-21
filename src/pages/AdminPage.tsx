@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Col, Container, Row, Table } from "react-bootstrap"
 import { useParams } from "react-router-dom"
-import { GetGamePlayersAndKillsByGameIdAction } from "../components/api/getGameAndPlayersByGameId"
+import { getGameStateAction } from "../components/api/getGameAndPlayersByGameId"
 import { useAppDispatch, useAppSelector } from "../store/hooks"
 import { RequestsEnum } from "../store/middleware/requestMiddleware"
 import { namedRequestInProgAndError } from "../store/slices/requestSlice"
@@ -37,12 +37,11 @@ function AdminPage() {
     const dispatch = useAppDispatch()
 
     const { game, players, kills, missions } = useAppSelector(state => state.game)
-    const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.GetGamePlayerAndKillsByGameId);
+    const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.GetGameStateInital);
     const [editItem, setEditItem] = useState<{item: Item, itemType: EditState}>({item: undefined, itemType: EditState.None})
     
     useEffect(() => {
-        dispatch(GetGamePlayersAndKillsByGameIdAction(Number(routeParam)))
-        dispatch(GetMissionsAction(Number(routeParam)))
+        dispatch(getGameStateAction(Number(routeParam), true, undefined))
     }, [])
     const handleCreateKillClicked = () => {setEditItem({item: undefined, itemType: EditState.CreateKill})}
 
@@ -54,7 +53,7 @@ function AdminPage() {
         return <p>LOADING</p>
 
     return (
-    <Row >
+    <Row className="background">
         <Col className="card">
             <h5>Game</h5>
             <Table hover>
