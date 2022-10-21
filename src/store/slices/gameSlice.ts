@@ -103,20 +103,15 @@ const gameSlice = createSlice({
             }
         },
         addSquadMember: (state, action: PayloadAction<any>) => {
-            console.log("action.payload [0]", action.payload[0])
-            console.log("addSquadMember", action.payload[1])
-
-
             return {
                 ...state,
-                squads: state.squads.map(squad => {
+                squads: state.squads.map<ISquad>(squad => {
                     if (squad.id !== action.payload[1]) {
-                        console.log("not s", squad.id, action.payload[1])
                         return squad
                     }
                     return {
                         ...squad,
-                        squadMember: [...squad.squadMember, action.payload[0]], //why not work???
+                        squad_Members: [...squad.squad_Members, action.payload[0]], 
                     }
                 }
                 )

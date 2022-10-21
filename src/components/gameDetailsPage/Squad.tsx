@@ -16,7 +16,7 @@ function Squad({gameid, gamestate} : {gameid: number, gamestate: keyof IGameStat
     const nameInputRef = useRef() as MutableRefObject<HTMLInputElement>;
     const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.postPlayerInSquad)
   
-    let isInSquad = squads.some(squad => squad.squadMember?.some(member => member.playerId))
+    let isInSquad = squads.some(squad => squad.squad_Members?.some(member => member.playerId))
     
     console.log("currPlayer id: " + currentPlayer?.id)
     console.log("is in squad: " + isInSquad)
@@ -32,7 +32,7 @@ function Squad({gameid, gamestate} : {gameid: number, gamestate: keyof IGameStat
             }
         }
         const postGameAction = PostSquadAction(gameid, squad)
-        isInSquad = squads.some(x => x.squadMember?.some(y=> y.playerId === currentPlayer!.id))
+        isInSquad = squads.some(x => x.squad_Members?.some(y=> y.playerId === currentPlayer!.id))
         dispatch(postGameAction)
     };
     
@@ -42,7 +42,7 @@ function Squad({gameid, gamestate} : {gameid: number, gamestate: keyof IGameStat
             rank: "Goon"
         }
         const joinGameAction = PostPlayerInSquadAction(gameid, squadId , squadMember)
-        isInSquad = squads.some(x => x.squadMember?.some(y=> y.playerId === currentPlayer!.id))
+        isInSquad = squads.some(x => x.squad_Members?.some(y=> y.playerId === currentPlayer!.id))
         dispatch(joinGameAction)
     };
     return (
