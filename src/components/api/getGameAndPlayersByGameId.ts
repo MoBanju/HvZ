@@ -26,7 +26,7 @@ async function getGameState({ id }: IParams) {
     let squads = await getSquadsByGameId({id})
     let kills = killsResponse
         .filter((killResponse: { playerKills: { playerId: number; }[]; }) => {
-            if(killResponse.playerKills.length != 2)
+            if(killResponse.playerKills.length !== 2)
                 return false;
             if(!players.some(p => p.id === killResponse.playerKills[0].playerId))
                 return false;

@@ -35,7 +35,7 @@ function GameDetailsPage() {
     const [requestInProgress, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.GetGameStateInital);
     const nav = useNavigate()
     const isAdmin = keycloak.realmAccess?.roles.includes("ADMIN")
-
+    
     if (error) {
         return <p>{error.message}</p>
     }
