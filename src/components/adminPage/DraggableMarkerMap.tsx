@@ -1,9 +1,7 @@
-import L, { LatLngTuple, Marker as LeafletMarker} from "leaflet"
+import L, { LatLngBoundsExpression, LatLngTuple, Marker as LeafletMarker} from "leaflet"
 import { Dispatch, useMemo, useRef } from "react"
-import { MapContainer, Marker, TileLayer } from "react-leaflet"
+import { MapContainer, Marker, Rectangle, TileLayer } from "react-leaflet"
 import { MAP_TILER_API_KEY } from "../../constants/enviroment"
-import { IKill } from "../../models/IKill"
-import { IMission } from "../../models/IMission"
 import { useAppSelector } from "../../store/hooks"
 
 interface IParams {
@@ -32,7 +30,12 @@ const BULLSEYE_ICON = L.icon({
 
 function DraggableMarkerMap({ markerPosition, setMarkerPosition, type}: IParams) {
     const { game } = useAppSelector(state => state.game);
-    const center = useMemo(() => [(game!.ne_lat + game!.sw_lat) / 2, (game!.ne_lng + game!.sw_lng) / 2], [game]) as LatLngTuple
+    const [center, bounds] = useMemo(() => 
+        [
+            [(game!.ne_lat + game!.sw_lat) / 2, (game!.ne_lng + game!.sw_lng) / 2] as LatLngTuple,
+            [[game!.sw_lat, game!.sw_lng], [game!.ne_lat, game!.ne_lng]] as LatLngBoundsExpression,
+        ]
+        , [game])
     const markerRef = useRef<LeafletMarker>(null)
 
     const ICON = useMemo(() => {
@@ -68,6 +71,14 @@ function DraggableMarkerMap({ markerPosition, setMarkerPosition, type}: IParams)
                         setMarkerPosition([coords.lat, coords.lng])
                     }
                 }}
+            />
+            
+            <Rectangle 
+                bounds={bounds}
+                fill={false}
+                stroke={true}
+                pathOptions={{color: '#ff000077'}}
+            
             />
 
 

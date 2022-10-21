@@ -11,10 +11,13 @@ import { RequestsEnum } from "../../store/middleware/requestMiddleware";
 import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
 import { DeleteGameByIdAction } from "../api/deleteGameById";
 import { PutGameByIdAction } from "../api/putGameById";
+import DeleteGameModal from "../landingPage/DeleteGameModal";
 import DraggableMap from "../landingPage/DraggableMap";
+import { HideEditFormFnc } from "./EditItem";
 
 interface IParams {
   game: IGame,
+  closeForm: HideEditFormFnc,
 }
 
 interface IFormValues {
@@ -27,34 +30,34 @@ interface IFormValues {
   sw_longtitude: number,
   ne_latitude: number,
   ne_longtitude: number,
-
 }
 
-function EditGame({ game }: IParams) {
+function EditGame({ game, closeForm }: IParams) {
+  const center = useMemo(() => [(game!.ne_lat + game!.sw_lat) / 2, (game!.ne_lng + game!.sw_lng) / 2], [game]) as LatLngTuple
   const { handleSubmit, register, setValue, formState } = useForm<IFormValues>();
-  const center = [(game!.ne_lat + game!.sw_lat) / 2, (game!.ne_lng + game!.sw_lng) / 2] as LatLngTuple
   const [boxBounds, setBoxBounds] = useState<LatLngBoundsLiteral>([[game.sw_lat, game.sw_lng], [game.ne_lat, game.ne_lng]]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [requestPutLoading, requestPutError] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PutGameById);
   const [requestDeleteLoading, requestDeleteError] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.DeleteGameById);
   const nav = useNavigate();
   const dispatch = useAppDispatch();
   useEffect(() => {
-    setValue('sw_latitude'  , boxBounds[0][0])
+    setValue('sw_latitude', boxBounds[0][0])
     setValue('sw_longtitude', boxBounds[0][1])
-    setValue('ne_latitude'  , boxBounds[1][0])
+    setValue('ne_latitude', boxBounds[1][0])
     setValue('ne_longtitude', boxBounds[1][1])
   }, [boxBounds]);
 
   const handleDeleteKill = () => {
-    const action = DeleteGameByIdAction(game.id, () => {nav("/")});
+    const action = DeleteGameByIdAction(game.id, () => { nav("/") });
     dispatch(action);
   };
 
-  console.log(formState)
+  const handleDeleteBtnClicked = () => { setShowDeleteModal(true) }
 
   const handleOnSubmit = handleSubmit((data) => {
     const state = data.state as keyof IGameState;
-    
+
     const updatedGame: IGame = {
       id: game.id,
       name: data.name,
@@ -68,7 +71,7 @@ function EditGame({ game }: IParams) {
       startTime: data.startTime,
       endTime: data.endTime,
     };
-    const action = PutGameByIdAction(updatedGame, state);
+    const action = PutGameByIdAction(updatedGame, state, () => {closeForm(`Successfully edited game ${game.id}`)});
     dispatch(action);
   });
 
@@ -93,14 +96,14 @@ function EditGame({ game }: IParams) {
           defaultValue={game.name}
           required
           {...register("name", {
-            required: {value: true, message: "Name is required for a game"},
-            maxLength: {value: 50, message: "Name cant be longer than 50 characters"},
+            required: { value: true, message: "Name is required for a game" },
+            maxLength: { value: 50, message: "Name cant be longer than 50 characters" },
 
           })}
-          />
-          <FormControl.Feedback type="invalid" style={{display: "unset"}}>
-            {formState.errors.name && formState.errors.name.message}
-          </FormControl.Feedback> 
+        />
+        <FormControl.Feedback type="invalid" style={{ display: "unset" }}>
+          {formState.errors.name && formState.errors.name.message}
+        </FormControl.Feedback>
       </InputGroup>
       <InputGroup >
         <InputGroup.Text id="description">Description</InputGroup.Text>
@@ -115,10 +118,32 @@ function EditGame({ game }: IParams) {
             maxLength: 800,
           })}
         />
+        <FormControl.Feedback type="invalid" style={{ display: "unset" }}>
+          {formState.errors.description && formState.errors.description.message}
+        </FormControl.Feedback>
       </InputGroup>
-          <FormControl.Feedback type="invalid" style={{display: "unset"}}>
-            {formState.errors.description && formState.errors.description.message}
-          </FormControl.Feedback> 
+      <InputGroup >
+        <InputGroup.Text id="startTime">Start Time</InputGroup.Text>
+        <FormControl
+          aria-label="startTime"
+          aria-describedby="startTime"
+          type="datetime-local"
+          defaultValue={new Date(game.startTime).toISOString().slice(0, -8)}
+          {...register('startTime', {
+            required: true,
+          })}
+        />
+      </InputGroup>
+      <InputGroup >
+        <InputGroup.Text id="endTime">End Time</InputGroup.Text>
+        <FormControl
+          aria-label="endTime"
+          aria-describedby="endTime"
+          type="datetime-local"
+          defaultValue={new Date(game.endTime).toISOString().slice(0, -8)}
+          {...register('endTime')}
+        />
+      </InputGroup>
       <Form.Select {...register("state")}>
         <option value="Registration">Register</option>
         <option value="Progress">Progress</option>
@@ -173,7 +198,7 @@ function EditGame({ game }: IParams) {
         />
       </MapContainer>
       <Container>
-        <Button variant="danger" onClick={handleDeleteKill}>
+        <Button variant="danger" onClick={handleDeleteBtnClicked}>
           {requestDeleteLoading ? <Spinner animation="border" /> : <span>Delete</span>}
         </Button>
         {requestDeleteError && <span style={{ fontStyle: 'italic' }}>{requestDeleteError.message}</span>}
@@ -184,6 +209,12 @@ function EditGame({ game }: IParams) {
       </Container>
 
     </Form>
+    <DeleteGameModal
+      game={game}
+      show={showDeleteModal}
+      setShow={setShowDeleteModal}
+      handleSubmit={handleDeleteKill}
+    />
   </>)
 }
 

@@ -9,9 +9,11 @@ import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
 import { PostGameAction } from "../api/postGames";
 import { IPostMissionRequest, PostMissionInGameAction } from "../api/postMission";
 import DraggableMarkerMap, { DraggableMarkerType } from "./DraggableMarkerMap";
+import { HideEditFormFnc } from "./EditItem";
 
 interface IParams {
     game: IGame,
+    closeFrom: HideEditFormFnc,
 }
 
 interface IFormValues {
@@ -26,10 +28,10 @@ interface IFormValues {
 }
 
 
-function AddMission({ game }: IParams) {
+function AddMission({ game, closeFrom }: IParams) {
     const center = useMemo(() => [(game!.ne_lat + game!.sw_lat) / 2, (game!.ne_lng + game!.sw_lng) / 2], [game]) as LatLngTuple
 
-    const { handleSubmit, register, setValue } = useForm<IFormValues>();
+    const { handleSubmit, register, setValue, formState} = useForm<IFormValues>();
     const [markerPosition, setMarkerPosition] = useState<LatLngTuple>(center);
     const [requestLoading, requestError] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PostMission);
     const dispatch = useAppDispatch();
@@ -39,18 +41,20 @@ function AddMission({ game }: IParams) {
         setValue("longtitude", markerPosition[1]);
     }, [markerPosition]);
 
+
+
     const handleOnSubmit = handleSubmit((data) => {
         const request: IPostMissionRequest = {
             name: data.name,
             description: data.description,
-            start_time: data.startTime,
-            end_time: data.endTime,
+            start_time: new Date(data.startTime).toISOString(),
+            end_time: new Date(data.endTime).toISOString(),
             is_human_visible: data.isHumanVisible,
             is_zombie_visible: data.isZombieVisible,
             latitude: data.latitude,
             longitude: data.longtitude,
         }
-        const action = PostMissionInGameAction(game.id, request);
+        const action = PostMissionInGameAction(game.id, request, () => {closeFrom(`Successfully added mission to game ${game.id}`)});
         dispatch(action);
     });
 
@@ -71,8 +75,14 @@ function AddMission({ game }: IParams) {
                 <FormControl
                     aria-label="name"
                     aria-describedby="name"
-                    {...register('name')}
+                    {...register('name', {
+                        required: {value: true, message: "Please proivde a name"},
+                        maxLength: {value: 100, message: "A name cant be longer than 100 characters."}
+                    })}
                 />
+                <FormControl.Feedback type="invalid" style={{ display: "unset" }}>
+                {formState.errors.name && formState.errors.name.message}
+                </FormControl.Feedback>
             </InputGroup>
             <InputGroup >
                 <InputGroup.Text id="description">Description</InputGroup.Text>
@@ -80,8 +90,14 @@ function AddMission({ game }: IParams) {
                     as="textarea"
                     aria-label="description"
                     aria-describedby="description"
-                    {...register('description')}
+                    {...register('description', {
+                        required: {value: true, message: "Please proivde a description"},
+                        maxLength: {value: 2000, message: "A description cant be longer than 2000 characters."}
+                    })}
                 />
+                <FormControl.Feedback type="invalid" style={{ display: "unset" }}>
+                {formState.errors.description && formState.errors.description.message}
+                </FormControl.Feedback>
             </InputGroup>
             <Container>
                 <Form.Check
@@ -103,8 +119,10 @@ function AddMission({ game }: IParams) {
                     aria-label="startTime"
                     aria-describedby="startTime"
                     type="datetime-local"
+                    defaultValue={new Date().toISOString().slice(0, -8)}
                     {...register('startTime', {
                         required: true,
+                        valueAsDate: true,
                     })}
                 />
             </InputGroup>
@@ -114,7 +132,11 @@ function AddMission({ game }: IParams) {
                     aria-label="endTime"
                     aria-describedby="endTime"
                     type="datetime-local"
-                    {...register('endTime')}
+                    defaultValue={new Date().toISOString().slice(0, -8)}
+                    {...register('endTime', {
+                        required: true,
+                        valueAsDate: true
+                    })}
                 />
             </InputGroup>
             <InputGroup >

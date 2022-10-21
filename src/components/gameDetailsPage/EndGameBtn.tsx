@@ -19,7 +19,7 @@ function EndGameBtn() {
     const EndGame: any = () => {
         if (game) {
 
-            dispatch(PutGameByIdAction(game, "Complete"))
+            dispatch(PutGameByIdAction(game, "Complete", undefined))
         }
     }
 
