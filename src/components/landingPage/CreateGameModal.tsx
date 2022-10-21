@@ -12,7 +12,7 @@ import 'leaflet-draw';
 import DraggableMap from "./DraggableMap";
 import { MAP_TILER_API_KEY } from "../../constants/enviroment";
 
-//import "react-leaflet-fullscreen/dist/styles.css";
+//import {FullscreenControl} from "leaflet-fullscreen";
 
 const START_POSITION = [58.9843363, 5.6923114] as LatLngTuple;
 const DEFAULT_ZOOM = 12;
@@ -164,13 +164,15 @@ function CreateGameModal({ show, setShow }: IProps) {
                                 polyline: false,
                                 polygon: false,
                                 rectangle: {
+                                    
                                     icon: new L.DivIcon({
                                         iconSize: new L.Point(8, 8),
-                                        className: "leaflet-div-icon leaflet-editing-icon"
+                                        iconUrl: "../../../gravestone.png",
+                                        className: /* "leaflet-div-icon leaflet-editing-icon" */"leaflet-marker-icon"
                                     }),
                                     shapeOptions: {
                                         guidelineDistance: 10,
-                                        color: "navy",
+                                        color: "green",
                                         weight: 3
                                     }
                                 },
@@ -180,6 +182,7 @@ function CreateGameModal({ show, setShow }: IProps) {
                             }}
                             position="bottomright" onCreated={onCreated} />
                     </FeatureGroup>
+                    {/* <FullscreenControl /> */} 
                 </MapContainer> 
                 <Button variant="dark" onClick={moveMapToCurrentLocation}>Move map to your position</Button>
             </Modal.Body>
