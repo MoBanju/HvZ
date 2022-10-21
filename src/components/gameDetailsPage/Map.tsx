@@ -3,13 +3,14 @@ import { useMemo, useState } from 'react';
 import { MapContainer, Rectangle, TileLayer } from 'react-leaflet'
 import { MAP_TILER_API_KEY } from '../../constants/enviroment';
 import { useAppSelector } from '../../store/hooks';
+import Checkin from './Checkin';
 import Gravestone from './Gravestone';
 import Mission from './Mission';
 import PostCheckinModal from './PostCheckinModal';
 
 
 function Map({ gameid }: { gameid: number }) {
-    const { game, currentPlayer } = useAppSelector(state => state.game)
+    const { game, currentPlayer, kills, checkins, missions} = useAppSelector(state => state.game)
     const [center, bounds] = useMemo(() =>
         [
             [(game!.ne_lat + game!.sw_lat) / 2, (game!.ne_lng + game!.sw_lng) / 2] as LatLngTuple,
@@ -22,6 +23,8 @@ function Map({ gameid }: { gameid: number }) {
             setShowCheckinModal({show: true, coords: e.latlng})
         }
     };
+    if(game!.state === "Registration")
+        return null;
 
     return (
         <>
@@ -48,12 +51,9 @@ function Map({ gameid }: { gameid: number }) {
                 attribution={"\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e"}
                 crossOrigin={true}
             />
-            {game?.state !== 'Registration' &&
-                <div>
-                    <Gravestone gameid={game!.id}></Gravestone>
-                    <Mission></Mission>
-                </div>
-            }
+            {missions.map(mission => <Mission mission={mission} />)}
+            {kills.map(kill => <Gravestone kill={kill} />)}
+            {checkins.map(checkin => <Checkin checkin={checkin} />)}
             <Rectangle
                 bounds={bounds}
                 fillColor='#000000ff'

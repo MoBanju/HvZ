@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IChatResponse } from "../../components/api/getChatByGameId";
+import { GameState } from "../../components/api/getGameState";
 import Squad from "../../components/gameDetailsPage/Squad";
 import keycloak from "../../keycloak";
 import { IChat } from "../../models/IChat";
@@ -40,12 +41,10 @@ const gameSlice = createSlice({
     name: 'game',
     initialState: initialState,
     reducers: {
-        setGameState: (state, action: PayloadAction<{ game: IGame, players: IPlayer[], kills: IKill[], missions: IMission[], squads: ISquad[] }>) => {
-            const currPlayer = action.payload.players.find(player => player.user.keyCloakId === keycloak.tokenParsed?.sub)
+        setGameState: (state, action: PayloadAction<GameState>) => {
             return {
                 ...state,
                 ...action.payload,
-                currentPlayer: currPlayer,
             };
         },
         setChat: (state, action: PayloadAction<IChatResponse[]>) => {

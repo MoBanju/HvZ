@@ -1,7 +1,6 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { API_URL } from "../../constants/enviroment";
 import { ICheckin } from "../../models/ICheckin";
-import { IPlayer } from "../../models/IPlayer";
 import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE, sideEffect } from "../../store/middleware/requestMiddleware";
 import { addCheckin } from "../../store/slices/gameSlice";
 import { IGetCheckinResponse } from "./getCheckin";

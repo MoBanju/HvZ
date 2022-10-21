@@ -3,7 +3,7 @@ import { Button, Container, Form, Spinner } from "react-bootstrap";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { RequestsEnum } from "../../store/middleware/requestMiddleware";
 import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
-import { getGameStateAction } from "../api/getGameAndPlayersByGameId";
+import { getGameStateAction } from "../api/getGameState";
 
 const FETCH_GAME_STATE_INTERVAL = 30;
 

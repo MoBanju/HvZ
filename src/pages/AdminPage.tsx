@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Col, Container, Row, Spinner, Table } from "react-bootstrap"
 import { NavLink, useParams } from "react-router-dom"
-import { getGameStateAction } from "../components/api/getGameAndPlayersByGameId"
+import { getGameStateAction } from "../components/api/getGameState"
 import { useAppDispatch, useAppSelector } from "../store/hooks"
 import { RequestsEnum } from "../store/middleware/requestMiddleware"
 import { namedRequestInProgAndError } from "../store/slices/requestSlice"
