@@ -32,30 +32,63 @@ function CreateGameModal({ show, setShow }: IProps) {
         [START_POSITION[0] - 0.01, START_POSITION[1] - 0.01],
         [START_POSITION[0] + 0.01, START_POSITION[1] + 0.01]
     ]);
-    
 
     /* Test */
-    const [editableFG, setEditableFG] = useState<any>(null);
+    const [mapLayer, setMaplayer] = useState<L.Layer | undefined>(undefined); 
 
     const onCreated = (e:any) => {
-        console.log(e);
-        console.log(editableFG);
 
-        const drawnItems = editableFG.leafletElement._layers;
-        console.log(drawnItems);
-        if (Object.keys(drawnItems).length > 1) {
-            Object.keys(drawnItems).forEach((layerid, index) => {
-                if (index > 0) return;
-                const layer = drawnItems[layerid];
-                editableFG.leafletElement.removeLayer(layer);
-            });
-            console.log(drawnItems);
+        console.log(e);
+
+        console.log(mapRef);
+        console.log(mapRef.current);
+        
+        const {layerType, layer} = e;
+
+
+        const {_leaflet_id} = layer;
+        
+        
+        var LayerSpecific : L.Layer = layer; 
+
+        console.log(LayerSpecific);
+
+        setMaplayer(LayerSpecific);
+        console.log(mapLayer);
+
+        console.log(layer)
+
+        var test = mapRef.current?.hasLayer(layer);
+        
+        console.log("Layers to follow");
+        mapRef.current?.eachLayer((rectLayer : L.Layer)  => {
+            console.log(rectLayer);
+        });
+
+
+        if(test){
+            var lc = document.getElementsByClassName('leaflet-draw-draw-rectangle')  as HTMLCollectionOf<HTMLElement>;
+            lc[0].style.visibility = 'hidden';
         }
+
+        //Diable the rectangle button
+
+        console.log(test);
     };
+
+    const onDeleted = (e:any) => {
+
+        console.log("Maplayer to follow");
+        console.log(mapLayer);
+
+        var lc = document.getElementsByClassName('leaflet-draw-draw-rectangle')  as HTMLCollectionOf<HTMLElement>;
+        lc[0].style.visibility = 'visible';
+    }
+
+
 
     const onFeatureGroupReady = (reactFGref: any) => {
         // store the ref for future access to content
-        setEditableFG(reactFGref);
     };
     /* Test */
     
@@ -180,7 +213,7 @@ function CreateGameModal({ show, setShow }: IProps) {
                                 circle: false,
                                 marker: false,
                             }}
-                            position="bottomright" onCreated={onCreated} />
+                            position="bottomright" onCreated={onCreated} onDeleted={onDeleted} />
                     </FeatureGroup>
                     {/* <FullscreenControl /> */} 
                 </MapContainer> 
