@@ -14,12 +14,11 @@ import AdminModal from "../components/gameDetailsPage/AdminModal";
 import keycloak from "../keycloak"
 import { namedRequestInProgAndError } from "../store/slices/requestSlice";
 import { RequestsEnum } from "../store/middleware/requestMiddleware";
-import { getGameStateAction } from "../components/api/getGameAndPlayersByGameId";
+import { getGameStateAction } from "../components/api/getGameState";
 import StartGameBtn from "../components/gameDetailsPage/StartGameBtn";
 import Map from "../components/gameDetailsPage/Map";
 import EndGameBtn from "../components/gameDetailsPage/EndGameBtn";
 import Squad from "../components/gameDetailsPage/Squad";
-import KillList from "../components/gameDetailsPage/KillList";
 
 import GameStateRefreshCountdown from "../components/gameDetailsPage/GameStateRefreshCountdown";
 
