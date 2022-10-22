@@ -107,18 +107,39 @@ const gameSlice = createSlice({
             }
         },
         addSquadMember: (state, action: PayloadAction<any>) => {
-            return {
-                ...state,
-                squads: state.squads.map<ISquad>(squad => {
-                    if (squad.id !== action.payload[1]) {
-                        return squad
+            console.log(action.payload)
+            var payloadPlayer : IPlayer;
+            if(state.currentPlayer){
+                payloadPlayer = {...state.currentPlayer, squadId: action.payload.id[1]}
+
+                return {
+                    ...state,
+                    currentPlayer: payloadPlayer.id === state.currentPlayer.id ? payloadPlayer : state.currentPlayer,
+                    squads: state.squads.map<ISquad>(squad => {
+                        if (squad.id !== action.payload[1]) {
+                            return squad
+                        }
+                        return {
+                            ...squad,
+                            squad_Members: [...squad.squad_Members, action.payload[0]], 
+                        }
                     }
-                    return {
-                        ...squad,
-                        squad_Members: [...squad.squad_Members, action.payload[0]], 
-                    }
+                    )
                 }
-                )
+            }else{
+                return {
+                    ...state,
+                    squads: state.squads.map<ISquad>(squad => {
+                        if (squad.id !== action.payload[1]) {
+                            return squad
+                        }
+                        return {
+                            ...squad,
+                            squad_Members: [...squad.squad_Members, action.payload[0]], 
+                        }
+                    }
+                    )
+                }
             }
         },
         addCheckin: (state, action: PayloadAction<ICheckin>) => {
