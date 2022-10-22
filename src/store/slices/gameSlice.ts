@@ -37,6 +37,7 @@ const initialState: initialeState = {
 }
 
 
+
 const gameSlice = createSlice({
     name: 'game',
     initialState: initialState,
@@ -47,11 +48,12 @@ const gameSlice = createSlice({
                 ...action.payload,
             };
         },
-        setChat: (state, action: PayloadAction<IChatResponse[]>) => {
+        setChat: (state, action: PayloadAction<IChatResponse[]>) => { //setChat
+            
             let chat = action.payload
                 .filter(chatResponse => state.players.some(player => player.id === chatResponse.playerId))
                 .map<IChat>(chatResponse => {
-                    let player = state.players.find(player => player.id === chatResponse.playerId) as IPlayer;
+                    let player = {...state.players.find(player => player.id === chatResponse.playerId), squadId: chatResponse.squadId} as IPlayer;
                     return {
                         id: chatResponse.playerId,
                         message: chatResponse.message,
@@ -66,7 +68,7 @@ const gameSlice = createSlice({
                 chat,
             }
         },
-        addChatMsg: (state, action: PayloadAction<IChat>) => ({
+        addChatMsg: (state, action: PayloadAction<IChat>) => ({ //From postChatMessageAPI
             ...state,
             chat: [...state.chat, action.payload],
         }),
@@ -126,6 +128,16 @@ const gameSlice = createSlice({
             };
         },
         addSquad: (state, action: PayloadAction<ISquad>) => {
+            if(state.currentPlayer && action.payload.squad_Members.length > 0){
+                var payloadPlayer : IPlayer  = {...state.currentPlayer, id: action.payload.squad_Members[0].playerId, squadId: action.payload.id}
+                
+                return {
+                    ...state,
+                    currentPlayer: payloadPlayer.id === state.currentPlayer.id ? payloadPlayer : state.currentPlayer,
+                    squads: [...state.squads, action.payload],
+                }
+            }
+                
             return {
                 ...state,
                 squads: [...state.squads, action.payload],
