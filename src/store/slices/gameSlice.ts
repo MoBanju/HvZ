@@ -107,40 +107,26 @@ const gameSlice = createSlice({
             }
         },
         addSquadMember: (state, action: PayloadAction<any>) => {
-            console.log(action.payload)
-            var payloadPlayer : IPlayer;
-            if(state.currentPlayer){
-                payloadPlayer = {...state.currentPlayer, squadId: action.payload.id[1]}
+            let squadMember : ISquadMember = action.payload[0];
+            let payloadPlayer : IPlayer | undefined = state.currentPlayer ?  
+                {...state.currentPlayer, id: squadMember.playerId, squadId: action.payload.id[1]} : state.currentPlayer
 
-                return {
-                    ...state,
-                    currentPlayer: payloadPlayer.id === state.currentPlayer.id ? payloadPlayer : state.currentPlayer,
-                    squads: state.squads.map<ISquad>(squad => {
-                        if (squad.id !== action.payload[1]) {
-                            return squad
-                        }
-                        return {
-                            ...squad,
-                            squad_Members: [...squad.squad_Members, action.payload[0]], 
-                        }
+            return {
+                ...state,
+                currentPlayer: payloadPlayer && state.currentPlayer && 
+                    payloadPlayer.id === state.currentPlayer.id ? payloadPlayer : state.currentPlayer,
+                squads: state.squads.map<ISquad>(squad => {
+                    if (squad.id !== action.payload[1]) {
+                        return squad
                     }
-                    )
-                }
-            }else{
-                return {
-                    ...state,
-                    squads: state.squads.map<ISquad>(squad => {
-                        if (squad.id !== action.payload[1]) {
-                            return squad
-                        }
-                        return {
-                            ...squad,
-                            squad_Members: [...squad.squad_Members, action.payload[0]], 
-                        }
+                    return {
+                        ...squad,
+                        squad_Members: [...squad.squad_Members, action.payload[0]], 
                     }
-                    )
                 }
+                )
             }
+
         },
         addCheckin: (state, action: PayloadAction<ICheckin>) => {
             return {
@@ -149,12 +135,12 @@ const gameSlice = createSlice({
             };
         },
         addSquad: (state, action: PayloadAction<ISquad>) => {
-            if(state.currentPlayer && action.payload.squad_Members.length > 0){
-                var payloadPlayer : IPlayer  = {...state.currentPlayer, id: action.payload.squad_Members[0].playerId, squadId: action.payload.id}
-                
+            if(action.payload.squad_Members.length > 0 && action.payload.squad_Members[0].playerId > 0){
+                var payloadPlayer : IPlayer | undefined = state.currentPlayer ?  
+                {...state.currentPlayer, id: action.payload.squad_Members[0].playerId, squadId: action.payload.id} : state.currentPlayer
                 return {
                     ...state,
-                    currentPlayer: payloadPlayer.id === state.currentPlayer.id ? payloadPlayer : state.currentPlayer,
+                    currentPlayer: payloadPlayer && state.currentPlayer && payloadPlayer.id === state.currentPlayer.id ? payloadPlayer : state.currentPlayer,
                     squads: [...state.squads, action.payload],
                 }
             }
