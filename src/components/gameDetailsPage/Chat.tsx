@@ -213,7 +213,7 @@ function Chat({gameId, currentPlayer}: { gameId: number, currentPlayer: IPlayer 
             .map((chat, i) =>
               <p
                 key={i}
-                className={`mb-1 ${CHAT_STATE_TO_BG_COLOR[chatState]} rounded p-3 m-2 ${currentPlayer == chat.player ? "align-self-end" : "align-self-start"} mw-50 text-break`}
+                className={`mb-1 ${CHAT_STATE_TO_BG_COLOR[chatState]} rounded p-3 m-2 ${currentPlayer.id === chat.player.id ? "align-self-end" : "align-self-start"} mw-50 text-break`}
                 style={{maxWidth: "55%"}}
                 >
                   ({chat.player.user.firstName}){squads.some(sq => sq.id === chat.player.squadId) && `[${squads.find(sq => sq.id === chat.player.squadId)?.name}]`} {chat.message}
