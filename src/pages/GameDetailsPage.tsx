@@ -105,7 +105,7 @@ function GameDetailsPage() {
 
                 </Row>
             </Container>
-            <div className="d-flex">
+            <div className="d-flex"> 
                 <Chat currentPlayer={currentPlayer} gameId={game.id} />
             </div>
         </Container>)

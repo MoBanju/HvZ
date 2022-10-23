@@ -6,12 +6,13 @@ import { addChatMsg } from "../../store/slices/gameSlice";
 import { IChatResponse } from "./getChatByGameId";
 import getAuthHeaders from "./setAuthHeaders";
 
-export interface PostChatMessageRequst {
+export interface IPostChatMessageRequest {
     message: string,
     isHumanGlobal: boolean,
     isZombieGlobal: boolean,
     chatTime: string,
     playerId: number,
+    squadId?: number,
 }
 
 interface IParams {
@@ -22,12 +23,13 @@ interface IParams {
 async function postChatMessage({gameId, chatMsg}: IParams): Promise<IChat>{
     const headers = await getAuthHeaders();
     // Have to exclude if from chatMsg
-    let body: PostChatMessageRequst = {
+    let body: IPostChatMessageRequest = {
         message: chatMsg.message,
         chatTime: chatMsg.chatTime,
         isHumanGlobal: chatMsg.isHumanGlobal,
         isZombieGlobal: chatMsg.isZombieGlobal,
         playerId: chatMsg.player.id,
+        squadId: chatMsg.player.squadId,
     };
     let response = await fetch(`${API_URL}/game/${gameId}/chat`, {
         method: "POST",
