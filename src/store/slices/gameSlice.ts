@@ -134,12 +134,6 @@ const gameSlice = createSlice({
                 checkins: [... state.checkins, action.payload],
             };
         },
-        addCheckin: (state, action: PayloadAction<ICheckin>) => {
-            return {
-                ...state,
-                checkins: [... state.checkins, action.payload],
-            };
-        },
         addSquad: (state, action: PayloadAction<ISquad>) => {
             if(action.payload.squad_Members.length > 0 && action.payload.squad_Members[0].playerId > 0){
                 var payloadPlayer : IPlayer | undefined = state.currentPlayer ?  
