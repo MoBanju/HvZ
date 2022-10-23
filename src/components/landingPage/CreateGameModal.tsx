@@ -12,6 +12,7 @@ import 'leaflet-draw';
 import 'leaflet-draw/dist/leaflet.draw.css';
 import DraggableMap from "./DraggableMap";
 import { MAP_TILER_API_KEY } from "../../constants/enviroment";
+import { useForm } from "react-hook-form";
 
 //import {FullscreenControl} from "leaflet-fullscreen";
 
@@ -25,158 +26,47 @@ interface IProps {
     setShow: Dispatch<React.SetStateAction<boolean>>,
 }
 
+interface IFormValues {
+  name: string,
+  description: string,
+  startTime: string,
+  endTime: string,
+  boxBounds: string,
+}
+
 function CreateGameModal({ show, setShow }: IProps) {
-    const hide = () => { setShow(false); }
     const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PostGame)
-    const [position, setPosition] = useState<LatLngTuple>(START_POSITION);
-    const [boxBounds, setBoxBounds] = useState<LatLngBoundsLiteral>([
-        [START_POSITION[0] - 0.01, START_POSITION[1] - 0.01],
-        [START_POSITION[0] + 0.01, START_POSITION[1] + 0.01]
-    ]);
-
-    /* Test */
-    const [maplayer, setMaplayer] = useState<L.FeatureGroup | undefined>(undefined); 
-
-
-    const onEditComplete = (e:any) => {
-        const {layers} = e;
-
-        console.log(e);
-        console.log(layers);
-
-        console.log("layers to follow");
-        layers.eachLayer((a : any) =>{
-                    //console.log(layers);
-            var soLayer : L.Layer = a;
-            var oneLayerArray = [];
-            oneLayerArray.push(soLayer);
-            var FeatureGroup : L.FeatureGroup = L.featureGroup(oneLayerArray);
-            
-            var Bounds = FeatureGroup.getBounds();
-            if(Bounds !== undefined){
-            var NELng = Bounds.getNorthEast().lng;
-            var NELat = Bounds.getNorthEast().lat;
-            var SWLng = Bounds.getSouthWest().lng;
-            var SWLat = Bounds.getSouthWest().lat;
-
-            let BoxBoundsNew : L.LatLngBoundsLiteral = boxBounds;
-            BoxBoundsNew[1][0] = NELat;
-            BoxBoundsNew[1][1] = NELng;
-            BoxBoundsNew[0][0] = SWLat;
-            BoxBoundsNew[0][1] = SWLng;
-            
-            setBoxBounds(BoxBoundsNew);
-
-
-            console.log("BOX TO BE SAVED");
-            console.log(BoxBoundsNew);
-            }
-        });
-
-
-    }
-
-    const onCreated = (e:any) => {
-
-        console.log(e);
-        const {layerType, layer} = e;
-
-
-        //const {_leaflet_id} = layer;
-        console.log("error?");
-        var soLayer : L.Layer = layer;
-        console.log("no error yet");
-        
-        var layers = [];
-        layers.push(soLayer);
-        console.log("No errors ever");
-        console.log(layers);
-        var FeatureGroup : L.FeatureGroup = L.featureGroup(layers);
-        console.log(FeatureGroup);
-        
-        //var test = mapRef.current?.hasLayer(layer);
-
-
-        var lc = document.getElementsByClassName('leaflet-draw-draw-rectangle')  as HTMLCollectionOf<HTMLElement>;
-        
-        console.log(lc);
-
-        lc[0].style.visibility = 'hidden';
-      
-        var Bounds = FeatureGroup.getBounds();
-        if(Bounds !== undefined){
-        var NELng = Bounds.getNorthEast().lng;
-        var NELat = Bounds.getNorthEast().lat;
-        var SWLng = Bounds.getSouthWest().lng;
-        var SWLat = Bounds.getSouthWest().lat;
-
-        let BoxBoundsNew : L.LatLngBoundsLiteral = boxBounds;
-        BoxBoundsNew[1][0] = NELat;
-        BoxBoundsNew[1][1] = NELng;
-        BoxBoundsNew[0][0] = SWLat;
-        BoxBoundsNew[0][1] = SWLng;
-        
-        setBoxBounds(BoxBoundsNew);
-
-
-        console.log("BOX TO BE SAVED");
-        console.log(BoxBoundsNew);
-
-
-        }
-    };
-
-    const onDeleted = (e:any) => {
-        //Should only have the clearallAction
-        console.log(e);
-        const {layers } = e;
-        console.log(e);
-        console.log(layers);
-
-        console.log("layers to follow");
-        layers.eachLayer((a : any) =>{
-            var lc = document.getElementsByClassName('leaflet-draw-draw-rectangle')  as HTMLCollectionOf<HTMLElement>;
-            lc[0].style.visibility = 'visible';
-        })
-    }
-
-
-
-    const onFeatureGroupReady = (reactFGref: any) => {
-        // store the ref for future access to content
-    };
-    /* Test */
+    const [boxBounds, setBoxBounds] = useState<LatLngBoundsLiteral | undefined>(undefined)
+    const { handleSubmit, register, setError, formState, clearErrors} = useForm<IFormValues>();
+    const dispatch = useAppDispatch();
     
     const mapRef = useRef<LeafletMap>(null)
-    const nameInputRef = useRef() as MutableRefObject<HTMLInputElement>;
-    const descriptionInputRef = useRef() as MutableRefObject<HTMLTextAreaElement>;
-    const startTimeRef = useRef<HTMLInputElement>(null)
-    const endTimeRef = useRef<HTMLInputElement>(null)
+    
+    const hide = () => { setShow(false); }
 
-    const dispatch = useAppDispatch();
-
-    const submitGame = () => {
+    const handleOnSubmit = handleSubmit((data) => {
+        if(!boxBounds) {
+            setError("boxBounds", {message: "Please provide a game area using the interactive map"})
+            return;
+        }
         const game: IPostGameRequest = {
-            name: nameInputRef.current.value,
-            description: descriptionInputRef.current.value,
+            name: data.name,
+            description: data.description,
             ne_lat: boxBounds[1][0],
             ne_lng: boxBounds[1][1],
             sw_lat: boxBounds[0][0],
             sw_lng: boxBounds[0][1],
-            startTime: startTimeRef.current!.value,
-            endTime: endTimeRef.current!.value,
+            startTime: data.startTime,
+            endTime: data.endTime,
         }
-
-        console.log("DO YOU EVEN POST ??")
-        console.log(game)
-        console.log(game.ne_lat)
-        console.log(game.ne_lng)
-        console.log(game.sw_lat)
-        console.log(game.sw_lng)
-
 
         const postGameAction = PostGameAction(game, hide)
         dispatch(postGameAction)
+    });
+
+    const handleSubmitBtnClicked = () => {
+        clearErrors();
+        handleOnSubmit();
     };
 
     const moveMapToCurrentLocation = () => {
@@ -189,26 +79,28 @@ function CreateGameModal({ show, setShow }: IProps) {
         });
     }
 
-    const getInitalEndDate = () => {
-        let now = new Date();
-        now.setDate(now.getDate() + 5);
-        return now.toISOString().slice(0,16);
-    }
-
     return (
         <Modal show={show} onEscapeKeyDown={hide} onHide={hide} id="myModal">
             <Modal.Header closeButton>
                 <Modal.Title>Create a new game</Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                <Form onSubmit={handleOnSubmit}>
                 <InputGroup >
-                    <InputGroup.Text id="title" >Title:</InputGroup.Text>
+                    <InputGroup.Text id="name" >Name:</InputGroup.Text>
                     <FormControl
                         placeholder="HvZ summer camp 2025"
-                        aria-label="Title"
-                        aria-describedby="title"
-                        ref={nameInputRef}
+                        aria-label="Name"
+                        aria-describedby="name"
+                        {...register("name", {
+                            required: { value: true, message: "Name is required for a game" },
+                            maxLength: { value: 50, message: "Name cant be longer than 50 characters" },
+
+                        })}
                     />
+                    <FormControl.Feedback type="invalid" style={{ display: "unset" }}>
+                    {formState.errors.name && formState.errors.name.message}
+                    </FormControl.Feedback>
                 </InputGroup>
                 <InputGroup className="mt-4">
                     <InputGroup.Text >Description</InputGroup.Text>
@@ -216,78 +108,54 @@ function CreateGameModal({ show, setShow }: IProps) {
                         as="textarea"
                         aria-label="Description"
                         placeholder="Come join your friends and family as we play a game of human vs zombies during summer camp 2025"
-                        ref={descriptionInputRef}
+                        {...register("description", {
+                            required: { value: true, message: "Description is required for a game"},
+                            maxLength: { value: 800, message: "Description cant be longer than 800 characters"},
+                        })}
                     />
+                    <FormControl.Feedback type="invalid" style={{ display: "unset" }}>
+                    {formState.errors.description && formState.errors.description.message}
+                    </FormControl.Feedback>
                 </InputGroup>
                 <InputGroup className="mt-4">
                     <InputGroup.Text >Start time</InputGroup.Text>
-                    <input
+                    <Form.Control
                         type="datetime-local"
-                        ref={startTimeRef}
-                        defaultValue={new Date().toISOString().slice(0,16)}
+                        defaultValue={new Date().toISOString().slice(0, -8)}
+                        {...register('startTime', {
+                            required: true,
+                        })}
                     />
                 </InputGroup>
                 <InputGroup className="mt-4 mb-4">
                     <InputGroup.Text >End time</InputGroup.Text>
-                    <input
+                    <Form.Control
                         type="datetime-local"
-                        ref={endTimeRef}
-                        defaultValue={getInitalEndDate()}
+                        defaultValue={new Date().toISOString().slice(0, -8)}
+                        {...register('endTime', {
+                            required: true,
+                        })}
                     />
                 </InputGroup>
-                <MapContainer center={position} zoom={DEFAULT_ZOOM} scrollWheelZoom={false} style={{ height: "500px", width: "100%" }} ref={mapRef}>
-                    <TileLayer
-                        url={"https://api.maptiler.com/maps/basic-v2-dark/{z}/{x}/{y}.png?key=" + MAP_TILER_API_KEY + ""}
-                        tileSize={512}
-                        minZoom={1}
-                        zoomOffset={-1}
-                        attribution={"\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e"}
-                        crossOrigin={true}
-                    />
-                {/* <DraggableMap
+                <InputGroup>
+                <MapContainer center={START_POSITION} zoom={DEFAULT_ZOOM} scrollWheelZoom={false} style={{ height: "500px", width: "100%" }} ref={mapRef}>
+                    <DraggableMap 
                         boxBounds={boxBounds}
                         setBoxBounds={setBoxBounds}
-                        position={position}
-                        setPosition={setPosition}
-
-                    /> */}
-                    {/**/} <FeatureGroup
-                         /**/ref={featureGroupRef => {
-                            onFeatureGroupReady(featureGroupRef);
-                        }}>
-                        <EditControl 
-                            
-                            draw={{
-                                polyline: false,
-                                polygon: false,
-                                rectangle: {
-                                    
-                                    icon: new L.DivIcon({
-                                        iconSize: new L.Point(8, 8),
-                                        iconUrl: "../../../gravestone.png",
-                                        className: /* "leaflet-div-icon leaflet-editing-icon" */"leaflet-marker-icon"
-                                    }),
-                                    shapeOptions: {
-                                        guidelineDistance: 10,
-                                        color: "green",
-                                        weight: 3
-                                    }
-                                },
-                                circlemarker: false,
-                                circle: false,
-                                marker: false,
-                            }}
-                            position="topright" onCreated={onCreated} onDeleted={onDeleted} onEdited={onEditComplete} />
-                    </FeatureGroup>
-                    {/* <FullscreenControl /> */} 
+                    />
                 </MapContainer> 
                 <Button variant="dark" onClick={moveMapToCurrentLocation}>Move map to your position</Button>
+                <FormControl.Feedback type="invalid" style={{ display: "unset" }}>
+                {formState.errors.boxBounds && formState.errors.boxBounds.message}
+                </FormControl.Feedback>
+                </InputGroup>
+                </Form>
             </Modal.Body>
             <Modal.Footer>
                 {error &&
                     <p>{error.message}</p>
                 }
-                <Button variant="dark" onClick={submitGame}>
+                <Button variant="dark" onClick={handleSubmitBtnClicked} type="submit">
                     {loading ?
                         <Spinner animation="border" as="span" />
                         : <span>Submit</span>}
