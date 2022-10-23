@@ -13,7 +13,7 @@ function LandingPage() {
     return (
         <>
     <Container className="justify-content-center align-items-center background d-flex" fluid>
-        <div className=" position-fixed top-0 end-0 m-3 log-header logged-in">
+        <div className=" position-fixed top-0 end-0 m-3 logged-in">
                 {keycloak.authenticated && <span>Logged in as: {keycloak.tokenParsed?.preferred_username} </span>}
                 {isAdmin && <span> <MdAdminPanelSettings size={30} /> Admin</span>}
         </div>
