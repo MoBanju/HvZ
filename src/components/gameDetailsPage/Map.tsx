@@ -1,5 +1,5 @@
-import { LatLng, LatLngBoundsLiteral, LatLngTuple, LeafletMouseEvent } from 'leaflet';
-import { useMemo, useState } from 'react';
+import { LatLng, LatLngBoundsLiteral, LatLngTuple, LeafletMouseEvent, Map as LeafletMap } from 'leaflet';
+import { useMemo, useRef, useState } from 'react';
 import { MapContainer, Rectangle, TileLayer } from 'react-leaflet'
 import { MAP_TILER_API_KEY } from '../../constants/enviroment';
 import { useAppSelector } from '../../store/hooks';
@@ -11,11 +11,16 @@ import PostCheckinModal from './PostCheckinModal';
 
 function Map({ gameid }: { gameid: number }) {
     const { game, currentPlayer, kills, checkins, missions} = useAppSelector(state => state.game)
-    const [center, bounds] = useMemo(() =>
-        [
+    const mapRef = useRef<LeafletMap>(null)
+    const [center, bounds] = useMemo(() => {
+        let gameBounds = [[game!.sw_lat, game!.sw_lng], [game!.ne_lat, game!.ne_lng]] as LatLngBoundsLiteral;
+        mapRef.current?.flyToBounds(gameBounds)
+        return [
             [(game!.ne_lat + game!.sw_lat) / 2, (game!.ne_lng + game!.sw_lng) / 2] as LatLngTuple,
-            [[game!.sw_lat, game!.sw_lng], [game!.ne_lat, game!.ne_lng]] as LatLngBoundsLiteral,
-        ], [game]);
+            gameBounds,
+        ];
+
+    }, [game]);
     const [showCheckinModal, setShowCheckinModal] = useState<{show: boolean, coords: LatLng | undefined}>({show: false, coords: undefined});
 
     const handleMapAreaClicked = (e: LeafletMouseEvent) => {
@@ -34,12 +39,15 @@ function Map({ gameid }: { gameid: number }) {
             minZoom={9}
             style={{
                 height: "30vh",
-                width: "35vh",
+                width: "40vw",
             }}
             maxBounds={[
                 [bounds[0][0] - 0.1, bounds[0][1] - 0.1],
                 [bounds[1][0] + 0.1, bounds[1][1] + 0.1]
-            ]}>
+            ]}
+            ref={mapRef}
+            >
+            
 
             <TileLayer
                 url={"https://api.maptiler.com/maps/basic-v2-dark/{z}/{x}/{y}.png?key=" + MAP_TILER_API_KEY + ""}
