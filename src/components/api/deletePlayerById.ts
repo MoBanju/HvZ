@@ -1,6 +1,6 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { API_URL } from "../../constants/enviroment";
-import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE } from "../../store/middleware/requestMiddleware";
+import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE, sideEffect } from "../../store/middleware/requestMiddleware";
 import { deletePlayer } from "../../store/slices/gameSlice";
 import { removeGame } from "../../store/slices/gamesSlice";
 import getAuthHeaders from "./setAuthHeaders";
@@ -22,7 +22,7 @@ async function deletePlayerById({ gameid, playerid }: IParams) {
     return playerid;
 }
 
-export function DeletePlayerByIdAction(gameid: number, playerid: number): PayloadAction<RequestPayload<IParams, number>> {
+export function DeletePlayerByIdAction(gameid: number, playerid: number, sideEffect: sideEffect): PayloadAction<RequestPayload<IParams, number>> {
     return {
         type: REQUEST_ACTION_TYPE,
         payload: {
@@ -30,6 +30,7 @@ export function DeletePlayerByIdAction(gameid: number, playerid: number): Payloa
             params: { gameid, playerid },
             request: deletePlayerById,
             requestName: RequestsEnum.DeletePlayerById,
+            sideEffect,
         },
     }
 };

@@ -2,7 +2,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { API_URL } from "../../constants/enviroment";
 import { IGame } from "../../models/IGame";
 import { IGameState } from "../../models/IGameState";
-import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE } from "../../store/middleware/requestMiddleware";
+import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE, sideEffect } from "../../store/middleware/requestMiddleware";
 import { updateGameState } from "../../store/slices/gameSlice";
 import getAuthHeaders from "./setAuthHeaders";
 
@@ -13,9 +13,10 @@ interface IParams {
 
 export async function PutGameById({game, state}: IParams): Promise<IGame> {
 
-    let myPar = 1
-    if(state === "Registration") myPar = 1
-    else if(state === "Progress") myPar = 2
+    let myPar = 0
+    if(state === "Registration") myPar = 0
+    else if(state === "Progress") myPar = 1
+    else if(state === "Complete") myPar = 2
 
     const headers = await getAuthHeaders();
     const body = {
@@ -36,7 +37,7 @@ export async function PutGameById({game, state}: IParams): Promise<IGame> {
         body: JSON.stringify(body)
     })
     if (!response.ok) {
-        throw new Error("Couldnt update gameSTATE")
+        throw new Error(await response.text() || response.statusText)
     }
     const newGame: IGame = {
         id: game.id,
@@ -51,19 +52,23 @@ export async function PutGameById({game, state}: IParams): Promise<IGame> {
         startTime: game.startTime,
         endTime: game.endTime,
     }
-    if(myPar === 1) newGame.state = "Progress"
+    if(myPar === 0) newGame.state = "Registration"
+    else if(myPar === 1)newGame.state = "Progress"
     else if(myPar === 2)newGame.state = "Complete"
 
     return newGame
 }
 
 
-export const PutGameByIdAction: (game: IGame, state: keyof IGameState) => PayloadAction<RequestPayload<IParams, IGame>> = (game: IGame, state: keyof IGameState) => ({
-    type: REQUEST_ACTION_TYPE,
-    payload: {
-        cbDispatch: updateGameState,
-        params: { game, state },
-        request: PutGameById,
-        requestName: RequestsEnum.PutGameById,
-    },
-})
+export function PutGameByIdAction(game: IGame, state: keyof IGameState, sideEffect: sideEffect): PayloadAction<RequestPayload<IParams, IGame>> {
+    return {
+        type: REQUEST_ACTION_TYPE,
+        payload: {
+            cbDispatch: updateGameState,
+            params: { game, state },
+            request: PutGameById,
+            requestName: RequestsEnum.PutGameById,
+            sideEffect,
+        },
+    }
+};

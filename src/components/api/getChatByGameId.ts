@@ -11,6 +11,7 @@ export interface IChatResponse {
     isHumanGlobal: boolean,
     isZombieGlobal: boolean,
     playerId: number,
+    squadId?: number,
 }
 
 interface IParams {

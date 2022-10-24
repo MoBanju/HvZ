@@ -6,4 +6,6 @@ export interface IPlayer {
     isPatientZero: boolean,
     biteCode: string,
     user: IUser,
+    squadId?: number,
+    squadMemberId?: number,
 }

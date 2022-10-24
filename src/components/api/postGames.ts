@@ -20,7 +20,7 @@ interface IParams {
     postGameRequest: IPostGameRequest,
 }
 
-async function postGame({postGameRequest}: IParams): Promise<IGame>{
+async function postGame({ postGameRequest }: IParams): Promise<IGame> {
     const headers = await getAuthHeaders();
 
     let response = await fetch(`${API_URL}/game`, {
@@ -28,20 +28,20 @@ async function postGame({postGameRequest}: IParams): Promise<IGame>{
         headers,
         body: JSON.stringify(postGameRequest),
     });
-    if(!response.ok)
+    if (!response.ok)
         throw new Error(await response.text() || response.statusText);
     let createdGame = await response.json() as IGame;
     return createdGame;
 };
 
 
-export const PostGameAction: (gameInfo: IPostGameRequest, sideEffect: ()=> void) => PayloadAction<RequestPayload<IParams, IGame>> = (gameInfo: IPostGameRequest, sideEffect: ()=> void) => ({
-        type: REQUEST_ACTION_TYPE,
-        payload: {
-            cbDispatch: addGame,
-            params: {postGameRequest: gameInfo},
-            request: postGame,
-            requestName: RequestsEnum.PostGame,
-            sideEffect,
-        },
-    });
+export const PostGameAction: (gameInfo: IPostGameRequest, sideEffect: () => void) => PayloadAction<RequestPayload<IParams, IGame>> = (gameInfo: IPostGameRequest, sideEffect: () => void) => ({
+    type: REQUEST_ACTION_TYPE,
+    payload: {
+        cbDispatch: addGame,
+        params: { postGameRequest: gameInfo },
+        request: postGame,
+        requestName: RequestsEnum.PostGame,
+        sideEffect,
+    },
+});

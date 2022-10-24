@@ -1,32 +1,23 @@
-import L, { LatLngExpression } from "leaflet";
-import { useEffect, useState } from "react";
-import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet'
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import GetKillsByGameIdAction from "../api/getKillsByGameId";
-import getKillsByGameId from "../api/getKillsByGameId";
+import L from "leaflet";
+import { Marker, Popup } from 'react-leaflet'
+import { IKill } from "../../models/IKill";
 
-function Gravestone({gameid} : {gameid: number}) {
+function Gravestone({ kill }: {kill: IKill}) {
     var gravestone = L.icon({
         iconUrl: '../../../gravestone.png',
         iconSize:     [38, 50], // size of the icon
         iconAnchor:   [22, 30], // point of the icon which will correspond to marker's location
         popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
     });
-    const { kills } = useAppSelector(state => state.game)
+    if(!kill.latitude || !kill.longitude)
+      return null;
 
     return  ( 
-    <>{
-      kills.filter((x, i) => x.latitude && x.longitude).map((x,i) => (
-        <Marker position={[x.latitude!, x.longitude!]} icon={gravestone}>
+        <Marker key={kill.id} position={[kill.latitude, kill.longitude]} icon={gravestone}>
           <Popup>
-            <p key={i}> {(x.timeDeath).slice(0,10)} <br /> {(x.timeDeath).slice(11,16)} <br /> {x.victim.user.firstName} was killed by {x.killer.user.firstName}</p>
+            <p> {(kill.timeDeath).slice(0,10)} <br /> {(kill.timeDeath).slice(11,16)} <br /> {kill.victim.user.firstName} was killed by {kill.killer.user.firstName}</p>
           </Popup>
         </Marker>
-        )
-      )
-    }
-
-    </>
     );
   }
 export default Gravestone;
