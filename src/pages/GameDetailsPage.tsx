@@ -44,16 +44,12 @@ function GameDetailsPage() {
         return <div className="background-game"><div className="loader"></div></div>
     }
 
-    const handleClick = () => {
-        nav("/admin/" + game.id)
-    }
-
     return (
         <Container className="background-game p-sm-4" fluid>
-            <NavLink to={"/"} className="btn-delete mb-4 btn btn-lg"><MdBackspace /></NavLink>
+            <NavLink to={"/"} className="btn-delete mb-4 btn btn-lg"><MdBackspace size={27}/></NavLink>
             <div className="position-absolute top-0 end-0 m-3 log-header logged-in">
-                {keycloak.authenticated && <span>Logged in as: {keycloak.tokenParsed?.preferred_username}</span>}
-                {isAdmin && <button className="logged-in" onClick={() => handleClick()}> <MdAdminPanelSettings size={30} />Admin</button>}
+                {keycloak.authenticated && <span className="text-justify">Logged in: {keycloak.tokenParsed?.preferred_username}</span>}
+                {isAdmin && <button className="logged-in" onClick={() => nav("/admin/" + game.id)}> <MdAdminPanelSettings size={30} />Admin</button>}
                 <GameStateRefreshCountdown id={game.id} />
             </div>
             <AdminModal show={show} setShow={setShow} players={players} game={game} />
@@ -91,8 +87,6 @@ function GameDetailsPage() {
                                 <div>
                                     <BiteCode />
                                 </div>
-
-
                             </div>
                         </div>
                     </Col>

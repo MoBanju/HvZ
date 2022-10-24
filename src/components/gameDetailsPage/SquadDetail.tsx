@@ -36,7 +36,7 @@ function SquadDetail() {
             }
         }
     }
-
+    console.log("ialjkfjarjnkm",squads)
     return (<>
         <h2>{myList[0].SquadName}</h2>
         <table className='table table-striped table-dark text-white '>

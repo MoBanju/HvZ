@@ -49,11 +49,11 @@ const gameSlice = createSlice({
             };
         },
         setChat: (state, action: PayloadAction<IChatResponse[]>) => { //setChat
-            
+
             let chat = action.payload
                 .filter(chatResponse => state.players.some(player => player.id === chatResponse.playerId))
                 .map<IChat>(chatResponse => {
-                    let player = {...state.players.find(player => player.id === chatResponse.playerId), squadId: chatResponse.squadId} as IPlayer;
+                    let player = { ...state.players.find(player => player.id === chatResponse.playerId), squadId: chatResponse.squadId } as IPlayer;
                     return {
                         id: chatResponse.playerId,
                         message: chatResponse.message,
@@ -107,44 +107,42 @@ const gameSlice = createSlice({
             }
         },
         addSquadMember: (state, action: PayloadAction<any>) => {
-            let squadMember : ISquadMember = action.payload[0];
-            let payloadPlayer : IPlayer | undefined = state.currentPlayer ?  
-                {...state.currentPlayer, id: squadMember.playerId, squadId: action.payload.id[1]} : state.currentPlayer
-
+            let squadMember: ISquadMember = action.payload[0];
+            let payloadPlayer: IPlayer | undefined = state.currentPlayer ?
+                { ...state.currentPlayer, squadId: action.payload[1] } : state.currentPlayer
             return {
                 ...state,
-                currentPlayer: payloadPlayer && state.currentPlayer && 
-                    payloadPlayer.id === state.currentPlayer.id ? payloadPlayer : state.currentPlayer,
+                currentPlayer: payloadPlayer && state.currentPlayer &&
+                    squadMember.playerId === state.currentPlayer.id ? payloadPlayer : state.currentPlayer,
                 squads: state.squads.map<ISquad>(squad => {
                     if (squad.id !== action.payload[1]) {
                         return squad
                     }
                     return {
                         ...squad,
-                        squad_Members: [...squad.squad_Members, action.payload[0]], 
+                        squad_Members: [...squad.squad_Members, action.payload[0]],
                     }
                 }
                 )
             }
-
         },
         addCheckin: (state, action: PayloadAction<ICheckin>) => {
             return {
                 ...state,
-                checkins: [... state.checkins, action.payload],
+                checkins: [...state.checkins, action.payload],
             };
         },
         addSquad: (state, action: PayloadAction<ISquad>) => {
-            if(action.payload.squad_Members.length > 0 && action.payload.squad_Members[0].playerId > 0){
-                var payloadPlayer : IPlayer | undefined = state.currentPlayer ?  
-                {...state.currentPlayer, id: action.payload.squad_Members[0].playerId, squadId: action.payload.id} : state.currentPlayer
+            if (action.payload.squad_Members.length > 0 && action.payload.squad_Members[0].playerId > 0) {
+                var payloadPlayer: IPlayer | undefined = state.currentPlayer ?
+                    { ...state.currentPlayer, id: action.payload.squad_Members[0].playerId, squadId: action.payload.id } : state.currentPlayer
                 return {
                     ...state,
                     currentPlayer: payloadPlayer && state.currentPlayer && payloadPlayer.id === state.currentPlayer.id ? payloadPlayer : state.currentPlayer,
                     squads: [...state.squads, action.payload],
                 }
             }
-                
+
             return {
                 ...state,
                 squads: [...state.squads, action.payload],
