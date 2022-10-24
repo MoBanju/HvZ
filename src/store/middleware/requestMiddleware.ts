@@ -7,19 +7,6 @@ export const REQUEST_ACTION_TYPE = "request/iniateRequest";
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 export enum RequestsEnum {
     GetGames,
     GetGameStateInital,
@@ -43,6 +30,7 @@ export enum RequestsEnum {
     PostMission,
     PutMission,
     DeleteMissionById,
+    DeletePlayerFromSquad,
 }
 
 export interface RequestPayload<P, T> {

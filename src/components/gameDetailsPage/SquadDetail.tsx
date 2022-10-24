@@ -1,17 +1,18 @@
 import React from 'react'
-import { useAppSelector } from '../../store/hooks'
+import { Spinner } from 'react-bootstrap'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { RequestsEnum } from '../../store/middleware/requestMiddleware'
+import { namedRequestInProgAndError } from '../../store/slices/requestSlice'
+import DeletePlayerFromSquadAction from '../api/deletePlayerFromSquad'
 
-/*  Squad Details Fragment. This should display the 
-names, 
-relative ranks and
-state of each of the members of your squad. 
-
-Additionally there should be buttons
-to leave a check in marker on your current position and to leave the squad. */
 
 function SquadDetail() {
 
-    const { players, squads, currentPlayer } = useAppSelector(state => state.game)
+    const { game, players, squads, currentPlayer } = useAppSelector(state => state.game)
+    const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.DeletePlayerFromSquad)
+
+    const dispatch = useAppDispatch();
+
 
     let myList = []
 
@@ -29,6 +30,7 @@ function SquadDetail() {
                             Rank: squads[i].squad_Members[y].rank,
                             isHuman: myStr,
                             SquadName: squads[i].name,
+                            SquadId: squads[i].id
                         }
                         myList.push(myObj)
                     }
@@ -36,6 +38,14 @@ function SquadDetail() {
             }
         }
     }
+
+
+    const LeaveSquad = () => {
+        if (currentPlayer?.squadId && game?.id) {
+            dispatch(DeletePlayerFromSquadAction(game.id, currentPlayer.squadId, currentPlayer?.id))
+        }
+    }
+
 
     return (<>
         <h2>{myList[0].SquadName}</h2>
@@ -64,6 +74,8 @@ function SquadDetail() {
                 }
             </tbody>
         </table>
+        {!loading ? <button className='btn btn-danger mt-3 mb-3 me-2' onClick={LeaveSquad}>Leave Squad</button> : <Spinner animation="border" size={"sm"} />}
+        {error && <span>{error.message}</span>}
     </>)
 
 
