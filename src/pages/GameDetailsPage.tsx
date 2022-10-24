@@ -21,6 +21,7 @@ import EndGameBtn from "../components/gameDetailsPage/EndGameBtn";
 import Squad from "../components/gameDetailsPage/Squad";
 
 import GameStateRefreshCountdown from "../components/gameDetailsPage/GameStateRefreshCountdown";
+import SquadDetail from "../components/gameDetailsPage/SquadDetail";
 
 
 function GameDetailsPage() {
@@ -102,7 +103,14 @@ function GameDetailsPage() {
                             </div>
                         </div>
                     </Col>
-
+                    { currentPlayer?.squadId &&
+                    <Col>
+                        <div className="card m-5 mx-auto card-detail">
+                            <div className="card-text">
+                                <SquadDetail/>
+                            </div>
+                        </div>
+                    </Col>}
                 </Row>
             </Container>
             <div className="d-flex"> 
