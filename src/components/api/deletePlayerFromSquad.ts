@@ -8,7 +8,6 @@ import { deleteFromSquad } from "../../store/slices/gameSlice";
 
 
 
-//[HttpDelete("{game_id}/[controller]/{squad_id}/{player_id}")]
 
 interface IParams{
     game_id: number,
@@ -41,9 +40,6 @@ export function DeletePlayerFromSquadAction(game_id: number, squad_id: number, p
         },
     }
 }
-
-
-
 
 
 
