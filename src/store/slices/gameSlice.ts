@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IChatResponse } from "../../components/api/getChatByGameId";
 import { GameState } from "../../components/api/getGameState";
-import Squad from "../../components/gameDetailsPage/Squad";
+import { IKillResponse } from "../../components/api/getKillsByGameId";
 import keycloak from "../../keycloak";
 import { IChat } from "../../models/IChat";
 import { ICheckin } from "../../models/ICheckin";
@@ -104,6 +104,41 @@ const gameSlice = createSlice({
                 ...state,
                 currentPlayer: currPlayer,
                 players: [...state.players!, action.payload],
+            }
+        },
+        addKill: (state, action: PayloadAction<IKillResponse>) => {
+            if(action.payload.playerKills.length != 2)
+                return {
+                    ...state
+                };
+            if(!state.players.some(player => player.id === action.payload.playerKills[0].playerId) || 
+                !state.players.some(player => player.id === action.payload.playerKills[1].playerId))
+                return {
+                    ...state
+                };
+            const newKill: IKill = {
+                id: action.payload.id,
+                latitude: action.payload.latitude,
+                longitude: action.payload.longitude,
+                description: action.payload.description,
+                timeDeath: action.payload.timeDeath,
+                killer: state.players.find(player => player.id === action.payload.playerKills[1].playerId)!,
+                victim: state.players.find(player => player.id === action.payload.playerKills[0].playerId)!,
+            }
+            return {
+                ...state,
+                kills: [... state.kills, newKill],
+                // Update local state such that the killed player's isHuman flag is set to false.
+                players: state.players.map<IPlayer>(player => {
+                    if (player.id === newKill.victim.id)
+                        return {
+                            ...player,
+                            isHuman: false,
+                        }
+                    return player;
+                }),
+                // If currentplayer is set, update isHuman flag to false.
+                currentPlayer: (state.currentPlayer && state.currentPlayer.id === newKill.victim.id) ? {...state.currentPlayer, isHuman: false} : state.currentPlayer,
             }
         },
         addSquadMember: (state, action: PayloadAction<any>) => {
@@ -221,6 +256,7 @@ export const {
     addMission,
     updateMission,
     deleteMission,
+    addKill,
     updateKill,
     deleteKill,
     addSquad,
