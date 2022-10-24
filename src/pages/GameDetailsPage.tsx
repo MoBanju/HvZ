@@ -31,13 +31,19 @@ function GameDetailsPage() {
     useEffect(() => {
         dispatch(getGameStateAction(Number(routeParam), true, undefined))
     }, [])
-    const { game, currentPlayer, players, kills } = useAppSelector(state => state.game)
+    const { game, currentPlayer, players } = useAppSelector(state => state.game)
     const [requestInProgress, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.GetGameStateInital);
     const nav = useNavigate()
     const isAdmin = keycloak.realmAccess?.roles.includes("ADMIN")
     
     if (error) {
-        return <p>{error.message}</p>
+        return (
+            <Container className="background-game d-flex justify-content-center align-items-center" fluid>
+                <NavLink to={"/"} className="btn-delete mb-4 btn btn-lg position-absolute" style={{left: "10px", top: "10px"}}><MdBackspace /></NavLink>
+                <Container className="card">
+                    <p>{error.message}</p>
+                </Container>
+            </Container>)
     }
 
     if (requestInProgress || !game) {

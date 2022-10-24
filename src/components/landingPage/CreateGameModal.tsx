@@ -75,10 +75,7 @@ function CreateGameModal({ show, setShow }: IProps) {
     const moveMapToCurrentLocation = () => {
         navigator.geolocation.getCurrentPosition((location) => {
             mapRef.current?.flyTo([location.coords.latitude, location.coords.longitude], DEFAULT_ZOOM);
-            setBoxBounds([
-                [location.coords.latitude - 0.01, location.coords.longitude - 0.01],
-                [location.coords.latitude + 0.01, location.coords.longitude + 0.01],
-            ])
+            setBoxBounds(undefined);
         });
     }
 

@@ -50,7 +50,7 @@ function DraggableMarkerMap({ markerPosition, setMarkerPosition, type}: IParams)
     },[type])
 
     return (
-        <MapContainer center={center} style={{height: "500px", width: "600px"}} zoom={13}>
+        <MapContainer center={center} style={{height: "35vh", width: "100%"}} zoom={13}>
             <TileLayer
                 url={"https://api.maptiler.com/maps/basic-v2-dark/{z}/{x}/{y}.png?key=" + MAP_TILER_API_KEY + ""}
                 tileSize={512}

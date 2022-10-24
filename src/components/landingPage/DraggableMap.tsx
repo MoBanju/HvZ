@@ -13,10 +13,18 @@ interface IParams {
 
 
 function DraggableMap({ boxBounds, setBoxBounds, canDelete = true }: IParams) {
+    const featureGroupRef = useRef<L.FeatureGroup<any>>(null);
 
     const canDrawRectangle = useMemo(() => {
+        // The boxbounds are set
         if(boxBounds)
             return false;
+        
+        // The boxbounds are not set
+        // Remove each shape currently on the map
+        featureGroupRef.current?.eachLayer((l) => {
+            l.remove()
+        })
         return {
             shapeOptions: {
                 guidelineDistance: 10,
@@ -84,7 +92,9 @@ function DraggableMap({ boxBounds, setBoxBounds, canDelete = true }: IParams) {
             attribution={"\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e"}
             crossOrigin={true}
         />
-        <FeatureGroup  >
+        <FeatureGroup
+            ref={featureGroupRef} 
+        >
             <EditControl
                 draw={{
                     polyline: false,

@@ -62,13 +62,23 @@ function AdminPage() {
                 }}
             />
         </div>
+    if (error) {
+        return (
+            <Container className="background-game d-flex justify-content-center align-items-center" fluid>
+                <NavLink to={`/game/${game.id}`} className="btn-delete mb-4 btn btn-lg position-absolute" style={{left: "10px", top: "10px"}}><MdBackspace /></NavLink>
+                <Container className="card">
+                    <p>{error.message}</p>
+                </Container>
+            </Container>)
+    }
 
     return (
     <Container className="background">
     <NavLink to={`/game/${game.id}`} className="btn-delete mb-4 btn btn-lg"><MdBackspace /></NavLink>
     <Row >
         <Col className="card">
-            <h5>Game</h5>
+            <Container>
+            <h5 className="admin-table-title">Game</h5>
             <Table hover className="admin-table table-admin">
                 <thead>
                     <tr>
@@ -93,7 +103,9 @@ function AdminPage() {
                     </tr>
                 </tbody>
             </Table>
-            <h5>Players</h5>
+            </Container>
+            <Container>
+            <h5 className="admin-table-title">Players</h5>
             <Table hover className="table-admin">
                 <thead>
                     <tr>
@@ -108,7 +120,9 @@ function AdminPage() {
                     {players.map(player => <PlayerTableItem player={player} setEditItem={setEditItem} key={player.id} />)}
                 </tbody>
             </Table>
-            <h5>Kills</h5>
+            </Container>
+            <Container>
+            <h5 className="admin-table-title">Kills</h5>
             <Table hover className="table-admin">
                 <thead>
                     <tr>
@@ -124,7 +138,9 @@ function AdminPage() {
                     {kills.map(kill => <KillTableItem kill={kill} setEditItem={setEditItem} key={kill.id}/>)}
                 </tbody>
             </Table>
-            <h5>Missions</h5>
+            </Container>
+            <Container>
+            <h5 className="admin-table-title">Missions</h5>
             <Table hover className="table-admin">
                 <thead>
                     <tr>
@@ -140,6 +156,7 @@ function AdminPage() {
                     {missions.map(mission => <MissionTableItem mission={mission} setEditItem={setEditItem} key={mission.id}/>)}
                 </tbody>
             </Table>
+            </Container>
         </Col>
         <Col className="card">
             <EditItem

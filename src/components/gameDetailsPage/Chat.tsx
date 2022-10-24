@@ -7,7 +7,7 @@ import { PostChatMessageAction } from "../api/postChatMessage";
 import { namedRequestInProgAndError } from "../../store/slices/requestSlice";
 import { RequestsEnum } from "../../store/middleware/requestMiddleware";
 import GetChatByGameIdAction from "../api/getChatByGameId";
-import React, { ChangeEvent, CSSProperties, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import {TbArrowsVertical} from "react-icons/tb"
 
 enum ChatState {
@@ -37,28 +37,11 @@ export interface ISquadMember{
 
 
 function Chat({gameId, currentPlayer}: { gameId: number, currentPlayer: IPlayer | undefined}) {
-
-  
   const [chatState, setChatState] = useState<ChatState>(ChatState.GLOBAL);
   const [chatMessage, setChatMessage] = useState("");
-  const [chatStyle, setChatStyle] = useState<CSSProperties>({backgroundColor: "#0d6efd !important", maxWidth: "55%"});
   const dispatch = useAppDispatch();
-  //All the chatmessages
-  const chatmessages = useAppSelector(state => state.game.chat);
-  const squads = useAppSelector(state => state.game.squads);
-
-  //const allThemPlayers = useAppSelector(state => state.game.players);
-
-
-  //
-
-  useEffect(() => {
-    console.log(chatmessages);
-  }, [])
-
-
+  const { chat: chatmessages, squads } = useAppSelector(state => state.game);
   const [isLoadingPost, errorPost] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PostChatMessage);
-  const [isLoadingGet, errorGet] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.GetChatByGameId);
   const [isCollapseOpen, setCollapse] = React.useState(false)
 
   const chatMsgContainerRef = useRef<HTMLDivElement>(null);
@@ -72,16 +55,19 @@ function Chat({gameId, currentPlayer}: { gameId: number, currentPlayer: IPlayer 
     dispatch(GetChatByGameIdAction(gameId));
   }
   
-  
-  if(errorPost)
-  return <p>{errorPost.message}</p>
+  const [isHuman, isZombie] = useMemo(() => {
+    if(!currentPlayer)
+      return [false, false];
+    // Current player is human
+    if(currentPlayer.isHuman)
+      return [true, false]
+    // Current player is a zombie or patient zero
+    return [false, true]
+  }, [currentPlayer])
   
   if(!currentPlayer)
   return null;
   
-  //Add squadId to currentplayer?
-  const isHuman = currentPlayer.isHuman;
-  const isZombie = !isHuman;
   
   const initCollapse = () => {
     if(!TIMER)
@@ -96,14 +82,9 @@ function Chat({gameId, currentPlayer}: { gameId: number, currentPlayer: IPlayer 
 
     setCollapse(!isCollapseOpen)
   }
-  console.log("MY squad id is " + currentPlayer.squadId);
 
 
   const filterChat = (chatMessage: IChat) => {
-
-    console.log("Chatmessage:");
-    console.log(chatMessage);
-
     switch (chatState) {
       case ChatState.SQUAD:
         return (chatMessage.player.squadId === currentPlayer.squadId)
@@ -146,9 +127,6 @@ function Chat({gameId, currentPlayer}: { gameId: number, currentPlayer: IPlayer 
         isHumanGlobal = false;
         isZombieGlobal = false;
     }
-
-    console.log("This is the players");
-    console.log(nonSquadCurrentPlayer);
 
     const msg: IChat = {
       id: 0,
@@ -255,6 +233,7 @@ function Chat({gameId, currentPlayer}: { gameId: number, currentPlayer: IPlayer 
                 }
               </Button>
           </InputGroup>
+            {errorPost && <span style={{fontStyle: 'italic', color: 'grey'}}>{errorPost.message}</span>}
         </Container>
         </div>
       </Collapse>
