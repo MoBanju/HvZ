@@ -16,9 +16,16 @@ form {
     margin: 5px;
 }
 
+.admin-table-title {
+    align-self: flex-start;
+    border-bottom: 3px solid white;
+    width: 100%;
+}
+
 .table-admin {
     table-layout: fixed;
     width: 100%;
+    margin-bottom: 2.5em;
 }
 
 .table-admin tr {

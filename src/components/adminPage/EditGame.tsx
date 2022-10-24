@@ -196,7 +196,7 @@ function EditGame({ game, closeForm }: IParams) {
           {...register('ne_longtitude')}
         />
       </InputGroup>
-      <MapContainer center={center} zoom={13} style={{ height: "500px", width: "600px" }}>
+      <MapContainer center={center} zoom={13} style={{ height: "30vh", width: "100%" }}>
         <DraggableMap
           boxBounds={boxBounds}
           setBoxBounds={setBoxBounds}
