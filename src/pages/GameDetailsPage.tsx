@@ -103,13 +103,14 @@ function GameDetailsPage() {
                             </div>
                         </div>
                     </Col>
+                    { currentPlayer?.squadId &&
                     <Col>
                         <div className="card m-5 mx-auto card-detail">
                             <div className="card-text">
                                 <SquadDetail/>
                             </div>
                         </div>
-                    </Col>
+                    </Col>}
                 </Row>
             </Container>
             <div className="d-flex"> 
