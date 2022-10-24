@@ -9,6 +9,7 @@ import { PostSquadAction, PostSquadInGameRequest } from "../api/PostSquad";
 import {BiPlusMedical} from "react-icons/bi"
 import { Spinner } from "react-bootstrap";
 import { IGameState } from "../../models/IGameState";
+import {TiTick} from "react-icons/ti";
 
 function Squad({gameid, gamestate} : {gameid: number, gamestate: keyof IGameState}) {
     const dispatch = useAppDispatch()
@@ -17,10 +18,6 @@ function Squad({gameid, gamestate} : {gameid: number, gamestate: keyof IGameStat
     const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.postPlayerInSquad)
   
     let isInSquad = squads.some(squad => squad.squad_Members?.some(member => member.playerId === currentPlayer?.id))
-    
-    console.log("currPlayer id: " + currentPlayer?.id)
-    console.log("is in squad: " + isInSquad)
-    console.log("squad", squads)
 
     const submitSquad = () => {
         const squad: PostSquadInGameRequest = {
@@ -35,6 +32,7 @@ function Squad({gameid, gamestate} : {gameid: number, gamestate: keyof IGameStat
         isInSquad = squads.some(x => x.squad_Members?.some(y=> y.playerId === currentPlayer!.id))
         dispatch(postGameAction)
     };
+
     
     const joinSquad = (squadId: number) => {
         const squadMember: PostPlayerInSquadRequest = {
@@ -65,6 +63,11 @@ function Squad({gameid, gamestate} : {gameid: number, gamestate: keyof IGameStat
                             Join squad
                         </th>
                     }
+                    {currentPlayer && isInSquad &&
+                        <th scope="col">
+                            Joined
+                        </th>
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -76,6 +79,14 @@ function Squad({gameid, gamestate} : {gameid: number, gamestate: keyof IGameStat
                         <td className="pt-3" >{squad.deseasedPlayers}</td>
                         {gamestate !== "Complete" && currentPlayer && !isInSquad &&
                         <td>{!loading ? (<button className="btn-delete ms-4" onClick={() => joinSquad(squad.id)}><BiPlusMedical color="red"/></button>) : <Spinner animation="border" size={"sm" }></Spinner> }</td>
+                        }
+                        {currentPlayer && isInSquad && squad.id === currentPlayer.squadId &&
+                        <td>
+                            <TiTick color="green" size={35}></TiTick>     
+                        </td>
+                        }
+                        { currentPlayer && isInSquad && squad.id !== currentPlayer.squadId &&
+                            <td> </td>
                         }
                     </tr>)
                 }

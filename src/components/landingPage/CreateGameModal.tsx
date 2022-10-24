@@ -42,7 +42,10 @@ function CreateGameModal({ show, setShow }: IProps) {
     
     const mapRef = useRef<LeafletMap>(null)
     
-    const hide = () => { setShow(false); }
+    const hide = () => {
+        setShow(false);
+        setBoxBounds(undefined);
+    }
 
     const handleOnSubmit = handleSubmit((data) => {
         if(!boxBounds) {
