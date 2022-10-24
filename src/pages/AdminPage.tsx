@@ -62,6 +62,15 @@ function AdminPage() {
                 }}
             />
         </div>
+    if (error) {
+        return (
+            <Container className="background-game d-flex justify-content-center align-items-center" fluid>
+                <NavLink to={`/game/${game.id}`} className="btn-delete mb-4 btn btn-lg position-absolute" style={{left: "10px", top: "10px"}}><MdBackspace /></NavLink>
+                <Container className="card">
+                    <p>{error.message}</p>
+                </Container>
+            </Container>)
+    }
 
     return (
     <Container className="background">
