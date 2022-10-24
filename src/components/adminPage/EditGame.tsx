@@ -35,17 +35,24 @@ interface IFormValues {
 function EditGame({ game, closeForm }: IParams) {
   const center = useMemo(() => [(game!.ne_lat + game!.sw_lat) / 2, (game!.ne_lng + game!.sw_lng) / 2], [game]) as LatLngTuple
   const { handleSubmit, register, setValue, formState } = useForm<IFormValues>();
-  const [boxBounds, setBoxBounds] = useState<LatLngBoundsLiteral>([[game.sw_lat, game.sw_lng], [game.ne_lat, game.ne_lng]]);
+  const [boxBounds, setBoxBounds] = useState<LatLngBoundsLiteral | undefined>([[game.sw_lat, game.sw_lng], [game.ne_lat, game.ne_lng]]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [requestPutLoading, requestPutError] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PutGameById);
   const [requestDeleteLoading, requestDeleteError] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.DeleteGameById);
   const nav = useNavigate();
   const dispatch = useAppDispatch();
   useEffect(() => {
-    setValue('sw_latitude', boxBounds[0][0])
-    setValue('sw_longtitude', boxBounds[0][1])
-    setValue('ne_latitude', boxBounds[1][0])
-    setValue('ne_longtitude', boxBounds[1][1])
+    if(boxBounds) {
+      setValue('sw_latitude', boxBounds[0][0])
+      setValue('sw_longtitude', boxBounds[0][1])
+      setValue('ne_latitude', boxBounds[1][0])
+      setValue('ne_longtitude', boxBounds[1][1])
+    } else {
+      setValue('sw_latitude', -1)
+      setValue('sw_longtitude', -1)
+      setValue('ne_latitude', -1)
+      setValue('ne_longtitude', -1)
+    }
   }, [boxBounds]);
 
   const handleDeleteKill = () => {
@@ -191,10 +198,9 @@ function EditGame({ game, closeForm }: IParams) {
       </InputGroup>
       <MapContainer center={center} zoom={13} style={{ height: "500px", width: "600px" }}>
         <DraggableMap
-          position={center}
           boxBounds={boxBounds}
           setBoxBounds={setBoxBounds}
-          setPosition={() => { }}
+          canDelete={false}
         />
       </MapContainer>
       <Container>
