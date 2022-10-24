@@ -77,7 +77,7 @@ function GameStateRefreshCountdown({ id }: { id: number }) {
           defaultChecked={active}
         />
       </Container>
-      <Button onClick={handleRefreshBtnClicked} variant="secondary">Refresh</Button>
+      <Button className="mt-2 h-25" onClick={handleRefreshBtnClicked} variant="secondary">Refresh</Button>
     </Container>
   )
 }

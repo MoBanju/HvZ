@@ -16,7 +16,8 @@ function Squad({gameid, gamestate} : {gameid: number, gamestate: keyof IGameStat
     const { squads, currentPlayer, squadMembers} = useAppSelector(state => state.game)
     const nameInputRef = useRef() as MutableRefObject<HTMLInputElement>;
     const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.postPlayerInSquad)
-  
+    var [loadingCreate, errorCreate] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.PostSquad)
+
     let isInSquad = squads.some(squad => squad.squad_Members?.some(member => member.playerId === currentPlayer?.id))
 
     const submitSquad = () => {
@@ -58,7 +59,7 @@ function Squad({gameid, gamestate} : {gameid: number, gamestate: keyof IGameStat
                     <th scope="col">
                         Members dead
                     </th>
-                    {gamestate !== "Complete" && currentPlayer && !isInSquad && 
+                    {gamestate !== "Complete" && currentPlayer && !isInSquad && squads.length > 0 &&
                         <th scope="col">
                             Join squad
                         </th>
@@ -77,9 +78,11 @@ function Squad({gameid, gamestate} : {gameid: number, gamestate: keyof IGameStat
                         <td className="pt-3" >{squad.name}</td>
                         <td className="pt-3">{squad.squad_Members.length}</td>
                         <td className="pt-3" >{squad.deseasedPlayers}</td>
-                        {gamestate !== "Complete" && currentPlayer && !isInSquad &&
+                        {gamestate !== "Complete" && currentPlayer && !isInSquad && (squad.is_human === currentPlayer.isHuman) &&
                         <td>{!loading ? (<button className="btn-delete ms-4" onClick={() => joinSquad(squad.id)}><BiPlusMedical color="red"/></button>) : <Spinner animation="border" size={"sm" }></Spinner> }</td>
                         }
+                        {gamestate !== "Complete" && currentPlayer && !isInSquad && (squad.is_human !== currentPlayer.isHuman) && 
+                        <td></td>}
                         {currentPlayer && isInSquad && squad.id === currentPlayer.squadId &&
                         <td>
                             <TiTick color="green" size={35}></TiTick>     
@@ -95,7 +98,8 @@ function Squad({gameid, gamestate} : {gameid: number, gamestate: keyof IGameStat
         {gamestate !== "Complete" && currentPlayer && !isInSquad &&
             <div>
                 <input ref={nameInputRef} placeholder="Enter squad name.." type="text" className="m-2"/>
-                <button onClick={submitSquad} className="btn btn-danger">Create new squad</button>
+                {!loadingCreate ? <button onClick={submitSquad} className="btn btn-danger">Create new squad</button> : <Spinner animation="border" size={"sm"} />}
+                {errorCreate && <span>{errorCreate.message}</span>}
             </div>
         }
         </>

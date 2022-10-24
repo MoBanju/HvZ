@@ -37,7 +37,7 @@ function GameStateIndicator({ gamestate, currentPlayer, players }: { gamestate: 
   else if (gamestate === "Progress") {
     return (
     <div className='row'>
-      <div className='h-100 d-flex align-items-center justify-content-center text-styling'>Game in progress..</div>
+      <div className='h-100 d-flex align-items-center justify-content-center text-styling ms-3'>Game in progress..</div>
       <div className='h-100 d-flex align-items-center justify-content-center text-styling text-size'>{PlayersLeft()}</div>
     </div>)
   }
