@@ -1,46 +1,62 @@
-# Getting Started with Create React App
+# Humans vs Zombies web app
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Description
 
-In the project directory, you can run:
+Humans vs. Zombies (HvZ) is a game of tag played at schools, camps, neighborhoods,
+libraries, and conventions around the world. The game simulates the exponential spread
+of a fictional zombie infection through a population.
 
-### `npm start`
+## Contributors
+- [Mussa Banjai](https://gitlab.com/MoBanju)
+- [Eivind Bertelsen](https://gitlab.com/eivindTB)
+- [Øyvind Reitan](https://gitlab.com/hindrance)
+- [Vebjørn Sundal](https://gitlab.com/vebsun95)
+- [Synne Sævik](https://gitlab.com/Synnems)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Usage
+1. Clone the project and `cd` into it. 
+2. Install the dependencies using the npm command `npm i --legacy-peer-deps`.
+3. Set the node environment variables by creating a .env file in the root of the directory and filling in the values:
+~~~
+REACT_APP_API_URL="[BACKEND_ENDPOINT]"
+REACT_APP_MAP_TILER_API_KEY="[MAPTILER_API_KEY]"
+~~~
+4. Run `npm run dev`.
+5. The web app will open in your browser of choice.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Future Work
+Write something here 😎
+## Style-guide
+### Casing
+ - React : 
+     - Pascal-Case:
+       - Components
+     - kebab-case
+       - html/xml tags inside components
+       - css
 
-### `npm test`
+### Git
+https://www.conventionalcommits.org/en/v1.0.0/
+ - commit-message:
+   - feat: new feature, code added
+   - fix: bugfix usually
+   - style: no functional changes
+   - docs: documentation
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Packages used
+- npx create-react-app --ts
+- redux
+- react-redux
+- @reduxjs/toolkit
+- react-router-dom
+- react-icons
+- react-hook-form
+- bootstrap
+- react-bootstrap
+- leaflet
+- react-leaflet
+- react-leaflet-draw
+- express
+- keycloak-js
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
