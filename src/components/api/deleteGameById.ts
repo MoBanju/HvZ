@@ -16,7 +16,7 @@ async function deleteGameById({ id }: IParams) {
         method: "DELETE",
     });
     if(!response.ok)
-        throw new Error(response.statusText);
+        throw new Error(await response.text() || response.statusText);
     return id;
 }
 

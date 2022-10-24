@@ -1,55 +1,47 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { API_URL } from "../../constants/enviroment";
-import { IChat } from "../../models/IChat";
 import { IGame } from "../../models/IGame";
-import { IGameState } from "../../models/IGameState";
 import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE } from "../../store/middleware/requestMiddleware";
-import { addChatMsg } from "../../store/slices/gameSlice";
 import { addGame } from "../../store/slices/gamesSlice";
-import { IChatResponse } from "./getChatByGameId";
-import { IGameResponse } from "./getGames";
 import getAuthHeaders from "./setAuthHeaders";
 
-export interface PostGameRequest {
+export interface IPostGameRequest {
     name: string,
     description: string,
+    ne_lat: number,
+    ne_lng: number,
+    sw_lat: number,
+    sw_lng: number,
+    startTime: string,
+    endTime: string
 }
 
 interface IParams {
-    gameInfo: PostGameRequest,
+    postGameRequest: IPostGameRequest,
 }
 
-async function postGames({gameInfo}: IParams): Promise<IGame>{
-    let body: PostGameRequest = {
-        name: gameInfo.name,
-        description: gameInfo.description,
-    };
+async function postGame({ postGameRequest }: IParams): Promise<IGame> {
     const headers = await getAuthHeaders();
 
     let response = await fetch(`${API_URL}/game`, {
         method: "POST",
         headers,
-        body: JSON.stringify(body),
+        body: JSON.stringify(postGameRequest),
     });
-    if(!response.ok)
-        throw new Error(response.statusText);
-    let createdGame = await response.json() as IGameResponse;
-    return {
-        id: createdGame.id,
-        name: createdGame.name,
-        description: createdGame.description,
-        state: "Registration",
-    }
+    if (!response.ok)
+        throw new Error(await response.text() || response.statusText);
+    let createdGame = await response.json() as IGame;
+    return createdGame;
 };
 
 
-export const PostGameAction: (gameInfo: PostGameRequest, sideEffect: ()=> void) => PayloadAction<RequestPayload<IParams, IGame>> = (gameInfo: PostGameRequest, sideEffect: ()=> void) => ({
-        type: REQUEST_ACTION_TYPE,
-        payload: {
-            cbDispatch: addGame,
-            params: {gameInfo},
-            request: postGames,
-            requestName: RequestsEnum.PostGame,
-            sideEffect,
-        },
-    });
+export const PostGameAction: (gameInfo: IPostGameRequest, sideEffect: () => void) => PayloadAction<RequestPayload<IParams, IGame>> = (gameInfo: IPostGameRequest, sideEffect: () => void) => ({
+    type: REQUEST_ACTION_TYPE,
+    payload: {
+        cbDispatch: addGame,
+        params: { postGameRequest: gameInfo },
+        request: postGame,
+        requestName: RequestsEnum.PostGame,
+        sideEffect,
+    },
+});

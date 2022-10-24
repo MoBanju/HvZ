@@ -5,6 +5,7 @@ import App from './App';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import { initialize } from './keycloak';
+import { Container } from 'react-bootstrap';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -22,7 +23,12 @@ initialize().then(() => {
   // TODO: make this look nicer.
   root.render(
     <React.StrictMode>
-      <p>Could not connect to keycloak</p>
+      <Container className='background d-flex justify-content-center align-items-center'>
+        <Container className="card">
+            <p>It looks like our identity provider is down. Pleae try again later.</p>
+            <p>{error.message}</p>
+        </Container>
+      </Container>
     </React.StrictMode>
   );
 })

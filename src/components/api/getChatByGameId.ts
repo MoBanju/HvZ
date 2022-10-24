@@ -11,6 +11,7 @@ export interface IChatResponse {
     isHumanGlobal: boolean,
     isZombieGlobal: boolean,
     playerId: number,
+    squadId?: number,
 }
 
 interface IParams {
@@ -23,7 +24,7 @@ async function GetChatByGameId({gameId}: IParams): Promise<IChatResponse[]> {
         headers,
     });
     if(!response.ok)
-        throw new Error(response.statusText);
+        throw new Error(await response.text() || response.statusText);
     let chatResponse = await response.json() as IChatResponse[];
     return chatResponse;
 }

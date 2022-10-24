@@ -6,20 +6,20 @@ function LoginForm() {
 
 
     if (keycloak.authenticated) {
-        return (<><div>
-            <button onClick={() => keycloak.logout()} className="btn btn-dark btn-lg login-btn m-5">Logout</button>
+        return (<><div className="table-resp">
+            <button onClick={() => keycloak.logout()} className="btn btn-dark btn-lg login-btn ">Logout</button>
         </div></>)
     }
     else {
         return (
-            <>
+            <div>
                 <div>
-                    <button onClick={() => keycloak.login()} className="btn btn-dark btn-lg login-btn m-5">Login</button>
+                    <button onClick={() => keycloak.login()} className="btn btn-dark btn-lg login-btn ">Login</button>
                 </div>
                 <div>
-                    <button onClick={() => keycloak.register()} className="btn btn-dark btn-lg login-btn m-5">Register</button>
+                    <button onClick={() => keycloak.register()} className="btn btn-dark btn-lg login-btn">Register</button>
                 </div>
-            </>
+            </div>
         );
     }
 }

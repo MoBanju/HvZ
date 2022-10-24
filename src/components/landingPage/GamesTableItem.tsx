@@ -7,6 +7,7 @@ import { useAppDispatch } from "../../store/hooks";
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import DeleteGameModal from "./DeleteGameModal";
+import { DeleteGameByIdAction } from "../api/deleteGameById";
 
 
 
@@ -16,10 +17,14 @@ function GamesTableItem({ game }: { game: IGame }) {
         const isLoggedIn = keycloak.authenticated;
         const [ isAlertVisible, setIsAlertVisible ] = React.useState(false);
         const [ showDeleteModal, setShowDeleteModal ] = useState(false);
-
+        const dispatch = useAppDispatch();
+        
+        const handleTrashCanClicked = () => {
+                setShowDeleteModal(true);
+        }
 
         const deleteGame = () => {
-                setShowDeleteModal(true);
+                dispatch(DeleteGameByIdAction(game.id, () => {setShowDeleteModal(false)}));
         }
 
         const handleClick = () => {
@@ -42,11 +47,16 @@ function GamesTableItem({ game }: { game: IGame }) {
                 </tr>}
                 <tr className="ms-6" >
                         <td onClick={handleClick} role={"button"}> {game.name} </td>
-                        <td className="ps-5">22</td>
+                        <td className="ps-5">{game.playerCount}</td>
                         <td>{game.state}</td>
-                        <td>{isAdmin && <button onClick={deleteGame} className="btn-delete"><CgTrash className="bosspann" /></button>} </td>
+                        <td>{isAdmin && <button onClick={handleTrashCanClicked} className="btn-delete"><CgTrash className="bosspann" /></button>} </td>
                 </tr>
-                <DeleteGameModal show={showDeleteModal} setShow={setShowDeleteModal} game={game} />
+                <DeleteGameModal
+                        game={game}
+                        show={showDeleteModal}
+                        setShow={setShowDeleteModal}
+                        handleSubmit={deleteGame}
+                />
         </>)
 
 

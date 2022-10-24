@@ -5,14 +5,44 @@ import { RootState } from "../store";
 
 export const REQUEST_ACTION_TYPE = "request/iniateRequest";
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export enum RequestsEnum {
     GetGames,
-    GetGameAndPlayerByGameId,
+    GetGameStateInital,
+    GetGameStatePeriodicaly,
+    GetCheckins,
     DeleteGameById,
+    DeleteKillById,
     GetChatByGameId,
     PostChatMessage,
     PostGame,
+    PostKill,
+    PostCheckin,
+    postPlayerInGame,
     PutPlayerType,
+    DeletePlayerById,
+    PutGameById,
+    PostSquad,
+    postPlayerInSquad,
+    PutKillById,
+    GetMissions,
+    PostMission,
+    PutMission,
+    DeleteMissionById,
 }
 
 export interface RequestPayload<P, T> {
@@ -20,8 +50,10 @@ export interface RequestPayload<P, T> {
     cbDispatch: ActionCreatorWithPayload<T, string>;
     params: P,
     request: ({}: P) => Promise<T>;
-    sideEffect?: () => void;
+    sideEffect?: sideEffect;
 }
+
+export type sideEffect = (() => void) | undefined
 
 const requestMiddleware: Middleware<{}, RootState> = storeApi => next => (action: PayloadAction<RequestPayload<any, any>>) => {
     if(action.type === REQUEST_ACTION_TYPE)

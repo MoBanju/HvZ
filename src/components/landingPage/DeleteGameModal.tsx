@@ -10,19 +10,15 @@ interface IProps {
     game: IGame,
     show: boolean,
     setShow: Dispatch<React.SetStateAction<boolean>>,
+    handleSubmit: () => void,
 }
 
-function DeleteGameModal({ game, show, setShow }: IProps) {
-    const dispatch = useAppDispatch();
+function DeleteGameModal({ game, show, setShow, handleSubmit }: IProps) {
     const [ , setInput] = useState("");
     const [ canDelete, setCanDelete ] = useState(false);
     const [loading, error] = namedRequestInProgAndError(useAppSelector(state => state.requests), RequestsEnum.DeleteGameById);
 
     const hide = () => {setShow(false)};
-
-    const handleSubmit = () => {
-        dispatch(DeleteGameByIdAction(game.id, hide));
-    };
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setInput(e.currentTarget.value);
@@ -36,7 +32,7 @@ function DeleteGameModal({ game, show, setShow }: IProps) {
             </Modal.Header>
             <Modal.Body>
                 <p>Are you sure you want to delete {game.name}</p>
-                <p>Fill in the name inorder to delete the game</p>
+                <p>Fill in the name in order to delete the game</p>
                 <InputGroup>
                     <InputGroup.Text id="title" >Title:</InputGroup.Text>
                     <FormControl
@@ -56,7 +52,7 @@ function DeleteGameModal({ game, show, setShow }: IProps) {
                 >
                     {loading ?
                         <Spinner animation="border" as="span" />
-                        : <span>delete</span>}
+                        : <span>Delete</span>}
                 </Button>
             </Modal.Footer>
         </Modal>);

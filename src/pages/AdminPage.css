@@ -1,0 +1,75 @@
+form {
+    width: 100%;
+}
+
+.background{
+    background-image: url("/public/zombie.jpg");
+    min-height: 100vh;
+    max-width: 100vw;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow-y: auto;
+}
+
+.card {
+    background-color: rgba(82, 82, 82, 0.96);
+    margin: 5px;
+}
+
+.admin-table-title {
+    align-self: flex-start;
+    border-bottom: 3px solid white;
+    width: 100%;
+}
+
+.table-admin {
+    table-layout: fixed;
+    width: 100%;
+    margin-bottom: 2.5em;
+}
+
+.table-admin tr {
+    display: flex;
+}
+
+.table-admin td, .table-admin th {
+    flex: 80px 1;
+    width: 10%;
+    max-height: 3em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.input-group-text {
+    width: 25%;
+    white-space: break-spaces;
+}
+
+.input-group {
+    margin-bottom: 8px;
+}
+
+input:read-only, input:read-only:focus {
+    background-color: grey;
+    cursor: default;
+}
+
+
+.form-control:focus-visible, .form-select:focus-visible, .form-check-input:focus-visible{
+    outline: none;
+}
+
+.form-control:focus, .form-select:focus, .form-check-input:focus{
+    border-color: crimson;
+    box-shadow: 0 0 0 0.25rem rgba(255, 122, 122, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: crimson;
+    border-color: crimson;
+}
+
+.form-select {
+    margin-bottom: 8px;
+}
