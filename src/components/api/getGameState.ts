@@ -32,6 +32,7 @@ export type GameState = {
 
 async function getGameState({ id }: IParams): Promise<GameState> {
     let sub = keycloak.tokenParsed?.sub;
+    let isAdmin = keycloak.realmAccess?.roles.includes("ADMIN")
     if(!sub) throw new Error("No keycloak token when fetching game state");
     let game          = await GetGameById({id});
     let players       = await getPlayersByGameId({id});
@@ -59,6 +60,17 @@ async function getGameState({ id }: IParams): Promise<GameState> {
         }
     });
     const currentPlayer = players.find(player => player.user.keyCloakId === sub);
+    if(isAdmin) {
+        return {
+            game,
+            players,
+            kills,
+            missions: missionsResponse,
+            checkins: [],
+            squads,
+            currentPlayer: currentPlayer,
+        }
+    }
     if(!currentPlayer)
         return {
             game,
@@ -69,20 +81,6 @@ async function getGameState({ id }: IParams): Promise<GameState> {
             squads,
             currentPlayer,
         }
-    let [squadId, squadMemberId] = findSquadAndSquadMemberId(squads, currentPlayer);
-    if(!squadId || !squadMemberId)
-        return {
-            game,
-            players,
-            kills,
-            checkins: [],
-            missions: [],
-            squads,
-            currentPlayer,
-        }
-
-    currentPlayer.squadId = squadId;
-    currentPlayer.squadMemberId = squadMemberId;
     let missions = missionsResponse.filter(mission => {
         if(currentPlayer.isHuman && mission.is_human_visible)
             return true;
@@ -90,6 +88,20 @@ async function getGameState({ id }: IParams): Promise<GameState> {
             return true;
         return false;
     });
+    let [squadId, squadMemberId] = findSquadAndSquadMemberId(squads, currentPlayer);
+    if(!squadId || !squadMemberId)
+        return {
+            game,
+            players,
+            kills,
+            checkins: [],
+            missions: missions,
+            squads,
+            currentPlayer,
+        }
+
+    currentPlayer.squadId = squadId;
+    currentPlayer.squadMemberId = squadMemberId;
     let checkins = await getCheckin({gameId: id, squadId: squadId});
     return {
         game,
