@@ -43,6 +43,7 @@ export enum RequestsEnum {
     PostMission,
     PutMission,
     DeleteMissionById,
+    DeletePlayerFromSquad,
 }
 
 export interface RequestPayload<P, T> {

@@ -107,11 +107,11 @@ const gameSlice = createSlice({
             }
         },
         addKill: (state, action: PayloadAction<IKillResponse>) => {
-            if(action.payload.playerKills.length != 2)
+            if (action.payload.playerKills.length != 2)
                 return {
                     ...state
                 };
-            if(!state.players.some(player => player.id === action.payload.playerKills[0].playerId) || 
+            if (!state.players.some(player => player.id === action.payload.playerKills[0].playerId) ||
                 !state.players.some(player => player.id === action.payload.playerKills[1].playerId))
                 return {
                     ...state
@@ -127,7 +127,7 @@ const gameSlice = createSlice({
             }
             return {
                 ...state,
-                kills: [... state.kills, newKill],
+                kills: [...state.kills, newKill],
                 // Update local state such that the killed player's isHuman flag is set to false.
                 players: state.players.map<IPlayer>(player => {
                     if (player.id === newKill.victim.id)
@@ -138,7 +138,7 @@ const gameSlice = createSlice({
                     return player;
                 }),
                 // If currentplayer is set, update isHuman flag to false.
-                currentPlayer: (state.currentPlayer && state.currentPlayer.id === newKill.victim.id) ? {...state.currentPlayer, isHuman: false} : state.currentPlayer,
+                currentPlayer: (state.currentPlayer && state.currentPlayer.id === newKill.victim.id) ? { ...state.currentPlayer, isHuman: false } : state.currentPlayer,
             }
         },
         addSquadMember: (state, action: PayloadAction<any>) => {
@@ -238,6 +238,24 @@ const gameSlice = createSlice({
                 missions: state.missions.filter(mission => mission.id !== action.payload)
             }
         },
+        deleteFromSquad: (state, action: PayloadAction<number[]>) => {
+            let squad_id = action.payload[1]
+            let player_id = action.payload[2]
+            let curr: IPlayer = (player_id === state.currentPlayer?.id) ? {...state.currentPlayer!, squadId: undefined, squadMemberId: undefined} : { ...state.currentPlayer! }
+
+            return {
+                ...state,
+                currentPlayer: curr,
+                squads: state.squads.map<ISquad>(squad => {
+                    if(squad.id === squad_id)
+                        return {
+                            ...squad,
+                            squad_Members: squad.squad_Members.filter(squad_member => squad_member.playerId !== player_id)
+                        }
+                    return squad;
+                })
+            }
+        }
     },
 });
 
@@ -260,6 +278,7 @@ export const {
     addSquad,
     addSquadMember,
     addCheckin,
+    deleteFromSquad,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

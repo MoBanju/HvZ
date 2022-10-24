@@ -1,5 +1,6 @@
 import React from 'react'
-import { useAppSelector } from '../../store/hooks'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import DeletePlayerFromSquadAction from '../api/deletePlayerFromSquad'
 
 /*  Squad Details Fragment. This should display the 
 names, 
@@ -11,7 +12,9 @@ to leave a check in marker on your current position and to leave the squad. */
 
 function SquadDetail() {
 
-    const { players, squads, currentPlayer } = useAppSelector(state => state.game)
+    const { game, players, squads, currentPlayer } = useAppSelector(state => state.game)
+    const dispatch = useAppDispatch();
+
 
     let myList = []
 
@@ -29,6 +32,7 @@ function SquadDetail() {
                             Rank: squads[i].squad_Members[y].rank,
                             isHuman: myStr,
                             SquadName: squads[i].name,
+                            SquadId: squads[i].id
                         }
                         myList.push(myObj)
                     }
@@ -36,7 +40,22 @@ function SquadDetail() {
             }
         }
     }
-    console.log("ialjkfjarjnkm",squads)
+
+    //[HttpDelete("{game_id}/[controller]/{squad_id}/{player_id}")]
+
+    //dispatch(PutGameByIdAction(game, "Progress", undefined))
+
+
+    const LeaveSquad = () => {
+        console.log("button works")
+        if (currentPlayer?.squadId && game?.id) {
+            dispatch(DeletePlayerFromSquadAction(game.id, currentPlayer.squadId, currentPlayer?.id))
+
+        }
+    }
+
+
+    console.log("ialjkfjarjnkm", squads)
     return (<>
         <h2>{myList[0].SquadName}</h2>
         <table className='table table-striped table-dark text-white '>
@@ -64,6 +83,8 @@ function SquadDetail() {
                 }
             </tbody>
         </table>
+        <button className='btn btn-danger mt-3 mb-3 me-2' onClick={LeaveSquad}>Leave Squad</button>
+
     </>)
 
 
