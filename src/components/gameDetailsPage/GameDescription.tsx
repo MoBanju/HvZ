@@ -4,12 +4,16 @@ import KillList from "./KillList"
 function GameDescription({title, description}: {title: string, description: string}) {
   const { game } = useAppSelector(state => state.game)
 
+  
+
   return (
     <>
     <div className="clearfix">
     <div className="me-5 ">
         <h1>{title}</h1>
-        <h5 className="">{description}</h5>
+        <h5>Starttime: {(game!.startTime).slice(0,10)}, {(game!.startTime).slice(11,16)}</h5>
+        <h5>Endtime: {(game!.endTime).slice(0,10)}, {(game!.endTime).slice(11,16)}</h5>
+        <h4 className="">{description}</h4>
     </div>
 
     <div className="float-end me-5 resp">
