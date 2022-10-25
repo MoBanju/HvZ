@@ -17,14 +17,14 @@ function LandingPage() {
         </div>
         <Row> 
             <Col className="m-auto"> 
-                <div className="card m-5 mx-auto">
+                <div className="card m-5 mx-auto card-detail">
                     <div className="card-text">
                         <LoginForm/>
                     </div>
                 </div>
             </Col>
             <Col>
-            <div className="card m-5 mx-auto">
+            <div className="card m-5 mx-auto card-detail">
                     <div className="card-text">
                         <GamesTable/>
                     </div>

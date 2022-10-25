@@ -52,10 +52,10 @@ function GameDetailsPage() {
 
     return (
         <Container className="background-game p-sm-4" fluid>
-            <NavLink to={"/"} className="btn-delete mb-4 btn btn-lg"><MdBackspace size={27}/></NavLink>
+            <NavLink to={"/"} className="btn-delete mb-4 btn btn-lg"><MdBackspace size={30}/></NavLink>
             <div className="position-absolute top-0 end-0 m-3 log-header logged-in">
                 {keycloak.authenticated && <span className="text-justify">Logged in as: {keycloak.tokenParsed?.name}</span>}
-                {isAdmin && <button className="logged-in" onClick={() => nav("/admin/" + game.id)}> <MdAdminPanelSettings size={30} />Admin</button>}
+                {isAdmin && <button className="btn-delete" style={{color: 'white'}} onClick={() => nav("/admin/" + game.id)}> <MdAdminPanelSettings size={30} />Admin</button>}
                 <GameStateRefreshCountdown id={game.id} />
             </div>
             <AdminModal show={show} setShow={setShow} players={players} game={game} />
