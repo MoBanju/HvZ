@@ -10,9 +10,8 @@ function GameDescription({title, description}: {title: string, description: stri
     <>
     <div className="clearfix">
     <div className="me-5 ">
+        <p>{(game!.startTime).slice(0,10)}, {(game!.startTime).slice(11,16)} to {(game!.endTime).slice(0,10)}, {(game!.endTime).slice(11,16)}</p>
         <h1>{title}</h1>
-        <h5>Starttime: {(game!.startTime).slice(0,10)}, {(game!.startTime).slice(11,16)}</h5>
-        <h5>Endtime: {(game!.endTime).slice(0,10)}, {(game!.endTime).slice(11,16)}</h5>
         <h4 className="">{description}</h4>
     </div>
 

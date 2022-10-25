@@ -3,7 +3,7 @@ import { IGame } from "../../models/IGame";
 import { IPlayer } from "../../models/IPlayer";
 import { RequestPayload, RequestsEnum, REQUEST_ACTION_TYPE, sideEffect } from "../../store/middleware/requestMiddleware";
 import GetGameById from "./getGameById";
-import getKillsByGameId from "./getKillsByGameId";
+import getKillsByGameId, { IKillResponse } from "./getKillsByGameId";
 import getPlayersByGameId from "./getPlayersByGameId";
 import {IKill} from "../../models/IKill"
 import getSquadsByGameId from "./getSquadsByGameId";
@@ -41,18 +41,27 @@ async function getGameState({ id }: IParams): Promise<GameState> {
     let squads          = await getSquadsByGameId({id})
 
     let kills = killsResponse
-    .filter((killResponse: { playerKills: { playerId: number; }[]; }) => {
+    .filter((killResponse) => {
         if(killResponse.playerKills.length !== 2)
-        return false;
+            return false;
+        if(!killResponse.playerKills.some(playerKill => playerKill.isVictim))
+            return false;
+        if(!killResponse.playerKills.some(playerKill => !playerKill.isVictim))
+            return false;
         if(!players.some(p => p.id === killResponse.playerKills[0].playerId))
-        return false;
+            return false;
         if(!players.some(p => p.id === killResponse.playerKills[1].playerId))
-        return false;
+            return false;
         return true;
     }) 
-    .map<IKill>((killResponse: { playerKills: { playerId: number; }[]; id: any; description: any; latitude: any; longitude: any; timeDeath: any; }) => {
+    .map<IKill>((killResponse: IKillResponse)=> {
         let killer = players.find(p => p.id === killResponse.playerKills[1].playerId)!
         let victim = players.find(p => p.id === killResponse.playerKills[0].playerId)!
+        if(killResponse.playerKills[1].isVictim) {
+            let tmp = killer;
+            killer = victim;
+            victim = tmp;
+        }
         return {
             ...killResponse,
             killer,

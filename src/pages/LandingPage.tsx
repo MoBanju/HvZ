@@ -12,19 +12,19 @@ function LandingPage() {
         <>
     <Container className="justify-content-center align-items-center background d-flex" fluid>
         <div className=" position-fixed top-0 end-0 m-3 logged-in">
-                {keycloak.authenticated && <span>Logged in as: {keycloak.tokenParsed?.preferred_username} </span>}
+                {keycloak.authenticated && <span>Logged in as: {keycloak.tokenParsed?.name} </span>}
                 {isAdmin && <span> <MdAdminPanelSettings size={30} /> Admin</span>}
         </div>
         <Row> 
             <Col className="m-auto"> 
-                <div className="card m-5 mx-auto">
+                <div className="card m-5 mx-auto card-detail">
                     <div className="card-text">
                         <LoginForm/>
                     </div>
                 </div>
             </Col>
             <Col>
-            <div className="card m-5 mx-auto">
+            <div className="card m-5 mx-auto card-detail">
                     <div className="card-text">
                         <GamesTable/>
                     </div>

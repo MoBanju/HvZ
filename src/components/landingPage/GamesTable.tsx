@@ -76,9 +76,9 @@ function GamesTable() {
             </div>
             <div className="text-center">
                 <h1 className="text-sz sidetall-color">
-                    {sideTall > 1 && <button onClick={() => setsideTall(sideTall - 1)} className="btn-delete">{'<'}</button>}
+                    {sideTall > 1 && <button onClick={() => setsideTall(sideTall - 1)} className="btn-delete" style={{color:"white"}}>{'<'}</button>}
                     {sideTall}
-                    {sideTall * GAMES_PER_PAGE < games.length && <button onClick={() => setsideTall(sideTall + 1)} className="btn-delete">{'>'}</button>}</h1>
+                    {sideTall * GAMES_PER_PAGE < games.length && <button onClick={() => setsideTall(sideTall + 1)} className="btn-delete" style={{color: 'white'}}>{'>'}</button>}</h1>
             </div>
             <CreateGameModal show={showCreateModal} setShow={setShowCreateModal}/>
         </div>)

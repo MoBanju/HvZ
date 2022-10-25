@@ -116,14 +116,22 @@ const gameSlice = createSlice({
                 return {
                     ...state
                 };
+            let killer = state.players.find(player => player.id === action.payload.playerKills[1].playerId)!;
+            let victim = state.players.find(player => player.id === action.payload.playerKills[0].playerId)!;
+            if(action.payload.playerKills[1].isVictim) {
+                let tmp = killer;
+                killer = victim;
+                victim = tmp;
+            }
+
             const newKill: IKill = {
                 id: action.payload.id,
                 latitude: action.payload.latitude,
                 longitude: action.payload.longitude,
                 description: action.payload.description,
                 timeDeath: action.payload.timeDeath,
-                killer: state.players.find(player => player.id === action.payload.playerKills[1].playerId)!,
-                victim: state.players.find(player => player.id === action.payload.playerKills[0].playerId)!,
+                killer,
+                victim,
             }
             return {
                 ...state,

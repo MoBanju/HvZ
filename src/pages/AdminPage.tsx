@@ -74,9 +74,9 @@ function AdminPage() {
 
     return (
     <Container className="background">
-    <NavLink to={`/game/${game.id}`} className="btn-delete mb-4 btn btn-lg"><MdBackspace /></NavLink>
+    <NavLink to={`/game/${game.id}`} className="btn-delete mb-4 btn btn-lg"><MdBackspace size={30}/></NavLink>
     <Row >
-        <Col className="card">
+        <Col className="card card-detail">
             <Container>
             <h5 className="admin-table-title">Game</h5>
             <Table hover className="admin-table table-admin">
@@ -158,7 +158,7 @@ function AdminPage() {
             </Table>
             </Container>
         </Col>
-        <Col className="card">
+        <Col className="card card-detail">
             <EditItem
                 game={game}
                 item={editItem.item}
