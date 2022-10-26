@@ -48,9 +48,7 @@ function GamesTableItem({ game }: { game: IGame }) {
                 <tr className="ms-6" >
                         <td onClick={handleClick} role={"button"}> {game.name} </td>
                         <td className="ps-5">{game.playerCount}</td>
-                        {game.state === "Registration" && <td className="text-success">{game.state}</td>}
-                        {game.state === "Progress" &&<td className="text-warning">{game.state}</td>}
-                        {game.state === "Complete" &&<td className="text-danger">{game.state}</td>}
+                        <td>{game.state}</td>
                         <td>{isAdmin && <button onClick={handleTrashCanClicked} className="btn-delete"><CgTrash className="bosspann" /></button>} </td>
                 </tr>
                 <DeleteGameModal
