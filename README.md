@@ -25,8 +25,10 @@ REACT_APP_MAP_TILER_API_KEY="[MAPTILER_API_KEY]"
 4. Run `npm run dev`.
 5. The web app will open in your browser of choice.
 
-## Future Work
-Write something here 😎
+## Future Work / Cool to have😎
+- Implements web sockets to notify clients when game state changes.
+- Improved page navigation
+
 ## Style-guide
 ### Casing
  - React : 
