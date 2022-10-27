@@ -73,7 +73,7 @@ function GamesTable() {
         <div className="table-responsive">
             <div className="btn-group float-end"> 
             <Form.Check
-                    className="me-2 text-success"
+                    className="me-2"
                     type='checkbox'
                     id='isRegister'
                     label='Registration'
@@ -81,7 +81,7 @@ function GamesTable() {
                     onChange = {()=>setGameFilter(prev => [!prev[0], prev[1], prev[2]])}
                 />
             <Form.Check
-                    className="me-2 text-warning"
+                    className="me-2"
                     type='checkbox'
                     id='isProgress'
                     label='In Progress'
@@ -89,7 +89,7 @@ function GamesTable() {
                     onChange = {()=>setGameFilter(prev => [prev[0], !prev[1], prev[2]])}
                 />
             <Form.Check
-                    className="me-2 text-danger"
+                    className="me-2"
                     type='checkbox'
                     id='isComplete'
                     label='Completed'
