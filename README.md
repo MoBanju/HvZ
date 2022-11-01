@@ -1,5 +1,6 @@
 # Humans vs Zombies web app
 
+The project can be tested at: https://hvz-vemoes.herokuapp.com/
 
 ## Description
 
